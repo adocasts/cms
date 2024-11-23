@@ -12,7 +12,7 @@ const props = defineProps<{
 <template>
   <div class="flex min-h-screen w-full flex-col">
     <header
-      class="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6"
+      class="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-10"
     >
       <Navigation v-bind="props" />
 
