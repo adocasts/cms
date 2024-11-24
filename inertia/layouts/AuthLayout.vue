@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Link } from '@tuyau/inertia/vue'
+
 defineProps<{
   messages: Record<string, string | Record<string, string>>
 }>()
@@ -9,17 +11,14 @@ defineProps<{
     <header>
       <nav class="flex items-center justify-between p-6 lg:px-8">
         <div class="flex lg:flex-1">
-          <Link href="/" class="flex items-center gap-2 text-lg font-semibold md:text-base">
+          <div class="flex items-center gap-2 text-lg font-semibold md:text-base">
             <img class="logo-black w-auto h-6 md:h-7" src="../assets/logo-black.svg" alt="Adocasts" width="146px" height="28px" />
             <span class="sr-only">Adocasts</span>
             <span>CMS</span>
-          </Link>
+          </div>
         </div>
         <div v-if="!$page.url.includes('/organizations')" class="flex flex-1 justify-end gap-4">
-          <Link href="/register" class="text-sm font-semibold leading-6 text-slate-900">
-            Register
-          </Link>
-          <Link href="/login" class="text-sm font-semibold leading-6 text-slate-900"> Login </Link>
+          <Link route="auth.login.show" class="text-sm font-semibold leading-6 text-slate-900"> Login </Link>
         </div>
       </nav>
     </header>

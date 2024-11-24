@@ -4,9 +4,11 @@
 import '../css/app.css'
 import { createApp, h } from 'vue'
 import type { DefineComponent } from 'vue'
-import { createInertiaApp, Link } from '@inertiajs/vue3'
+import { createInertiaApp } from '@inertiajs/vue3'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 import AppLayout from '~/layouts/AppLayout.vue'
+import { TuyauPlugin } from '@tuyau/inertia/vue'
+import { tuyau } from '~/lib/tuyau'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Adocasts CMS'
 
@@ -27,7 +29,7 @@ createInertiaApp({
   setup({ el, App, props, plugin }) {
     createApp({ render: () => h(App, props) })
       .use(plugin)
-      .component('Link', Link)
+      .use(TuyauPlugin, { client: tuyau })
       .mount(el)
   },
 })
