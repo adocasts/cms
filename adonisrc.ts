@@ -16,7 +16,7 @@ export default defineConfig({
     () => import('@adonisjs/mail/commands'),
     () => import('@adocasts.com/dto/commands'),
     () => import('@adocasts.com/actions/commands'),
-    () => import('@tuyau/core/commands')
+    () => import('@tuyau/core/commands'),
   ],
 
   /*
@@ -46,7 +46,7 @@ export default defineConfig({
     () => import('@adonisjs/auth/auth_provider'),
     () => import('@adonisjs/inertia/inertia_provider'),
     () => import('@adonisjs/mail/mail_provider'),
-    () => import('@tuyau/core/tuyau_provider')
+    () => import('@tuyau/core/tuyau_provider'),
   ],
 
   /*
@@ -61,7 +61,8 @@ export default defineConfig({
     () => import('#start/routes'),
     () => import('#start/kernel'),
     () => import('#start/macros/model_query_builder_macros'),
-    () => import('#start/globals')
+    () => import('#start/globals'),
+    () => import('#start/rules/enum'),
   ],
 
   /*

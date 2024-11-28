@@ -4,11 +4,13 @@ import type { SimplePaginatorDtoContract } from '@adocasts.com/dto/types'
 import { ref, watchEffect } from 'vue'
 import { Link } from '@tuyau/inertia/vue'
 import { StateDesc } from '#enums/states'
-import { PostTypeDesc } from '#enums/post_types'
+import PostTypes, { PostTypeDesc } from '#enums/post_types'
 import PaywallTypes from '#enums/paywall_types'
 import { DateTime } from 'luxon'
+import { Plus } from 'lucide-vue-next'
 
 const props = defineProps<{
+  postTypeId: PostTypes
   posts: SimplePaginatorDtoContract<PostDto>
 }>()
 
@@ -18,19 +20,32 @@ watchEffect(() => (posts.value = props.posts))
 </script>
 
 <template>
-  <Breadcrumb class="mb-3">
-    <BreadcrumbList>
-      <BreadcrumbItem class="hidden md:block">
-        <BreadcrumbLink as-child>
-          <Link route="dashboard"> Dashboard </Link>
-        </BreadcrumbLink>
-      </BreadcrumbItem>
-      <BreadcrumbSeparator class="hidden md:block" />
-      <BreadcrumbItem>
-        <BreadcrumbPage>Posts</BreadcrumbPage>
-      </BreadcrumbItem>
-    </BreadcrumbList>
-  </Breadcrumb>
+  <div class="flex justify-between items-center gap-3 mb-3">
+    <Breadcrumb>
+      <BreadcrumbList>
+        <BreadcrumbItem class="hidden md:block">
+          <BreadcrumbLink as-child>
+            <Link route="dashboard"> Dashboard </Link>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator class="hidden md:block" />
+        <BreadcrumbItem v-if="postTypeId" class="hidden md:block">
+          <BreadcrumbLink as-child>
+            <Link route="posts.index"> Posts </Link>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator v-if="postTypeId" class="hidden md:block" />
+        <BreadcrumbItem>
+          <BreadcrumbPage>{{ postTypeId ? PostTypeDesc[postTypeId] : 'Posts' }}</BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+
+    <Button>
+      <Plus class="w-4 h-4" />
+      New Post
+    </Button>
+  </div>
 
   <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xl">
     <Table>

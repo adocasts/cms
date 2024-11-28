@@ -1,5 +1,6 @@
 import GetPaginatedPosts from '#actions/posts/get_paginated_posts'
 import PostDto from '#dtos/post'
+import { postIndexValidator } from '#validators/post'
 import type { HttpContext } from '@adonisjs/core/http'
 import router from '@adonisjs/core/services/router'
 
@@ -8,14 +9,18 @@ export default class PostsController {
    * Display a list of resource
    */
   async index({ request, inertia }: HttpContext) {
+    const data = await request.validateUsing(postIndexValidator)
+
     const paginator = await GetPaginatedPosts.handle({
       page: request.input('page', 1),
+      data,
     })
 
     paginator.baseUrl(router.makeUrl('posts.index'))
     paginator.queryString(request.qs())
 
     return inertia.render('posts/index', {
+      postTypeId: data.postTypeId,
       posts: PostDto.fromPaginator(paginator, {
         start: paginator.firstPage,
         end: paginator.lastPage,

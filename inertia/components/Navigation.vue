@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
+import PostTypes from '#enums/post_types'
+import { Link } from '@inertiajs/vue3'
 import { Menu, Slash, Route, Plus, EllipsisVertical } from 'lucide-vue-next'
 
 const links = [
@@ -9,28 +10,28 @@ const links = [
   },
   {
     text: 'Posts',
-    href: '/posts'
+    href: '/posts',
   },
   {
     text: 'Collections',
-    href: '/collections'
+    href: '/collections',
   },
   {
     text: 'Taxonomies',
-    href: '/taxonomies'
+    href: '/taxonomies',
   },
   {
     text: 'Users',
-    href: '/users'
+    href: '/users',
   },
   {
     text: 'Roles',
-    href: '/roles'
+    href: '/roles',
   },
   {
     text: 'Plans',
-    href: '/plans'
-  }
+    href: '/plans',
+  },
 ]
 </script>
 
@@ -39,7 +40,13 @@ const links = [
     class="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6"
   >
     <Link href="/" class="flex items-center gap-2 text-lg font-semibold md:text-base">
-      <img class="logo-black w-auto h-6 md:h-7" src="../assets/logo-black.svg" alt="Adocasts" width="146px" height="28px" />
+      <img
+        class="logo-black w-auto h-6 md:h-7"
+        src="../assets/logo-black.svg"
+        alt="Adocasts"
+        width="146px"
+        height="28px"
+      />
       <span class="sr-only">Adocasts</span>
       <span>CMS</span>
     </Link>
@@ -52,22 +59,18 @@ const links = [
       <MenubarMenu>
         <MenubarTrigger>Posts</MenubarTrigger>
         <MenubarContent>
-          <MenubarItem :as="Link" href="/posts">
-            All Posts
-          </MenubarItem>
-          <MenubarItem :as="Link" href="/posts/lessons">
+          <MenubarItem :as="Link" href="/posts"> All Posts </MenubarItem>
+          <MenubarItem :as="Link" :href="`/posts?postTypeId=${PostTypes.LESSON}`">
             Lessons
           </MenubarItem>
-          <MenubarItem :as="Link" href="/posts/streams">
+          <MenubarItem :as="Link" :href="`/posts?postTypeId=${PostTypes.LIVESTREAM}`">
             Livestreams
           </MenubarItem>
-          <MenubarItem :as="Link" href="/posts/news">
-            News
-          </MenubarItem>
-          <MenubarItem :as="Link" href="/posts/blogs">
+          <MenubarItem :as="Link" :href="`/posts?postTypeId=${PostTypes.NEWS}`"> News </MenubarItem>
+          <MenubarItem :as="Link" :href="`/posts?postTypeId=${PostTypes.BLOG}`">
             Blogs
           </MenubarItem>
-          
+
           <MenubarSeparator />
 
           <MenubarItem :as="Link" href="/posts/create">
@@ -80,19 +83,11 @@ const links = [
       <MenubarMenu>
         <MenubarTrigger>Collections</MenubarTrigger>
         <MenubarContent>
-          <MenubarItem :as="Link" href="/collections">
-            All Collections
-          </MenubarItem>
-          <MenubarItem :as="Link" href="/collections/series">
-            Series
-          </MenubarItem>
-          <MenubarItem :as="Link" href="/collections/playlists">
-            Playlists
-          </MenubarItem>
-          <MenubarItem :as="Link" href="/collections/paths">
-            Learning Paths
-          </MenubarItem>
-          
+          <MenubarItem :as="Link" href="/collections"> All Collections </MenubarItem>
+          <MenubarItem :as="Link" href="/collections/series"> Series </MenubarItem>
+          <MenubarItem :as="Link" href="/collections/playlists"> Playlists </MenubarItem>
+          <MenubarItem :as="Link" href="/collections/paths"> Learning Paths </MenubarItem>
+
           <MenubarSeparator />
 
           <MenubarItem :as="Link" href="/collections/create">
@@ -105,16 +100,12 @@ const links = [
       <MenubarMenu>
         <MenubarTrigger>Taxonomies</MenubarTrigger>
         <MenubarContent>
-          <MenubarItem :as="Link" href="/taxonomies">
-            All Taxonomies
-          </MenubarItem>
-          <MenubarItem :as="Link" href="/taxonomies/contents">
-            Content Taxonomies
-          </MenubarItem>
+          <MenubarItem :as="Link" href="/taxonomies"> All Taxonomies </MenubarItem>
+          <MenubarItem :as="Link" href="/taxonomies/contents"> Content Taxonomies </MenubarItem>
           <MenubarItem :as="Link" href="/taxonomies/discussions">
             Discussion Taxonomies
           </MenubarItem>
-          
+
           <MenubarSeparator />
 
           <MenubarItem :as="Link" href="/taxonomies/create">
@@ -129,15 +120,9 @@ const links = [
           <EllipsisVertical class="w-4 h-4" aria-label="More Options" />
         </MenubarTrigger>
         <MenubarContent>
-          <MenubarItem :as="Link" href="/users">
-            Users
-          </MenubarItem>
-          <MenubarItem :as="Link" href="/roles">
-            Roles
-          </MenubarItem>
-          <MenubarItem :as="Link" href="/plans">
-            Plans
-          </MenubarItem>
+          <MenubarItem :as="Link" href="/users"> Users </MenubarItem>
+          <MenubarItem :as="Link" href="/roles"> Roles </MenubarItem>
+          <MenubarItem :as="Link" href="/plans"> Plans </MenubarItem>
         </MenubarContent>
       </MenubarMenu>
     </Menubar>
@@ -146,18 +131,25 @@ const links = [
     <SheetTrigger as-child>
       <Button variant="outline" size="icon" class="shrink-0 md:hidden">
         <Menu class="h-5 w-5" />
-        <span class="sr-only">Toggle navigation menu</span> 
+        <span class="sr-only">Toggle navigation menu</span>
       </Button>
     </SheetTrigger>
     <SheetContent side="left">
       <nav class="grid gap-6 text-lg font-medium">
         <Link href="/" class="flex items-center gap-2 text-lg font-semibold">
-          <img class="logo-black w-auto h-6 md:h-7" src="../assets/logo-black.svg" alt="Adocasts" width="146px" height="28px" />
+          <img
+            class="logo-black w-auto h-6 md:h-7"
+            src="../assets/logo-black.svg"
+            alt="Adocasts"
+            width="146px"
+            height="28px"
+          />
           <span class="sr-only">Adocasts</span>
           <span>CMS</span>
         </Link>
         <Link
-          v-for="link in links" :key="link.href"
+          v-for="link in links"
+          :key="link.href"
           :href="link.href"
           class="mobile-link"
           :class="{ active: $page.url.startsWith(link.href) }"
