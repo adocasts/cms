@@ -14,8 +14,12 @@ type LogoutPost = {
   response: MakeTuyauResponse<import('../app/controllers/auth/logout_controller.ts').default['handle'], false>
 }
 type PostsGetHead = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/post.ts')['postIndexValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['index'], true>
+}
+type PostsCreateGetHead = {
   request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['index'], false>
+  response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['create'], false>
 }
 type PostsIdGetHead = {
   request: unknown
@@ -51,6 +55,12 @@ export interface ApiDefinition {
     };
     '$get': PostsGetHead;
     '$head': PostsGetHead;
+    'create': {
+      '$url': {
+      };
+      '$get': PostsCreateGetHead;
+      '$head': PostsCreateGetHead;
+    };
     ':id': {
       '$url': {
       };
@@ -103,6 +113,13 @@ const routes = [
     path: '/posts',
     method: ["GET","HEAD"],
     types: {} as PostsGetHead,
+  },
+  {
+    params: [],
+    name: 'posts.create',
+    path: '/posts/create',
+    method: ["GET","HEAD"],
+    types: {} as PostsCreateGetHead,
   },
   {
     params: ["id"],

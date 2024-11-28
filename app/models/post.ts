@@ -260,6 +260,30 @@ export default class Post extends AppBaseModel {
   }
 
   @computed()
+  public get publishAtDateString() {
+    let dte = this.publishAt
+
+    if (dte && this.timezone) {
+      dte = DateTime.now()
+      dte = dte.set(this.publishAt!.toObject()).setZone(this.timezone)
+    }
+
+    return dte?.toFormat('yyyy-MM-dd')
+  }
+
+  @computed()
+  public get publishAtTimeString() {
+    let dte = this.publishAt
+
+    if (dte && this.timezone) {
+      dte = DateTime.now()
+      dte = dte.set(this.publishAt!.toObject()).setZone(this.timezone)
+    }
+
+    return dte?.toFormat('HH:mm')
+  }
+
+  @computed()
   get rootSortOrder() {
     if (!this.series || !this.series.length) {
       return undefined

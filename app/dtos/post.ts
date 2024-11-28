@@ -47,6 +47,8 @@ export default class PostDto extends BaseModelDto {
   declare timezone: string | null
   declare publishAtUser: string | null
   declare publishAt?: string | null
+  declare publishAtDate?: string | null
+  declare publishAtTime?: string | null
   declare createdAt: string
   declare updatedAt: string
 
@@ -120,6 +122,8 @@ export default class PostDto extends BaseModelDto {
     this.timezone = post.timezone
     this.publishAtUser = post.publishAtUser
     this.publishAt = post.publishAt?.toISO()
+    this.publishAtDate = post.publishAtDateString
+    this.publishAtTime = post.publishAtTimeString
     this.createdAt = post.createdAt.toISO()!
     this.updatedAt = post.updatedAt.toISO()!
 

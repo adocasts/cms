@@ -41,7 +41,7 @@ watchEffect(() => (posts.value = props.posts))
       </BreadcrumbList>
     </Breadcrumb>
 
-    <Button>
+    <Button :as="Link" route="posts.create">
       <Plus class="w-4 h-4" />
       New Post
     </Button>
