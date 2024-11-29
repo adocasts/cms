@@ -50,9 +50,18 @@ const files = ref(
 function onFilePondInit() {
   pond.value.setOptions({
     server: {
-      process: `/assets/${AssetTypes.THUMBNAIL}`,
-      fetch: '/assets?fetch=',
-      load: '/assets?load=',
+      process: {
+        url: `/assets/${AssetTypes.THUMBNAIL}`,
+        withCredentials: true,
+      },
+      fetch: {
+        url: '/assets?fetch=',
+        withCredentials: true,
+      },
+      load: {
+        url: '/assets?load=',
+        withCredentials: true,
+      },
     },
   })
 
