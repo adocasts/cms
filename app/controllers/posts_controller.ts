@@ -1,6 +1,8 @@
 import GetPaginatedPosts from '#actions/posts/get_paginated_posts'
 import GetTaxonomyTree from '#actions/taxonomies/get_taxonomy_tree'
 import PostDto from '#dtos/post'
+import TaxonomyDto from '#dtos/taxonomy'
+import Taxonomy from '#models/taxonomy'
 import { postIndexValidator } from '#validators/post'
 import type { HttpContext } from '@adonisjs/core/http'
 import router from '@adonisjs/core/services/router'
@@ -33,8 +35,10 @@ export default class PostsController {
    * Display form to create a new record
    */
   async create({ inertia }: HttpContext) {
+    const taxonomies = await Taxonomy.query().orderBy('name')
+
     return inertia.render('posts/form', {
-      taxonomyTree: async () => await GetTaxonomyTree.handle(),
+      taxonomies: TaxonomyDto.fromArray(taxonomies),
     })
   }
 

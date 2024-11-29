@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { TreeContract } from '#actions/utils/tree'
 import AssetDto from '#dtos/asset'
 import PostDto from '#dtos/post'
+import TaxonomyDto from '#dtos/taxonomy'
 import PaywallTypes from '#enums/paywall_types'
 import PostTypes, { PostTypeDesc } from '#enums/post_types'
 import States from '#enums/states'
@@ -14,7 +14,7 @@ import { enumKeys } from '~/lib/utils'
 const props = defineProps<{
   post?: PostDto
   thumbnail?: AssetDto
-  taxonomyTree: TreeContract[]
+  taxonomies: TaxonomyDto[]
 }>()
 
 const form = useForm({
@@ -44,7 +44,7 @@ const form = useForm({
     altText: props.thumbnail?.altText,
     credit: props.thumbnail?.credit,
   },
-  taxonomyIds: props.post?.taxonomies.map((row) => row.id) ?? '',
+  taxonomyIds: props.post?.taxonomies.map((row) => row.id) ?? [],
 })
 </script>
 
@@ -169,6 +169,10 @@ const form = useForm({
         :errors="form.errors.repositoryUrl"
         placeholder="Have code associated with this post? Provide the repository URL here"
       />
+
+      <FormInput type="group" label="Taxonomies" :error="form.errors.taxonomyIds">
+        <TaxonomyTags v-model="form.taxonomyIds" :taxonomies="taxonomies" />
+      </FormInput>
     </div>
 
     <div class="w-full lg:w-2/5 flex flex-col gap-4">
@@ -227,7 +231,12 @@ const form = useForm({
             placeholder="Enter the Bunny Stream Video Id"
           />
 
-          <FormInput v-if="form.videoTypeId" type="group" label="Video Length (in seconds)">
+          <FormInput
+            v-if="form.videoTypeId"
+            type="group"
+            label="Video Length (in seconds)"
+            :error="form.errors.videoSeconds"
+          >
             <NumberField v-model="form.videoSeconds">
               <NumberFieldContent>
                 <NumberFieldDecrement />
@@ -235,6 +244,17 @@ const form = useForm({
                 <NumberFieldIncrement />
               </NumberFieldContent>
             </NumberField>
+          </FormInput>
+
+          <FormInput
+            v-if="form.videoTypeId == VideoTypes.YOUTUBE"
+            type="group"
+            :error="form.errors.isLive"
+          >
+            <div class="flex items-center gap-2">
+              <Checkbox v-model:checked="form.isLive" />
+              <span>Is this a livestream?</span>
+            </div>
           </FormInput>
         </div>
       </div>
