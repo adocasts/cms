@@ -2,18 +2,17 @@
 import { TreeContract } from '#actions/utils/tree'
 import AssetDto from '#dtos/asset'
 import PostDto from '#dtos/post'
-import AssetTypes from '#enums/asset_types'
 import PaywallTypes from '#enums/paywall_types'
 import PostTypes, { PostTypeDesc } from '#enums/post_types'
 import States from '#enums/states'
 import { useForm } from '@inertiajs/vue3'
 import { Link } from '@tuyau/inertia/vue'
-import { ArrowDownCircle, ArrowUpDown, ChevronsUpDown } from 'lucide-vue-next'
+import { ChevronsUpDown } from 'lucide-vue-next'
 import { enumKeys } from '~/lib/utils'
 
 const props = defineProps<{
   post?: PostDto
-  assets?: AssetDto[]
+  thumbnail?: AssetDto
   taxonomyTree: TreeContract[]
 }>()
 
@@ -39,13 +38,11 @@ const form = useForm({
   postTypeId: props.post?.postTypeId ?? PostTypes.LESSON.toString(),
   stateId: props.post?.stateId ?? States.DRAFT,
   paywallTypeId: props.post?.paywallTypeId ?? PaywallTypes.NONE.toString(),
-  assets:
-    props.assets?.map((row) => ({
-      id: row.id,
-      assetTypeId: row.assetTypeId ?? AssetTypes.THUMBNAIL.toString(),
-      altText: row.altText ?? '',
-      credit: row.credit ?? '',
-    })) ?? [],
+  thumbnail: {
+    id: props.thumbnail?.id,
+    altText: props.thumbnail?.altText,
+    credit: props.thumbnail?.credit,
+  },
   taxonomyIds: props.post?.taxonomies.map((row) => row.id) ?? '',
 })
 </script>
@@ -139,7 +136,18 @@ const form = useForm({
       />
     </div>
 
-    <div class="w-full lg:w-2/5">
+    <div class="w-full lg:w-2/5 flex flex-col gap-4">
+      <div class="-mx-3 lg:-mx-6 mb-6">
+        <AssetUpload
+          name="thumbnail"
+          idle-label="Upload Thumbnail"
+          class="bg-white p-3 lg:p-6 rounded-lg border border-slate-200 shadow-xl"
+          v-model="form.thumbnail"
+          :asset="thumbnail"
+          :error="form.errors.thumbnail"
+        />
+      </div>
+
       <Collapsible>
         <CollapsibleTrigger as-child>
           <Button variant="outline" class="w-full flex items-center justify-between">

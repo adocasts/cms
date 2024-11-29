@@ -21,7 +21,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   APP_CONTACT_EMAIL: Env.schema.string(),
   APP_DOMAIN: Env.schema.string(),
   CACHE_VIEWS: Env.schema.boolean(),
-  DRIVE_DISK: Env.schema.enum(['local', 'gcs'] as const),
+  DRIVE_DISK: Env.schema.enum(['fs', 'gcs'] as const),
   NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
   ASSET_DOMAIN: Env.schema.string.optional({ format: 'url' }),
   LOG_LEVEL: Env.schema.string(),

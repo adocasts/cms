@@ -13,6 +13,18 @@ type LogoutPost = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/auth/logout_controller.ts').default['handle'], false>
 }
+type AssetsGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/assets_controller.ts').default['show'], false>
+}
+type AssetsIdPost = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/assets_controller.ts').default['store'], false>
+}
+type AssetsIdDelete = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/assets_controller.ts').default['destroy'], false>
+}
 type PostsGetHead = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/validators/post.ts')['postIndexValidator']>>
   response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['index'], true>
@@ -50,6 +62,28 @@ export interface ApiDefinition {
     };
     '$post': LogoutPost;
   };
+  'assets': {
+    '$url': {
+    };
+    '$get': AssetsGetHead;
+    '$head': AssetsGetHead;
+    '*': {
+      '$url': {
+      };
+      '$get': AssetsGetHead;
+      '$head': AssetsGetHead;
+    };
+    ':typeId?': {
+      '$url': {
+      };
+      '$post': AssetsIdPost;
+    };
+    ':id': {
+      '$url': {
+      };
+      '$delete': AssetsIdDelete;
+    };
+  };
   'posts': {
     '$url': {
     };
@@ -80,6 +114,13 @@ export interface ApiDefinition {
 }
 const routes = [
   {
+    params: ["*"],
+    name: 'drive.fs.serve',
+    path: '/uploads/*',
+    method: ["GET","HEAD"],
+    types: {} as unknown,
+  },
+  {
     params: [],
     name: 'auth.login.show',
     path: '/login',
@@ -106,6 +147,27 @@ const routes = [
     path: '/',
     method: ["GET","HEAD"],
     types: {} as unknown,
+  },
+  {
+    params: ["*"],
+    name: 'assets.show',
+    path: '/assets/*',
+    method: ["GET","HEAD"],
+    types: {} as AssetsGetHead,
+  },
+  {
+    params: ["typeId"],
+    name: 'assets.store',
+    path: '/assets/:typeId?',
+    method: ["POST"],
+    types: {} as AssetsIdPost,
+  },
+  {
+    params: ["id"],
+    name: 'assets.destroy',
+    path: '/assets/:id',
+    method: ["DELETE"],
+    types: {} as AssetsIdDelete,
   },
   {
     params: [],

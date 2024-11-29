@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+const AssetsController = () => import('#controllers/assets_controller')
 const PostsController = () => import('#controllers/posts_controller')
 
 const DashboardController = () => import('#controllers/dashboard_controller')
@@ -29,6 +30,12 @@ router.post('/logout', [LogoutController, 'handle']).as('auth.logout').use(middl
 router.group(() => {
 
   router.get('/', [DashboardController]).as('dashboard')
+
+  //* ASSETS
+  router.get('/assets', [AssetsController, 'show'])
+  router.get('/assets/*', [AssetsController, 'show']).as('assets.show')
+  router.post('/assets/:typeId?', [AssetsController, 'store']).as('assets.store')
+  router.delete('/assets/:id', [AssetsController, 'destroy']).as('assets.destroy')
 
   //* POSTS
   router.get('/posts', [PostsController, 'index']).as('posts.index')
