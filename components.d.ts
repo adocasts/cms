@@ -104,6 +104,11 @@ declare module 'vue' {
     MenubarSubTrigger: typeof import('./inertia/components/ui/menubar/MenubarSubTrigger.vue')['default']
     MenubarTrigger: typeof import('./inertia/components/ui/menubar/MenubarTrigger.vue')['default']
     Navigation: typeof import('./inertia/components/Navigation.vue')['default']
+    NumberField: typeof import('./inertia/components/ui/number-field/NumberField.vue')['default']
+    NumberFieldContent: typeof import('./inertia/components/ui/number-field/NumberFieldContent.vue')['default']
+    NumberFieldDecrement: typeof import('./inertia/components/ui/number-field/NumberFieldDecrement.vue')['default']
+    NumberFieldIncrement: typeof import('./inertia/components/ui/number-field/NumberFieldIncrement.vue')['default']
+    NumberFieldInput: typeof import('./inertia/components/ui/number-field/NumberFieldInput.vue')['default']
     PaginationEllipsis: typeof import('./inertia/components/ui/pagination/PaginationEllipsis.vue')['default']
     PaginationFirst: typeof import('./inertia/components/ui/pagination/PaginationFirst.vue')['default']
     PaginationLast: typeof import('./inertia/components/ui/pagination/PaginationLast.vue')['default']
@@ -149,5 +154,6 @@ declare module 'vue' {
     TooltipContent: typeof import('./inertia/components/ui/tooltip/TooltipContent.vue')['default']
     TooltipProvider: typeof import('./inertia/components/ui/tooltip/TooltipProvider.vue')['default']
     TooltipTrigger: typeof import('./inertia/components/ui/tooltip/TooltipTrigger.vue')['default']
+    VideoPreview: typeof import('./inertia/components/VideoPreview.vue')['default']
   }
 }

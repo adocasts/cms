@@ -5,6 +5,7 @@ import PostDto from '#dtos/post'
 import PaywallTypes from '#enums/paywall_types'
 import PostTypes, { PostTypeDesc } from '#enums/post_types'
 import States from '#enums/states'
+import VideoTypes, { VideoTypeDesc } from '#enums/video_types'
 import { useForm } from '@inertiajs/vue3'
 import { Link } from '@tuyau/inertia/vue'
 import { ChevronsUpDown } from 'lucide-vue-next'
@@ -31,7 +32,7 @@ const form = useForm({
   videoTypeId: props.post?.videoTypeId ?? '',
   videoUrl: props.post?.videoUrl ?? '',
   videoBunnyId: props.post?.videoBunnyId ?? '',
-  videoSeconds: props.post?.videoSeconds ?? '',
+  videoSeconds: props.post?.videoSeconds ?? 0,
   timezone: props.post?.timezone ?? '',
   publishAtDate: props.post?.publishAtDate ?? '',
   publishAtTime: props.post?.publishAtTime ?? '',
@@ -89,6 +90,40 @@ const form = useForm({
         placeholder="Will auto generate from title if left empty"
       />
 
+      <Collapsible>
+        <CollapsibleTrigger as-child>
+          <Button variant="outline" class="w-full flex items-center justify-between">
+            Search Engine Optimization (SEO)
+            <ChevronsUpDown class="w-4 h-4" />
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <div class="flex flex-col gap-3 py-3">
+            <FormInput
+              label="Page Title"
+              v-model="form.pageTitle"
+              :errors="form.errors.pageTitle"
+              placeholder="Enter a concise SEO friendly page title, uses post title when left empty"
+            />
+
+            <FormInput
+              label="Meta Description"
+              v-model="form.metaDescription"
+              :errors="form.errors.metaDescription"
+              placeholder="Enter a concise SEO friendly meta description, uses post description when left empty"
+            />
+
+            <FormInput
+              label="Canonical URL"
+              type="url"
+              v-model="form.canonical"
+              :errors="form.errors.canonical"
+              placeholder="Cross-posting from another site? Link the original here"
+            />
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+
       <FormInput
         type="group"
         label="Publish At"
@@ -137,7 +172,7 @@ const form = useForm({
     </div>
 
     <div class="w-full lg:w-2/5 flex flex-col gap-4">
-      <div class="-mx-3 lg:-mx-6 mb-6">
+      <div class="-mx-3 lg:-mx-6">
         <AssetUpload
           name="thumbnail"
           idle-label="Upload Thumbnail"
@@ -148,39 +183,61 @@ const form = useForm({
         />
       </div>
 
-      <Collapsible>
-        <CollapsibleTrigger as-child>
-          <Button variant="outline" class="w-full flex items-center justify-between">
-            Search Engine Optimization (SEO)
-            <ChevronsUpDown class="w-4 h-4" />
-          </Button>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <div class="flex flex-col gap-3 py-3">
-            <FormInput
-              label="Page Title"
-              v-model="form.pageTitle"
-              :errors="form.errors.pageTitle"
-              placeholder="Enter a concise SEO friendly page title, uses post title when left empty"
-            />
+      <div class="-mx-3 lg:-mx-6">
+        <div
+          class="bg-white p-3 lg:p-6 rounded-lg border border-slate-200 shadow-xl flex flex-col gap-3"
+        >
+          <VideoPreview
+            v-model:duration="form.videoSeconds"
+            :video-type-id="form.videoTypeId"
+            :bunny-id="form.videoBunnyId"
+            :video-url="form.videoUrl"
+          />
 
-            <FormInput
-              label="Meta Description"
-              v-model="form.metaDescription"
-              :errors="form.errors.metaDescription"
-              placeholder="Enter a concise SEO friendly meta description, uses post description when left empty"
-            />
+          <FormInput
+            type="select"
+            label="Video Source"
+            v-model="form.videoTypeId"
+            placeholder="Have a video? Where is it stored?"
+            :errors="form.errors.videoTypeId"
+          >
+            <SelectItem
+              v-for="name in enumKeys(VideoTypes)"
+              :key="name"
+              :value="VideoTypes[name].toString()"
+            >
+              {{ VideoTypeDesc[VideoTypes[name]] }}
+            </SelectItem>
+          </FormInput>
 
-            <FormInput
-              label="Canonical URL"
-              type="url"
-              v-model="form.canonical"
-              :errors="form.errors.canonical"
-              placeholder="Cross-posting from another site? Link the original here"
-            />
-          </div>
-        </CollapsibleContent>
-      </Collapsible>
+          <FormInput
+            v-if="form.videoTypeId == VideoTypes.YOUTUBE"
+            label="YouTube Video URL"
+            type="url"
+            v-model="form.videoUrl"
+            :errors="form.errors.videoUrl"
+            placeholder="Enter the YouTube Video URL"
+          />
+
+          <FormInput
+            v-else-if="form.videoTypeId == VideoTypes.BUNNY"
+            label="Bunny Video Id"
+            v-model="form.videoBunnyId"
+            :errors="form.errors.videoBunnyId"
+            placeholder="Enter the Bunny Stream Video Id"
+          />
+
+          <FormInput v-if="form.videoTypeId" type="group" label="Video Length (in seconds)">
+            <NumberField v-model="form.videoSeconds">
+              <NumberFieldContent>
+                <NumberFieldDecrement />
+                <NumberFieldInput />
+                <NumberFieldIncrement />
+              </NumberFieldContent>
+            </NumberField>
+          </FormInput>
+        </div>
+      </div>
     </div>
   </div>
 </template>

@@ -3,5 +3,9 @@ enum VideoTypes {
   BUNNY = 2,
 }
 
-export default VideoTypes
+export const VideoTypeDesc: Record<VideoTypes, string> = {
+  [VideoTypes.YOUTUBE]: 'YouTube',
+  [VideoTypes.BUNNY]: 'Bunny Stream',
+}
 
+export default VideoTypes
