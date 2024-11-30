@@ -173,6 +173,10 @@ const form = useForm({
       <FormInput type="group" label="Taxonomies" :error="form.errors.taxonomyIds">
         <TaxonomyTags v-model="form.taxonomyIds" :taxonomies="taxonomies" />
       </FormInput>
+
+      <FormInput type="group" label="Body" :error="form.errors.body">
+        <TipTapEditor v-model="form.body" />
+      </FormInput>
     </div>
 
     <div class="w-full lg:w-2/5 flex flex-col gap-4">

@@ -159,6 +159,8 @@ declare module 'vue' {
     TagsInputItemDelete: typeof import('./inertia/components/ui/tags-input/TagsInputItemDelete.vue')['default']
     TagsInputItemText: typeof import('./inertia/components/ui/tags-input/TagsInputItemText.vue')['default']
     TaxonomyTags: typeof import('./inertia/components/TaxonomyTags.vue')['default']
+    TipTapCommandPallete: typeof import('./inertia/components/TipTapCommandPallete.vue')['default']
+    TipTapEditor: typeof import('./inertia/components/TipTapEditor.vue')['default']
     ToastManager: typeof import('./inertia/components/ToastManager.vue')['default']
     Tooltip: typeof import('./inertia/components/ui/tooltip/Tooltip.vue')['default']
     TooltipContent: typeof import('./inertia/components/ui/tooltip/TooltipContent.vue')['default']

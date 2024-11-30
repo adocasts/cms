@@ -9,6 +9,8 @@ import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 import AppLayout from '~/layouts/AppLayout.vue'
 import { TuyauPlugin } from '@tuyau/inertia/vue'
 import { tuyau } from '~/lib/tuyau'
+import { plugin as VueTippy } from 'vue-tippy'
+import 'tippy.js/dist/tippy.css'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Adocasts CMS'
 
@@ -30,6 +32,11 @@ createInertiaApp({
     createApp({ render: () => h(App, props) })
       .use(plugin)
       .use(TuyauPlugin, { client: tuyau })
+      .use(VueTippy, {
+        directive: 'tippy',
+        component: 'tippy',
+        componentSingleton: 'tippy-singleton',
+      })
       .mount(el)
   },
 })

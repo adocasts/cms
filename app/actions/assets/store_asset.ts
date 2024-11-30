@@ -86,6 +86,13 @@ export default class StoreAsset {
           size: '5mb',
           extnames: ['jpg', 'jpeg', 'png', 'webp'],
         }
+      case AssetTypes.CONTENT:
+        return {
+          id: AssetTypes.CONTENT,
+          fieldName: 'content',
+          size: '5mb',
+          extnames: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+        }
       default:
         return {
           id: AssetTypes.THUMBNAIL,
