@@ -182,9 +182,25 @@ export const commandList = [
     },
   },
   {
-    name: 'html',
-    title: 'HTML',
+    name: 'code',
+    title: 'Code Block',
     icon: '<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256"><path fill="currentColor" d="M71.68 97.22L34.74 128l36.94 30.78a12 12 0 1 1-15.36 18.44l-48-40a12 12 0 0 1 0-18.44l48-40a12 12 0 0 1 15.36 18.44m176 21.56l-48-40a12 12 0 1 0-15.36 18.44L221.26 128l-36.94 30.78a12 12 0 1 0 15.36 18.44l48-40a12 12 0 0 0 0-18.44M164.1 28.72a12 12 0 0 0-15.38 7.18l-64 176a12 12 0 0 0 7.18 15.37a11.79 11.79 0 0 0 4.1.73a12 12 0 0 0 11.28-7.9l64-176a12 12 0 0 0-7.18-15.38"/></svg>',
+    inline: false,
+    basic: false,
+    command: ({ editor, range }: CommandParams) => {
+      const language = window.prompt('Enter language code, ex: "ts"')
+
+      if (language === null) return
+
+      if (range) editor.chain().focus().deleteRange(range).run()
+
+      editor.commands.setCodeBlock({ language })
+    },
+  },
+  {
+    name: 'html',
+    title: 'Embeded HTML',
+    icon: '<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-code"><path d="M10 12.5 8 15l2 2.5"/><path d="m14 12.5 2 2.5-2 2.5"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/></svg>',
     inline: false,
     basic: false,
     command: ({ editor, range }: CommandParams) => {
