@@ -14,7 +14,6 @@ import { Typography } from '@tiptap/extension-typography'
 import AssetTypes from '#enums/asset_types'
 import CodeBlockShiki from 'tiptap-extension-code-block-shiki'
 import UploadImage from '~/lib/tiptap/upload_image'
-import 'tiptap-extension-upload-image/dist/upload-image.min.css'
 import axios from 'axios'
 
 const props = defineProps<{

@@ -2,13 +2,16 @@
 import AssetDto from '#dtos/asset'
 import PostDto from '#dtos/post'
 import TaxonomyDto from '#dtos/taxonomy'
-import PaywallTypes from '#enums/paywall_types'
+import PaywallTypes, { PaywallTypeDesc } from '#enums/paywall_types'
 import PostTypes, { PostTypeDesc } from '#enums/post_types'
 import States from '#enums/states'
 import VideoTypes, { VideoTypeDesc } from '#enums/video_types'
 import { useForm } from '@inertiajs/vue3'
 import { Link } from '@tuyau/inertia/vue'
-import { ChevronsUpDown } from 'lucide-vue-next'
+import { BookCheck, BookDashed, BookKey, BookLock, ChevronsUpDown } from 'lucide-vue-next'
+import { DateTime } from 'luxon'
+import { computed } from 'vue'
+import { tuyau } from '~/lib/tuyau'
 import { enumKeys } from '~/lib/utils'
 
 const props = defineProps<{
@@ -46,6 +49,24 @@ const form = useForm({
   },
   taxonomyIds: props.post?.taxonomies.map((row) => row.id) ?? [],
 })
+
+const publishAt = computed(() => {
+  const iso = [form.publishAtDate, form.publishAtTime].filter(Boolean).join('T')
+  return iso && DateTime.fromISO(iso)
+})
+
+function onSubmit(stateId: States = form.stateId) {
+  const action = form.transform((data) => {
+    data.stateId = stateId
+    return data
+  })
+
+  if (props.post?.id) {
+    return action.put(tuyau.$url('posts.update', { params: { id: props.post.id } }))
+  }
+
+  action.post(tuyau.$url('posts.create'))
+}
 </script>
 
 <template>
@@ -69,6 +90,32 @@ const form = useForm({
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
+
+    <div class="flex justify-end items-center gap-1.5">
+      <Button
+        v-if="!post?.id || post.stateId === States.DRAFT"
+        @click="onSubmit(States.DRAFT)"
+        variant="secondary"
+      >
+        <BookDashed class="w-4 h-4" />
+        Draft
+      </Button>
+      <Button @click="onSubmit(States.UNLISTED)" variant="secondary">
+        <BookKey class="w-4 h-4" />
+        Unlisted
+      </Button>
+      <Button @click="onSubmit(States.PRIVATE)" variant="secondary">
+        <BookLock class="w-4 h-4" />
+        Private
+      </Button>
+      <Button @click="onSubmit(States.PUBLIC)">
+        <BookCheck class="w-4 h-4" />
+        <span v-if="publishAt && publishAt > DateTime.now()">
+          Schedule Publish for {{ publishAt.toFormat('MMM dd, yy HH:mm') }}
+        </span>
+        <span v-else> Publish Now </span>
+      </Button>
+    </div>
   </div>
 
   <div class="flex gap-10">
@@ -158,7 +205,7 @@ const form = useForm({
           :key="name"
           :value="PaywallTypes[name].toString()"
         >
-          {{ name }}
+          {{ PaywallTypeDesc[PaywallTypes[name]] }}
         </SelectItem>
       </FormInput>
 

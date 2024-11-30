@@ -4,5 +4,10 @@ enum PaywallTypes {
   FULL = 3, // always paywalled
 }
 
-export default PaywallTypes
+export const PaywallTypeDesc = {
+  [PaywallTypes.NONE]: 'None - Free to all',
+  [PaywallTypes.DELAYED_RELEASE]: 'Delayed Release - Plus Exclusive for 2 weeks',
+  [PaywallTypes.FULL]: 'Full - Plus Exclusive',
+}
 
+export default PaywallTypes
