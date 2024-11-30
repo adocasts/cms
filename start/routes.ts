@@ -34,7 +34,7 @@ router.group(() => {
   //* ASSETS
   router.get('/assets', [AssetsController, 'show'])
   router.get('/assets/*', [AssetsController, 'show']).as('assets.show')
-  router.post('/assets/:typeId?', [AssetsController, 'store']).as('assets.store')
+  router.post('/assets/:typeId?', [AssetsController, 'store']).as('assets.store').where('typeId', router.matchers.number())
   router.delete('/assets/:id', [AssetsController, 'destroy']).as('assets.destroy')
 
   //* POSTS

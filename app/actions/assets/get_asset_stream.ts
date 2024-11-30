@@ -8,11 +8,16 @@ export default class GetAssetStream {
   constructor(protected ctx: HttpContext) {}
 
   async handle() {
-    let key = this.ctx.params['*']?.join('/')
+    let key = this.ctx.params['*'] && this.ctx.params['*'].join('/')
 
-    if (!Array.isArray(key) || !key.length) {
+    if (!key && !key.length) {
       key = this.ctx.request.qs().load
     }
+
+    console.log({
+      key,
+      params: this.ctx.params['*'],
+    })
 
     if (!key) {
       throw new BadRequestException('Asset key was not found')

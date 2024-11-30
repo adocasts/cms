@@ -97,6 +97,7 @@
     "@vinejs/vine": "^2.1.0",
     "@vueuse/core": "^11.2.0",
     "argon2": "^0.41.1",
+    "axios": "^1.7.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dinero.js": "^1.9.1",

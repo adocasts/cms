@@ -9,12 +9,13 @@ import Blockquote from '@tiptap/extension-blockquote'
 import Dropcursor from '@tiptap/extension-dropcursor'
 import HardBreak from '@tiptap/extension-hard-break'
 import YouTube from '@tiptap/extension-youtube'
-import { createImageExtension } from '~/lib/tiptap/upload_image'
 import Image from '@tiptap/extension-image'
 import { Typography } from '@tiptap/extension-typography'
-import { tuyau } from '~/lib/tuyau'
 import AssetTypes from '#enums/asset_types'
 import CodeBlockShiki from 'tiptap-extension-code-block-shiki'
+import UploadImage from '~/lib/tiptap/upload_image'
+import 'tiptap-extension-upload-image/dist/upload-image.min.css'
+import axios from 'axios'
 
 const props = defineProps<{
   modelValue: string
@@ -101,7 +102,9 @@ const editor = useEditor({
     Commands.configure({
       suggestion,
     }),
-    createImageExtension(uploadImage),
+    UploadImage.configure({
+      uploadFn: uploadImage,
+    }),
   ],
   onUpdate: (event) => {
     emit('update:modelValue', event.editor.getHTML())
@@ -112,11 +115,16 @@ const editor = useEditor({
 })
 
 async function uploadImage(file: File) {
-  const resp = await tuyau
-    .$route('assets.store', { typeId: AssetTypes.CONTENT })
-    .$post({ content: file })
+  const formData = new FormData()
+  formData.append('content', file)
 
-  return resp.data.filename
+  const { data } = await axios.post(`/assets/${AssetTypes.CONTENT}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+
+  return `/assets/${data.filename}`
 }
 </script>
 

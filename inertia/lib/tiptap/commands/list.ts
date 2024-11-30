@@ -148,8 +148,13 @@ export const commandList = [
 
       if (url === null) return
 
+      const alt = window.prompt('Enter alt text for this image')
+
       let callList = editor.chain().focus()
-      return callList.deleteRange(range).setImage({ src: url, alt: 'TODO' }).run()
+      return callList
+        .deleteRange(range)
+        .setImage({ src: url, alt: alt ?? '' })
+        .run()
     },
   },
   {
