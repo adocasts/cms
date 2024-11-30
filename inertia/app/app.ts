@@ -11,6 +11,7 @@ import { TuyauPlugin } from '@tuyau/inertia/vue'
 import { tuyau } from '~/lib/tuyau'
 import { plugin as VueTippy } from 'vue-tippy'
 import 'tippy.js/dist/tippy.css'
+import 'tippy.js/themes/translucent.css'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Adocasts CMS'
 
@@ -35,7 +36,6 @@ createInertiaApp({
       .use(VueTippy, {
         directive: 'tippy',
         component: 'tippy',
-        componentSingleton: 'tippy-singleton',
       })
       .mount(el)
   },

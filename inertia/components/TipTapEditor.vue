@@ -25,10 +25,10 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['update:modelValue', 'blur'])
-const tippy = ref()
+const { suggestion } = getSuggestions()
 
-const { commandState, suggestion } = getSuggestions(tippy)
-console.log({ commandState, suggestion })
+const bubble = ref()
+
 const editor = useEditor({
   content: props.modelValue,
   editorProps: {
@@ -53,6 +53,9 @@ const editor = useEditor({
         rel: 'nofollow noopener noreferrer',
       },
     }),
+    // BubbleMenu.configure({
+    //   element: bubble.value,
+    // }),
     Blockquote.configure({}),
     Dropcursor.configure({}),
     HardBreak.configure({}),
@@ -82,33 +85,34 @@ const editor = useEditor({
           content.append(code)
           container.append(content)
 
-          const selector = document.createElement('select') as HTMLSelectElement
-          selector.classList.add(
-            'absolute',
-            'top-1',
-            'right-1',
-            'rounded',
-            'text-xs',
-            'text-gray-200',
-            'bg-gray-900',
-            'border-gray-800',
-            'px-2',
-            'py-1'
-          )
-          selector.contentEditable = 'false'
-          selector.addEventListener('change', (e) => {
-            const view = props.editor.view
-            const language = (e.target as HTMLInputElement).value
-            view.dispatch(view.state.tr.setNodeMarkup(props.getPos(), undefined, { language }))
-          })
-          languages.map((lang) => {
-            const option = document.createElement('option')
-            option.value = lang.code
-            option.textContent = lang.name
-            option.selected = lang.code === props.node.attrs.language
-            selector.append(option)
-          })
-          container.append(selector)
+          // const selector = document.createElement('select') as HTMLSelectElement
+          // selector.classList.add(
+          //   'absolute',
+          //   'top-1',
+          //   'right-1',
+          //   'rounded',
+          //   'text-xs',
+          //   'text-slate-200',
+          //   'bg-slate-600',
+          //   'border',
+          //   'border-slate-700',
+          //   'px-2',
+          //   'py-1'
+          // )
+          // selector.setAttribute('contenteditable', 'false')
+          // selector.addEventListener('change', (e) => {
+          //   const view = props.editor.view
+          //   const language = (e.target as HTMLInputElement).value
+          //   view.dispatch(view.state.tr.setNodeMarkup(props.getPos(), undefined, { language }))
+          // })
+          // languages.map((lang) => {
+          //   const option = document.createElement('option')
+          //   option.value = lang.code
+          //   option.textContent = lang.name
+          //   option.selected = lang.code === props.node.attrs.language
+          //   selector.append(option)
+          // })
+          // container.append(selector)
 
           return {
             dom: container,
@@ -137,37 +141,70 @@ async function uploadImage(file: File) {
 
   return resp.data.filename
 }
+
+function onLinkToggle() {
+  if (editor.value?.isActive('link')) {
+    return editor.value.commands.unsetLink()
+  }
+
+  const href = prompt('Enter the link href below')
+
+  if (!href) return
+
+  editor.value?.commands.setLink({ href, target: '_blank', rel: 'nofollow noopener noreferrer' })
+}
 </script>
 
 <template>
   <div v-if="editor" class="relative border border-slate-200 rounded-md">
     <editor-content :editor="editor" />
   </div>
-  <tippy-singleton ref="tippy" trigger="manual" arrow>
-    <template #content>
-      <div
-        class="items flex flex-col bg-slate-200/90 backdrop-blur-lg border border-slate-300/50 shadow-xl rounded-md p-2"
+  <!-- <div ref="bubble" class="bubble-menu bg-slate-100 text-slate-700 text-sm py-1 px-2 rounded-md">
+    <div v-if="editor" class="flex items-center space-x-2">
+      <button
+        type="button"
+        @click="editor.commands.toggleHeading({ level: 3 })"
+        :class="{ 'text-white': editor.isActive('h3') }"
       >
-        <template v-for="(item, index) in commandState.items" :key="item.name">
-          <button
-            class="block py-1 item flex items-center gap-1.5 w-full pl-1 py-1 pr-12 rounded-lg text-left"
-            :class="{ 'bg-slate-300': commandState.selectedIndex === index }"
-            @click="commandState.onClick(index)"
-          >
-            <template x-if="item.icon">
-              <div
-                class="w-6 h-6 flex items-center justify-center bg-slate-300 rounded-md"
-                :class="{ 'bg-slate-400': commandState.selectedIndex === index }"
-                v-html="item.icon"
-              ></div>
-            </template>
-            <div class="title text-left" x-text="item.title"></div>
-          </button>
-        </template>
-        <div v-show="!commandState.items.length" class="text-slate-600">No results found</div>
-      </div>
-    </template>
-  </tippy-singleton>
+        H3
+      </button>
+      <button
+        type="button"
+        @click="editor.commands.toggleHeading({ level: 4 })"
+        :class="{ 'text-white': editor.isActive('h4') }"
+      >
+        H4
+      </button>
+      <button
+        type="button"
+        @click="editor.commands.toggleBold()"
+        :class="{ 'text-white': editor.isActive('bold') }"
+      >
+        Bold
+      </button>
+      <button
+        type="button"
+        @click="editor.commands.toggleItalic()"
+        :class="{ 'text-white': editor.isActive('italic') }"
+      >
+        Italic
+      </button>
+      <button
+        type="button"
+        @click="editor.commands.toggleStrike()"
+        :class="{ 'text-white': editor.isActive('strike') }"
+      >
+        Strike
+      </button>
+      <button
+        type="button"
+        @click="onLinkToggle"
+        :class="{ 'text-white': editor.isActive('link') }"
+      >
+        Link
+      </button>
+    </div>
+  </div> -->
 </template>
 
 <style scoped>

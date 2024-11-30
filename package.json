@@ -75,6 +75,7 @@
     "@adonisjs/vite": "^3.0.0",
     "@google-cloud/storage": "^7.14.0",
     "@inertiajs/vue3": "^1.2.0",
+    "@tailwindcss/typography": "^0.5.15",
     "@tiptap/extension-blockquote": "^2.10.3",
     "@tiptap/extension-bubble-menu": "^2.10.3",
     "@tiptap/extension-character-count": "^2.10.3",
