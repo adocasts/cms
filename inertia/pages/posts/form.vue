@@ -36,7 +36,7 @@ const form = useForm({
   videoUrl: props.post?.videoUrl ?? '',
   videoBunnyId: props.post?.videoBunnyId ?? '',
   videoSeconds: props.post?.videoSeconds ?? 0,
-  timezone: props.post?.timezone ?? '',
+  timezone: props.post?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
   publishAtDate: props.post?.publishAtDate ?? '',
   publishAtTime: props.post?.publishAtTime ?? '',
   postTypeId: props.post?.postTypeId ?? PostTypes.LESSON.toString(),
@@ -65,7 +65,7 @@ function onSubmit(stateId: States = form.stateId) {
     return action.put(tuyau.$url('posts.update', { params: { id: props.post.id } }))
   }
 
-  action.post(tuyau.$url('posts.create'))
+  action.post(tuyau.$url('posts.store'))
 }
 </script>
 

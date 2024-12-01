@@ -10,7 +10,7 @@ export default class GetAssetStream {
   async handle() {
     let key = this.ctx.params['*'] && this.ctx.params['*'].join('/')
 
-    if (!key && !key.length) {
+    if (!key && !key?.length) {
       key = this.ctx.request.qs().load
     }
 

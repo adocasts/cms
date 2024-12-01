@@ -1,9 +1,10 @@
 import GetPaginatedPosts from '#actions/posts/get_paginated_posts'
+import StorePost from '#actions/posts/store_post'
 import GetTaxonomyTree from '#actions/taxonomies/get_taxonomy_tree'
 import PostDto from '#dtos/post'
 import TaxonomyDto from '#dtos/taxonomy'
 import Taxonomy from '#models/taxonomy'
-import { postIndexValidator } from '#validators/post'
+import { postIndexValidator, postValidator } from '#validators/post'
 import type { HttpContext } from '@adonisjs/core/http'
 import router from '@adonisjs/core/services/router'
 
@@ -45,7 +46,16 @@ export default class PostsController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request }: HttpContext) {}
+  async store({ request, response, auth }: HttpContext) {
+    const data = await request.validateUsing(postValidator)
+
+    await StorePost.handle({
+      author: auth.user!,
+      data,
+    })
+
+    return response.redirect().toRoute('posts.index')
+  }
 
   /**
    * Show individual record

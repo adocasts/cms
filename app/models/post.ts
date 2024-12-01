@@ -167,12 +167,14 @@ export default class Post extends AppBaseModel {
   @manyToMany(() => User, {
     pivotTable: 'author_posts',
     pivotColumns: ['author_type_id'],
+    pivotTimestamps: true,
   })
   declare authors: ManyToMany<typeof User>
 
   @manyToMany(() => Taxonomy, {
     pivotTable: 'post_taxonomies',
     pivotColumns: ['sort_order'],
+    pivotTimestamps: true,
   })
   declare taxonomies: ManyToMany<typeof Taxonomy>
 
@@ -181,6 +183,7 @@ export default class Post extends AppBaseModel {
       query.where('collectionTypeId', CollectionTypes.SERIES)
     },
     pivotColumns: ['sort_order', 'root_collection_id', 'root_sort_order'],
+    pivotTimestamps: true,
   })
   declare series: ManyToMany<typeof Collection>
 
@@ -190,6 +193,7 @@ export default class Post extends AppBaseModel {
     },
     pivotRelatedForeignKey: 'root_collection_id',
     pivotColumns: ['sort_order', 'root_collection_id', 'root_sort_order'],
+    pivotTimestamps: true,
   })
   declare rootSeries: ManyToMany<typeof Collection>
 
@@ -199,6 +203,7 @@ export default class Post extends AppBaseModel {
     },
     pivotRelatedForeignKey: 'root_collection_id',
     pivotColumns: ['sort_order', 'root_collection_id', 'root_sort_order'],
+    pivotTimestamps: true,
   })
   declare rootPaths: ManyToMany<typeof Collection>
 
@@ -207,6 +212,7 @@ export default class Post extends AppBaseModel {
       query.where('collectionTypeId', CollectionTypes.COURSE)
     },
     pivotColumns: ['sort_order', 'root_collection_id', 'root_sort_order'],
+    pivotTimestamps: true,
   })
   declare courses: ManyToMany<typeof Collection>
 
@@ -215,6 +221,7 @@ export default class Post extends AppBaseModel {
       query.where('collectionTypeId', CollectionTypes.PLAYLIST)
     },
     pivotColumns: ['sort_order', 'root_collection_id', 'root_sort_order'],
+    pivotTimestamps: true,
   })
   declare playlists: ManyToMany<typeof Collection>
 
@@ -223,11 +230,13 @@ export default class Post extends AppBaseModel {
       query.where('collectionTypeId', CollectionTypes.PATH)
     },
     pivotColumns: ['sort_order', 'root_collection_id', 'root_sort_order'],
+    pivotTimestamps: true,
   })
   declare paths: ManyToMany<typeof Collection>
 
   @manyToMany(() => Collection, {
     pivotColumns: ['sort_order', 'root_collection_id', 'root_sort_order'],
+    pivotTimestamps: true,
   })
   declare collections: ManyToMany<typeof Collection>
 

@@ -1,6 +1,6 @@
 import PostTypes from '#enums/post_types'
 import vine from '@vinejs/vine'
-import { exists, unique } from './helpers/db.js'
+import { exists } from './helpers/db.js'
 import VideoTypes from '#enums/video_types'
 import States from '#enums/states'
 import PaywallTypes from '#enums/paywall_types'
@@ -26,7 +26,8 @@ export const postValidator = vine.compile(
           .whereNot('id', field.data.id)
           .first()
         return !!result
-      }),
+      })
+      .optional(),
     pageTitle: vine.string().trim().maxLength(100).optional(),
     description: vine.string().trim().maxLength(255).optional(),
     metaDescription: vine.string().trim().maxLength(255).optional(),
@@ -38,21 +39,18 @@ export const postValidator = vine.compile(
     videoTypeId: vine.number().enum(VideoTypes).optional(),
     videoUrl: vine.string().trim().maxLength(255).url().optional().nullable(),
     videoBunnyId: vine.string().trim().maxLength(500).optional().nullable(),
-    videoSeconds: vine.number().optional().nullable(),
+    videoSeconds: vine.number().optional(),
     timezone: vine.string().trim().optional(),
-    publishAtDate: vine.date({ formats: ['yyyy-MM-dd'] }).optional(),
+    publishAtDate: vine.date().optional(),
     publishAtTime: vine.date({ formats: ['HH:mm'] }).optional(),
     postTypeId: vine.number().enum(PostTypes).optional(),
     stateId: vine.number().enum(States).optional(),
     paywallTypeId: vine.number().enum(PaywallTypes).optional(),
-    thumbnail: vine
-      .object({
-        id: vine.number().exists(exists('assets', 'id')),
-        altText: vine.string().maxLength(100).optional(),
-        credit: vine.string().maxLength(100).optional().nullable(),
-      })
-      .optional()
-      .nullable(),
+    thumbnail: vine.object({
+      id: vine.number().exists(exists('assets', 'id')).optional(),
+      altText: vine.string().maxLength(100).optional(),
+      credit: vine.string().maxLength(100).optional(),
+    }),
     taxonomyIds: vine.array(vine.number().exists(exists('taxonomies', 'id'))).optional(),
   })
 )
