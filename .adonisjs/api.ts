@@ -33,13 +33,13 @@ type PostsCreateGetHead = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['create'], false>
 }
-type PostsIdGetHead = {
+type PostsIdEditGetHead = {
   request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['show'], false>
+  response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['edit'], false>
 }
 type PostsPost = {
-  request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['store'], false>
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/post.ts')['postValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['store'], true>
 }
 type PostsIdPut = {
   request: unknown
@@ -96,18 +96,16 @@ export interface ApiDefinition {
       '$head': PostsCreateGetHead;
     };
     ':id': {
+      'edit': {
+        '$url': {
+        };
+        '$get': PostsIdEditGetHead;
+        '$head': PostsIdEditGetHead;
+      };
       '$url': {
       };
-      '$get': PostsIdGetHead;
-      '$head': PostsIdGetHead;
       '$put': PostsIdPut;
       '$delete': PostsIdDelete;
-    };
-    ':slug': {
-      '$url': {
-      };
-      '$get': PostsIdGetHead;
-      '$head': PostsIdGetHead;
     };
     '$post': PostsPost;
   };
@@ -185,17 +183,10 @@ const routes = [
   },
   {
     params: ["id"],
-    name: 'posts.show',
-    path: '/posts/:id',
+    name: 'posts.edit',
+    path: '/posts/:id/edit',
     method: ["GET","HEAD"],
-    types: {} as PostsIdGetHead,
-  },
-  {
-    params: ["slug"],
-    name: 'posts.slug',
-    path: '/posts/:slug',
-    method: ["GET","HEAD"],
-    types: {} as PostsIdGetHead,
+    types: {} as PostsIdEditGetHead,
   },
   {
     params: [],

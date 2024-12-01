@@ -62,7 +62,7 @@ watchEffect(() => (posts.value = props.posts))
       <TableBody>
         <TableRow v-for="post in posts.data" :key="post.id">
           <TableCell>
-            <Link route="posts.show" :params="{ id: post.id }" class="hover:underline">
+            <Link route="posts.edit" :params="{ id: post.id }" class="hover:underline">
               {{ post.title }}
             </Link>
             <div class="text-slate-600 text-xs">

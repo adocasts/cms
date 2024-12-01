@@ -47,24 +47,22 @@ const files = ref(
   ].filter(Boolean)
 )
 
-function onFilePondInit() {
-  pond.value.setOptions({
-    server: {
-      process: {
-        url: `/assets/${AssetTypes.THUMBNAIL}`,
-        withCredentials: true,
-      },
-      fetch: {
-        url: '/assets?fetch=',
-        withCredentials: true,
-      },
-      load: {
-        url: '/assets?load=',
-        withCredentials: true,
-      },
-    },
-  })
+const server = ref({
+  process: {
+    url: `/assets/${AssetTypes.THUMBNAIL}`,
+    withCredentials: true,
+  },
+  fetch: {
+    url: '/assets?fetch=',
+    withCredentials: true,
+  },
+  load: {
+    url: '/assets?load=',
+    withCredentials: true,
+  },
+})
 
+function onFilePondInit() {
   pond.value.on('processfiles', () => {
     const file = filepond.value._pond.getFiles()[0]
     const resp = JSON.parse(file.serverId)
@@ -81,6 +79,8 @@ function onFilePondInit() {
       },
     ]
   })
+
+  pond.value.on('error', (e) => console.log({ e }))
 
   pond.value.on('removefile', async (_: any, file: FilePondFile) => {
     const { id } = file.getMetadata()
@@ -99,6 +99,7 @@ function onFilePondInit() {
       :name="name"
       :label-idle="idleLabel ?? 'Upload Asset'"
       accepted-file-types="image/jpeg, image/png"
+      :server="server"
       :files="files"
       @init="onFilePondInit"
     />

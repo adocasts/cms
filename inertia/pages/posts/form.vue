@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AssetDto from '#dtos/asset'
-import PostDto from '#dtos/post'
+import PostFormDto from '#dtos/post_form'
 import TaxonomyDto from '#dtos/taxonomy'
 import PaywallTypes, { PaywallTypeDesc } from '#enums/paywall_types'
 import PostTypes, { PostTypeDesc } from '#enums/post_types'
@@ -15,8 +15,7 @@ import { tuyau } from '~/lib/tuyau'
 import { enumKeys } from '~/lib/utils'
 
 const props = defineProps<{
-  post?: PostDto
-  thumbnail?: AssetDto
+  post?: PostFormDto
   taxonomies: TaxonomyDto[]
 }>()
 
@@ -32,22 +31,22 @@ const form = useForm({
   isFeatured: props.post?.isFeatured ?? false,
   isLive: props.post?.isLive ?? false,
   livestreamUrl: props.post?.livestreamUrl ?? '',
-  videoTypeId: props.post?.videoTypeId ?? '',
+  videoTypeId: props.post?.videoTypeId?.toString() ?? '',
   videoUrl: props.post?.videoUrl ?? '',
   videoBunnyId: props.post?.videoBunnyId ?? '',
   videoSeconds: props.post?.videoSeconds ?? 0,
   timezone: props.post?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
   publishAtDate: props.post?.publishAtDate ?? '',
   publishAtTime: props.post?.publishAtTime ?? '',
-  postTypeId: props.post?.postTypeId ?? PostTypes.LESSON.toString(),
-  stateId: props.post?.stateId ?? States.DRAFT,
-  paywallTypeId: props.post?.paywallTypeId ?? PaywallTypes.NONE.toString(),
+  postTypeId: props.post?.postTypeId.toString() ?? PostTypes.LESSON.toString(),
+  stateId: props.post?.stateId.toString() ?? States.DRAFT,
+  paywallTypeId: props.post?.paywallTypeId.toString() ?? PaywallTypes.NONE.toString(),
   thumbnail: {
-    id: props.thumbnail?.id,
-    altText: props.thumbnail?.altText,
-    credit: props.thumbnail?.credit,
+    id: props.post?.thumbnail?.id,
+    altText: props.post?.thumbnail?.altText ?? '',
+    credit: props.post?.thumbnail?.credit ?? '',
   },
-  taxonomyIds: props.post?.taxonomies.map((row) => row.id) ?? [],
+  taxonomyIds: props.post?.taxonomyIds ?? [],
 })
 
 const publishAt = computed(() => {
@@ -55,7 +54,7 @@ const publishAt = computed(() => {
   return iso && DateTime.fromISO(iso)
 })
 
-function onSubmit(stateId: States = form.stateId) {
+function onSubmit(stateId: States = Number(form.stateId)) {
   const action = form.transform((data) => {
     data.stateId = stateId
     return data
@@ -233,7 +232,7 @@ function onSubmit(stateId: States = form.stateId) {
           idle-label="Upload Thumbnail"
           class="bg-white p-3 lg:p-6 rounded-lg border border-slate-200 shadow-xl"
           v-model="form.thumbnail"
-          :asset="thumbnail"
+          :asset="post?.thumbnail"
           :error="form.errors.thumbnail"
         />
       </div>
@@ -266,7 +265,7 @@ function onSubmit(stateId: States = form.stateId) {
           </FormInput>
 
           <FormInput
-            v-if="form.videoTypeId == VideoTypes.YOUTUBE"
+            v-if="Number(form.videoTypeId) === VideoTypes.YOUTUBE"
             label="YouTube Video URL"
             type="url"
             v-model="form.videoUrl"
@@ -275,7 +274,7 @@ function onSubmit(stateId: States = form.stateId) {
           />
 
           <FormInput
-            v-else-if="form.videoTypeId == VideoTypes.BUNNY"
+            v-else-if="Number(form.videoTypeId) === VideoTypes.BUNNY"
             label="Bunny Video Id"
             v-model="form.videoBunnyId"
             :errors="form.errors.videoBunnyId"
@@ -298,7 +297,7 @@ function onSubmit(stateId: States = form.stateId) {
           </FormInput>
 
           <FormInput
-            v-if="form.videoTypeId == VideoTypes.YOUTUBE"
+            v-if="Number(form.videoTypeId) === VideoTypes.YOUTUBE"
             type="group"
             :error="form.errors.isLive"
           >

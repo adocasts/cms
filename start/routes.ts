@@ -40,8 +40,7 @@ router.group(() => {
   //* POSTS
   router.get('/posts', [PostsController, 'index']).as('posts.index')
   router.get('/posts/create', [PostsController, 'create']).as('posts.create')
-  router.get('/posts/:id', [PostsController, 'show']).as('posts.show')
-  router.get('/posts/:slug', [PostsController, 'show']).as('posts.slug')
+  router.get('/posts/:id/edit', [PostsController, 'edit']).as('posts.edit')
   router.post('/posts', [PostsController, 'store']).as('posts.store')
   router.put('/posts/:id', [PostsController, 'update']).as('posts.update')
   router.delete('/posts/:id', [PostsController, 'destroy']).as('posts.destroy')

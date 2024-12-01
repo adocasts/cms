@@ -1,7 +1,9 @@
 import GetPaginatedPosts from '#actions/posts/get_paginated_posts'
+import GetPost from '#actions/posts/get_post'
 import StorePost from '#actions/posts/store_post'
 import GetTaxonomyTree from '#actions/taxonomies/get_taxonomy_tree'
 import PostDto from '#dtos/post'
+import PostFormDto from '#dtos/post_form'
 import TaxonomyDto from '#dtos/taxonomy'
 import Taxonomy from '#models/taxonomy'
 import { postIndexValidator, postValidator } from '#validators/post'
@@ -58,14 +60,17 @@ export default class PostsController {
   }
 
   /**
-   * Show individual record
-   */
-  async show({ params }: HttpContext) {}
-
-  /**
    * Edit individual record
    */
-  async edit({ params }: HttpContext) {}
+  async edit({ params, inertia }: HttpContext) {
+    const post = await GetPost.byId(params.id)
+    const taxonomies = await Taxonomy.query().orderBy('name')
+
+    return inertia.render('posts/form', {
+      post: new PostFormDto(post),
+      taxonomies: TaxonomyDto.fromArray(taxonomies),
+    })
+  }
 
   /**
    * Handle form submission for the edit action
