@@ -37,9 +37,6 @@ const internalValue = computed({
       const taxonomy = props.taxonomies.find((item) => item.name === name)
       return taxonomy?.id
     })
-    //.filter(Boolean)
-
-    console.log({ value, ids })
 
     emit('update:modelValue', ids)
   },

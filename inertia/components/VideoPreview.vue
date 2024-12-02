@@ -1,18 +1,16 @@
 <script setup lang="ts">
 import VideoTypes from '#enums/video_types'
 import { VideoOff } from 'lucide-vue-next'
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 
 const props = defineProps<{
   duration: number
-  videoTypeId: number | null
+  videoTypeId: number | string | null
   videoUrl: string | null
   bunnyId: string | null
 }>()
 
 const emit = defineEmits(['update:duration'])
-
-const youtube = ref()
 
 const videoId = computed(() => {
   if (props.videoTypeId == VideoTypes.BUNNY) return props.bunnyId
@@ -49,12 +47,8 @@ watch(
 )
 
 function onYouTubeInit() {
-  console.log('youtube init')
-
   const embedApiSrc = 'https://www.youtube.com/iframe_api'
   const exists = document.querySelector(`script[src="${embedApiSrc}"]`)
-
-  console.log({ exists })
 
   if (!exists) {
     const tag = document.createElement('script')
@@ -111,6 +105,6 @@ function onBunnyReady(event: any) {
       <h4 class="font-semibold">No Video</h4>
       <p class="text-xs">Enter a valid youtube video url to add a video to this post</p>
     </div>
-    <div v-ref="youtube" id="youtubeVideoPreviewEmbed" class="w-full" v-once></div>
+    <div id="youtubeVideoPreviewEmbed" class="w-full" v-once></div>
   </div>
 </template>

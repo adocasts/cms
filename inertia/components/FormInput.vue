@@ -3,10 +3,10 @@ import { computed, ref } from 'vue'
 
 const props = withDefaults(
   defineProps<{
-    type: string
-    modelValue: string | number
+    type?: string
+    modelValue?: string | number
     placeholder?: string
-    label: string
+    label?: string
     error?: string
     disabled?: boolean
     required?: boolean
@@ -31,7 +31,7 @@ defineExpose({ inputEl })
 <template>
   <div class="grid gap-1">
     <Label class="grid gap-1">
-      <span>{{ label }} </span>
+      <span v-if="label">{{ label }} </span>
       <div v-if="type === 'color'" class="relative w-full items-center">
         <input
           v-model="internalValue"

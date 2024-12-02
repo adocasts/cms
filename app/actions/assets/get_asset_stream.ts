@@ -14,11 +14,6 @@ export default class GetAssetStream {
       key = this.ctx.request.qs().load
     }
 
-    console.log({
-      key,
-      params: this.ctx.params['*'],
-    })
-
     if (!key) {
       throw new BadRequestException('Asset key was not found')
     }

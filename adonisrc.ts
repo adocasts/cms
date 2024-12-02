@@ -64,6 +64,7 @@ export default defineConfig({
     () => import('#start/macros/model_query_builder_macros'),
     () => import('#start/globals'),
     () => import('#start/rules/enum'),
+    () => import('#start/schemas/computed')
   ],
 
   /*

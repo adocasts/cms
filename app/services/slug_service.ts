@@ -157,6 +157,7 @@ export default class SlugService<Model extends LucidModel> extends SimpleStrateg
      * First row has the counter and hence consider it
      */
     let counter = rows[0].$extras[this.counterName]
+
     if (counter) {
       return `${slug}${this.separator}${counter + 1}`
     }

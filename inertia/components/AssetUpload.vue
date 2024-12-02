@@ -13,7 +13,7 @@ import AssetDto from '#dtos/asset'
 const props = defineProps<{
   name: string
   asset?: AssetDto
-  error: string
+  error?: string
   idleLabel?: string
   modelValue: {
     id?: number
@@ -79,8 +79,6 @@ function onFilePondInit() {
       },
     ]
   })
-
-  pond.value.on('error', (e) => console.log({ e }))
 
   pond.value.on('removefile', async (_: any, file: FilePondFile) => {
     const { id } = file.getMetadata()

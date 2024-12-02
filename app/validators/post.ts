@@ -4,6 +4,7 @@ import { exists } from './helpers/db.js'
 import VideoTypes from '#enums/video_types'
 import States from '#enums/states'
 import PaywallTypes from '#enums/paywall_types'
+import { DateTime } from 'luxon'
 
 export const postIndexValidator = vine.compile(
   vine.object({
@@ -23,9 +24,9 @@ export const postValidator = vine.compile(
           .from('posts')
           .select('id')
           .whereILike('slug', value)
-          .whereNot('id', field.data.id)
+          .if(field.meta.id, (query) => query.whereNot('id', field.meta.id))
           .first()
-        return !!result
+        return !result
       })
       .optional(),
     pageTitle: vine.string().trim().maxLength(100).optional(),
@@ -52,5 +53,24 @@ export const postValidator = vine.compile(
       credit: vine.string().maxLength(100).optional(),
     }),
     taxonomyIds: vine.array(vine.number().exists(exists('taxonomies', 'id'))).optional(),
+
+    publishAt: vine
+      .computed()
+      .requires(['publishAtDate', 'publishAtTime', 'timezone'])
+      .transform((data) => {
+        let publishAt = DateTime.now().setZone(data.timezone)
+
+        if (data.publishAtDate) {
+          const { year, month, day } = DateTime.fromFormat(data.publishAtDate, 'yyyy-MM-dd')
+          publishAt = publishAt.set({ year, month, day })
+        }
+
+        if (data.publishAtTime) {
+          const { hour, minute } = DateTime.fromFormat(data.publishAtTime, 'HH:mm')
+          publishAt = publishAt.set({ hour, minute })
+        }
+
+        return publishAt.setZone('UTC').set({ second: 0, millisecond: 0 })
+      }),
   })
 )

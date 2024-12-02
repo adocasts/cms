@@ -87,7 +87,7 @@ const editor = useEditor({
             'py-1'
           )
 
-          selector.textContent = props.node.attrs.language
+          selector.textContent = props.node.attrs.language ?? 'plaintext'
           container.append(selector)
 
           return {

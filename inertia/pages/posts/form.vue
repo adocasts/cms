@@ -31,7 +31,7 @@ const form = useForm({
   isFeatured: props.post?.isFeatured ?? false,
   isLive: props.post?.isLive ?? false,
   livestreamUrl: props.post?.livestreamUrl ?? '',
-  videoTypeId: props.post?.videoTypeId?.toString() ?? '',
+  videoTypeId: props.post?.videoTypeId?.toString() ?? VideoTypes.NONE.toString(),
   videoUrl: props.post?.videoUrl ?? '',
   videoBunnyId: props.post?.videoBunnyId ?? '',
   videoSeconds: props.post?.videoSeconds ?? 0,
@@ -282,7 +282,7 @@ function onSubmit(stateId: States = Number(form.stateId)) {
           />
 
           <FormInput
-            v-if="form.videoTypeId"
+            v-if="Number(form.videoTypeId) !== VideoTypes.NONE"
             type="group"
             label="Video Length (in seconds)"
             :error="form.errors.videoSeconds"

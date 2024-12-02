@@ -5,7 +5,7 @@ import { ref, watchEffect } from 'vue'
 import { Link } from '@tuyau/inertia/vue'
 import { StateDesc } from '#enums/states'
 import PostTypes, { PostTypeDesc } from '#enums/post_types'
-import PaywallTypes from '#enums/paywall_types'
+import { PaywallTypeDesc } from '#enums/paywall_types'
 import { DateTime } from 'luxon'
 import { Plus } from 'lucide-vue-next'
 
@@ -77,7 +77,7 @@ watchEffect(() => (posts.value = props.posts))
           <TableCell>
             {{ StateDesc[post.stateId] }}
             <div class="text-xs text-slate-600">
-              {{ PaywallTypes[post.paywallTypeId] }}
+              {{ PaywallTypeDesc[post.paywallTypeId].split('-').at(1) }}
             </div>
           </TableCell>
           <TableCell>

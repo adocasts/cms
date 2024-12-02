@@ -166,11 +166,6 @@ const placeholderPlugin = new Plugin({
 function findPlaceholder(state: EditorState, id: Object) {
   let decos = placeholderPlugin.getState(state)
   let found = decos?.find(undefined, undefined, (spec) => spec.id === id)
-  console.log({
-    decos,
-    found,
-    id,
-  })
   return found?.length ? found[0].from : null
 }
 
@@ -182,7 +177,6 @@ function startImageUpload(view: EditorView, file: File, schema: Schema) {
   // Replace the selection with a placeholder
   const selection = view.state.selection
   let tr = view.state.tr
-  console.log({ tr })
   if (!selection.empty) tr.deleteSelection()
   tr.setMeta(placeholderPlugin, { add: { id, pos: selection.$from.pos } })
   view.dispatch(tr)

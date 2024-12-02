@@ -1,6 +1,7 @@
 import GetPaginatedPosts from '#actions/posts/get_paginated_posts'
 import GetPost from '#actions/posts/get_post'
 import StorePost from '#actions/posts/store_post'
+import UpdatePost from '#actions/posts/update_post'
 import GetTaxonomyTree from '#actions/taxonomies/get_taxonomy_tree'
 import PostDto from '#dtos/post'
 import PostFormDto from '#dtos/post_form'
@@ -75,7 +76,16 @@ export default class PostsController {
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request }: HttpContext) {}
+  async update({ params, request, response }: HttpContext) {
+    const data = await request.validateUsing(postValidator, { meta: { id: params.id } })
+
+    await UpdatePost.handle({
+      id: params.id,
+      data,
+    })
+
+    return response.redirect().toRoute('posts.index')
+  }
 
   /**
    * Delete record
