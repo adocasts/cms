@@ -7,7 +7,9 @@ import { StateDesc } from '#enums/states'
 import PostTypes, { PostTypeDesc } from '#enums/post_types'
 import { PaywallTypeDesc } from '#enums/paywall_types'
 import { DateTime } from 'luxon'
-import { Plus } from 'lucide-vue-next'
+import { Plus, Trash2 } from 'lucide-vue-next'
+import { router } from '@inertiajs/vue3'
+import { tuyau } from '~/lib/tuyau'
 
 const props = defineProps<{
   postTypeId: PostTypes
@@ -17,6 +19,10 @@ const props = defineProps<{
 const posts = ref(props.posts)
 
 watchEffect(() => (posts.value = props.posts))
+
+async function onDelete(post: PostDto) {
+  await router.delete(tuyau.posts({ id: post.id }).$url(), { preserveScroll: true })
+}
 </script>
 
 <template>
@@ -93,7 +99,12 @@ watchEffect(() => (posts.value = props.posts))
               </div>
             </div>
           </TableCell>
-          <TableCell></TableCell>
+          <TableCell>
+            <Button variant="ghost" size="sm" class="hover:text-red-500" @click="onDelete(post)">
+              <Trash2 class="w-3 h-3" />
+              Delete
+            </Button>
+          </TableCell>
         </TableRow>
       </TableBody>
     </Table>

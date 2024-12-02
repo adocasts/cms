@@ -1,3 +1,4 @@
+import DestroyPost from '#actions/posts/destroy_post'
 import GetPaginatedPosts from '#actions/posts/get_paginated_posts'
 import GetPost from '#actions/posts/get_post'
 import StorePost from '#actions/posts/store_post'
@@ -90,5 +91,11 @@ export default class PostsController {
   /**
    * Delete record
    */
-  async destroy({ params }: HttpContext) {}
+  async destroy({ params, response, session }: HttpContext) {
+    const post = await DestroyPost.byId(params.id)
+
+    session.flash('success', `Your post "${post.title}" has been deleted`)
+
+    return response.redirect().toRoute('posts.index')
+  }
 }
