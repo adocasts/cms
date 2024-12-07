@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AssetDto from '#dtos/asset'
 import PostFormDto from '#dtos/post_form'
 import TaxonomyDto from '#dtos/taxonomy'
 import PaywallTypes, { PaywallTypeDesc } from '#enums/paywall_types'

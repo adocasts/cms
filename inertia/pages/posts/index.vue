@@ -10,18 +10,26 @@ import { DateTime } from 'luxon'
 import { Plus, Trash2 } from 'lucide-vue-next'
 import { router } from '@inertiajs/vue3'
 import { tuyau } from '~/lib/tuyau'
+import useConfirmDestroyDialog from '~/composables/use_confirm_destroy_dialog'
 
 const props = defineProps<{
   postTypeId: PostTypes
   posts: SimplePaginatorDtoContract<PostDto>
 }>()
 
+const destroy = useConfirmDestroyDialog()
 const posts = ref(props.posts)
 
 watchEffect(() => (posts.value = props.posts))
 
 async function onDelete(post: PostDto) {
-  await router.delete(tuyau.posts({ id: post.id }).$url(), { preserveScroll: true })
+  destroy.value?.show({
+    title: 'Delete Post?',
+    message: `Are you sure you'd like to delete the post "${post.title}"? Once deleted, it'll be gone forever.`,
+    async onConfirm() {
+      await router.delete(tuyau.posts({ id: post.id }).$url(), { preserveScroll: true })
+    },
+  })
 }
 </script>
 
