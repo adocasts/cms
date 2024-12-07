@@ -8,17 +8,19 @@ import PostTypes, { PostTypeDesc } from '#enums/post_types'
 import { PaywallTypeDesc } from '#enums/paywall_types'
 import { DateTime } from 'luxon'
 import { Plus, Trash2 } from 'lucide-vue-next'
-import { router } from '@inertiajs/vue3'
+import { router, useForm } from '@inertiajs/vue3'
 import { tuyau } from '~/lib/tuyau'
 import useConfirmDestroyDialog from '~/composables/use_confirm_destroy_dialog'
 
 const props = defineProps<{
   postTypeId: PostTypes
   posts: SimplePaginatorDtoContract<PostDto>
+  term: string
 }>()
 
 const destroy = useConfirmDestroyDialog()
 const posts = ref(props.posts)
+const search = useForm({ term: props.term ?? '' })
 
 watchEffect(() => (posts.value = props.posts))
 
@@ -55,10 +57,17 @@ async function onDelete(post: PostDto) {
       </BreadcrumbList>
     </Breadcrumb>
 
-    <Button :as="Link" route="posts.create">
-      <Plus class="w-4 h-4" />
-      New Post
-    </Button>
+    <div class="flex items-center gap-3">
+      <Input
+        v-model="search.term"
+        placeholder="Search posts ..."
+        @blur="search.get(tuyau.$url('posts.index'))"
+      />
+      <Button :as="Link" route="posts.create">
+        <Plus class="w-4 h-4" />
+        New Post
+      </Button>
+    </div>
   </div>
 
   <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xl">

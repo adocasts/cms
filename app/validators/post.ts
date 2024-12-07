@@ -9,6 +9,7 @@ import { DateTime } from 'luxon'
 export const postIndexValidator = vine.compile(
   vine.object({
     postTypeId: vine.number().enum(PostTypes).optional(),
+    term: vine.string().optional(),
   })
 )
 

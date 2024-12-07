@@ -3,7 +3,6 @@ import GetPaginatedPosts from '#actions/posts/get_paginated_posts'
 import GetPost from '#actions/posts/get_post'
 import StorePost from '#actions/posts/store_post'
 import UpdatePost from '#actions/posts/update_post'
-import GetTaxonomyTree from '#actions/taxonomies/get_taxonomy_tree'
 import PostDto from '#dtos/post'
 import PostFormDto from '#dtos/post_form'
 import TaxonomyDto from '#dtos/taxonomy'
@@ -29,6 +28,7 @@ export default class PostsController {
 
     return inertia.render('posts/index', {
       postTypeId: data.postTypeId,
+      term: data.term,
       posts: PostDto.fromPaginator(paginator, {
         start: paginator.firstPage,
         end: paginator.lastPage,
