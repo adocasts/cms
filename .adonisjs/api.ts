@@ -42,12 +42,36 @@ type PostsPost = {
   response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['store'], true>
 }
 type PostsIdPut = {
-  request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['update'], false>
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/post.ts')['postValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['update'], true>
 }
 type PostsIdDelete = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['destroy'], false>
+}
+type CollectionsGetHead = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/collection.ts')['collectionIndexValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/collections_controller.ts').default['index'], true>
+}
+type CollectionsCreateGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/collections_controller.ts').default['create'], false>
+}
+type CollectionsIdEditGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/collections_controller.ts').default['edit'], false>
+}
+type CollectionsPost = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/collections_controller.ts').default['store'], false>
+}
+type CollectionsIdPut = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/collections_controller.ts').default['update'], false>
+}
+type CollectionsIdDelete = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/collections_controller.ts').default['destroy'], false>
 }
 export interface ApiDefinition {
   'login': {
@@ -108,6 +132,31 @@ export interface ApiDefinition {
       '$delete': PostsIdDelete;
     };
     '$post': PostsPost;
+  };
+  'collections': {
+    '$url': {
+    };
+    '$get': CollectionsGetHead;
+    '$head': CollectionsGetHead;
+    'create': {
+      '$url': {
+      };
+      '$get': CollectionsCreateGetHead;
+      '$head': CollectionsCreateGetHead;
+    };
+    ':id': {
+      'edit': {
+        '$url': {
+        };
+        '$get': CollectionsIdEditGetHead;
+        '$head': CollectionsIdEditGetHead;
+      };
+      '$url': {
+      };
+      '$put': CollectionsIdPut;
+      '$delete': CollectionsIdDelete;
+    };
+    '$post': CollectionsPost;
   };
 }
 const routes = [
@@ -208,6 +257,48 @@ const routes = [
     path: '/posts/:id',
     method: ["DELETE"],
     types: {} as PostsIdDelete,
+  },
+  {
+    params: [],
+    name: 'collections.index',
+    path: '/collections',
+    method: ["GET","HEAD"],
+    types: {} as CollectionsGetHead,
+  },
+  {
+    params: [],
+    name: 'collections.create',
+    path: '/collections/create',
+    method: ["GET","HEAD"],
+    types: {} as CollectionsCreateGetHead,
+  },
+  {
+    params: ["id"],
+    name: 'collections.edit',
+    path: '/collections/:id/edit',
+    method: ["GET","HEAD"],
+    types: {} as CollectionsIdEditGetHead,
+  },
+  {
+    params: [],
+    name: 'collections.store',
+    path: '/collections',
+    method: ["POST"],
+    types: {} as CollectionsPost,
+  },
+  {
+    params: ["id"],
+    name: 'collections.update',
+    path: '/collections/:id',
+    method: ["PUT"],
+    types: {} as CollectionsIdPut,
+  },
+  {
+    params: ["id"],
+    name: 'collections.destroy',
+    path: '/collections/:id',
+    method: ["DELETE"],
+    types: {} as CollectionsIdDelete,
   },
 ] as const;
 export const api = {

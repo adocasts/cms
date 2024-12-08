@@ -8,6 +8,8 @@ import { DateTime } from 'luxon'
 
 export const postIndexValidator = vine.compile(
   vine.object({
+    page: vine.number().optional(),
+    perPage: vine.number().max(100).optional(),
     postTypeId: vine.number().enum(PostTypes).optional(),
     term: vine.string().optional(),
   })

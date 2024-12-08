@@ -22,6 +22,7 @@ export default class CollectionDto extends BaseModelDto {
   declare difficultyId: number | null
   declare assetId: number | null
   declare name: string
+  declare slug: string
   declare moduleNumber: number
   declare owner: UserDto | null
   declare asset: AssetDto | null
@@ -35,6 +36,7 @@ export default class CollectionDto extends BaseModelDto {
   declare watchlist: WatchlistDto[]
   declare viewHistory: HistoryDto[]
   declare progressionHistory: ProgressDto[]
+  declare meta: Record<string, any>
 
   constructor(collection?: Collection) {
     super()
@@ -50,6 +52,7 @@ export default class CollectionDto extends BaseModelDto {
     this.difficultyId = collection.difficultyId
     this.assetId = collection.assetId
     this.name = collection.name
+    this.slug = collection.slug
     this.moduleNumber = collection.moduleNumber
     this.owner = collection.owner && new UserDto(collection.owner)
     this.asset = collection.asset && new AssetDto(collection.asset)
@@ -64,5 +67,6 @@ export default class CollectionDto extends BaseModelDto {
     this.watchlist = WatchlistDto.fromArray(collection.watchlist)
     this.viewHistory = HistoryDto.fromArray(collection.viewHistory)
     this.progressionHistory = ProgressDto.fromArray(collection.progressionHistory)
+    this.meta = collection.$extras
   }
 }

@@ -17,11 +17,7 @@ export default class PostsController {
    */
   async index({ request, inertia }: HttpContext) {
     const data = await request.validateUsing(postIndexValidator)
-
-    const paginator = await GetPaginatedPosts.handle({
-      page: request.input('page', 1),
-      data,
-    })
+    const paginator = await GetPaginatedPosts.handle(data)
 
     paginator.baseUrl(router.makeUrl('posts.index'))
     paginator.queryString(request.qs())

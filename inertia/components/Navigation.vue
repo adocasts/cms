@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CollectionTypes from '#enums/collection_types'
 import PostTypes from '#enums/post_types'
 import { Link } from '@inertiajs/vue3'
 import { Menu, Slash, Route, Plus, EllipsisVertical } from 'lucide-vue-next'
@@ -84,9 +85,18 @@ const links = [
         <MenubarTrigger>Collections</MenubarTrigger>
         <MenubarContent>
           <MenubarItem :as="Link" href="/collections"> All Collections </MenubarItem>
-          <MenubarItem :as="Link" href="/collections/series"> Series </MenubarItem>
-          <MenubarItem :as="Link" href="/collections/playlists"> Playlists </MenubarItem>
-          <MenubarItem :as="Link" href="/collections/paths"> Learning Paths </MenubarItem>
+          <MenubarItem :as="Link" :href="`/collections?collectionTypeId=${CollectionTypes.SERIES}`">
+            Series
+          </MenubarItem>
+          <MenubarItem
+            :as="Link"
+            :href="`/collections?collectionTypeId=${CollectionTypes.PLAYLIST}`"
+          >
+            Playlists
+          </MenubarItem>
+          <MenubarItem :as="Link" :href="`/collections?collectionTypeId=${CollectionTypes.PATH}`">
+            Learning Paths
+          </MenubarItem>
 
           <MenubarSeparator />
 
