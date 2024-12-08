@@ -28,7 +28,7 @@ async function onDelete(collection: CollectionDto) {
     title: 'Delete Collection?',
     message: `Are you sure you'd like to delete the collection "${collection.name}"? Once deleted, it'll be gone forever.`,
     async onConfirm() {
-      await router.delete(tuyau.posts({ id: collection.id }).$url(), { preserveScroll: true })
+      await router.delete(tuyau.collections({ id: collection.id }).$url(), { preserveScroll: true })
     },
   })
 }
