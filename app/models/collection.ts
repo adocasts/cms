@@ -75,10 +75,10 @@ export default class Collection extends AppBaseModel {
   declare metaDescription: string
 
   @column()
-  declare youtubePlaylistUrl: string
+  declare youtubePlaylistUrl: string | null
 
   @column()
-  declare repositoryUrl: string
+  declare repositoryUrl: string | null
 
   @column()
   declare isFeatured: boolean

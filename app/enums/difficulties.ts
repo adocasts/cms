@@ -4,5 +4,10 @@ enum Difficulties {
   ADVANCED = 3,
 }
 
-export default Difficulties
+export const DifficultyDesc: Record<Difficulties, string> = {
+  [Difficulties.BEGINNER]: 'Beginner',
+  [Difficulties.INTERMEDIATE]: 'Intermediate',
+  [Difficulties.ADVANCED]: 'Advanced',
+}
 
+export default Difficulties

@@ -23,6 +23,12 @@ export default class CollectionDto extends BaseModelDto {
   declare assetId: number | null
   declare name: string
   declare slug: string
+  declare description: string
+  declare pageTitle: string
+  declare metaDescription: string
+  declare youtubePlaylistUrl: string
+  declare repositoryUrl: string
+  declare sortOrder: number
   declare moduleNumber: number
   declare owner: UserDto | null
   declare asset: AssetDto | null
@@ -53,6 +59,11 @@ export default class CollectionDto extends BaseModelDto {
     this.assetId = collection.assetId
     this.name = collection.name
     this.slug = collection.slug
+    this.description = collection.description
+    this.pageTitle = collection.pageTitle
+    this.metaDescription = collection.metaDescription
+    this.youtubePlaylistUrl = collection.youtubePlaylistUrl
+    this.repositoryUrl = collection.repositoryUrl
     this.moduleNumber = collection.moduleNumber
     this.owner = collection.owner && new UserDto(collection.owner)
     this.asset = collection.asset && new AssetDto(collection.asset)

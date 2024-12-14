@@ -5,8 +5,8 @@ import User from '#models/user'
 import { postValidator } from '#validators/post'
 import db from '@adonisjs/lucid/services/db'
 import { Infer } from '@vinejs/vine/types'
-import SyncPostTaxonomies from './sync_post_taxonomies.js'
 import SyncPostAsset from './sync_post_assets.js'
+import SyncTaxonomies from '#actions/taxonomies/sync_taxonomies'
 
 type Data = Infer<typeof postValidator>
 
@@ -27,8 +27,8 @@ export default class StorePost {
 
       await post.related('authors').attach([author.id])
 
-      await SyncPostTaxonomies.handle({ post, ids: data.taxonomyIds })
-      await SyncPostAsset.handle({ post, asset: data.thumbnail }, trx)
+      await SyncTaxonomies.handle({ resource: post, ids: taxonomyIds })
+      await SyncPostAsset.handle({ post, asset: thumbnail }, trx)
 
       return post
     })

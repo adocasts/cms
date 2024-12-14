@@ -14,6 +14,13 @@ export const collectionIndexValidator = vine.compile(
   })
 )
 
+export const collectionStubValidator = vine.compile(
+  vine.object({
+    parentId: vine.number().exists(exists('collections', 'id')),
+    name: vine.string().maxLength(100).optional(),
+  })
+)
+
 export const collectionValidator = vine.compile(
   vine.object({
     name: vine.string().trim().maxLength(100),
@@ -35,16 +42,11 @@ export const collectionValidator = vine.compile(
     statusId: vine.number().enum(Status).optional(),
     stateId: vine.number().enum(States).optional(),
     difficultyId: vine.number().enum(Difficulties).optional(),
-    assetId: vine.number().exists(exists('assets', 'id')).optional(),
-    asset: vine.object({
-      altText: vine.string().maxLength(100).optional(),
-      credit: vine.string().maxLength(100).optional(),
-    }),
     pageTitle: vine.string().trim().maxLength(100).optional(),
     description: vine.string().trim().maxLength(255).optional(),
     metaDescription: vine.string().trim().maxLength(255).optional(),
-    youtubePlaylistUrl: vine.string().trim().maxLength(255).optional(),
-    repositoryUrl: vine.string().trim().maxLength(255).optional(),
+    youtubePlaylistUrl: vine.string().trim().maxLength(255).nullable(),
+    repositoryUrl: vine.string().trim().maxLength(255).nullable(),
     taxonomyIds: vine.array(vine.number().exists(exists('taxonomies', 'id'))).optional(),
     postIds: vine.array(vine.number().exists(exists('posts', 'id'))).optional(),
     subcollections: vine.array(
@@ -54,5 +56,10 @@ export const collectionValidator = vine.compile(
         postIds: vine.array(vine.number().exists(exists('posts', 'id'))).optional(),
       })
     ),
+    asset: vine.object({
+      id: vine.number().exists(exists('assets', 'id')).optional(),
+      altText: vine.string().maxLength(100).optional(),
+      credit: vine.string().maxLength(100).optional(),
+    }),
   })
 )

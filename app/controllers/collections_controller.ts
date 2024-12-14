@@ -1,6 +1,16 @@
 import GetPaginatedCollections from '#actions/collections/get_paginated_collections'
+import StoreCollection from '#actions/collections/store_collection'
+import StubCollection from '#actions/collections/stub_collection'
+import UpdateCollection from '#actions/collections/update_collection'
 import CollectionDto from '#dtos/collection'
-import { collectionIndexValidator } from '#validators/collection'
+import TaxonomyDto from '#dtos/taxonomy'
+import Collection from '#models/collection'
+import Taxonomy from '#models/taxonomy'
+import {
+  collectionIndexValidator,
+  collectionStubValidator,
+  collectionValidator,
+} from '#validators/collection'
 import type { HttpContext } from '@adonisjs/core/http'
 import router from '@adonisjs/core/services/router'
 
@@ -28,12 +38,40 @@ export default class CollectionsController {
   /**
    * Display form to create a new record
    */
-  async create({}: HttpContext) {}
+  async create({ inertia }: HttpContext) {
+    const taxonomies = await Taxonomy.query().orderBy('name')
+
+    return inertia.render('collections/form', {
+      taxonomies: TaxonomyDto.fromArray(taxonomies),
+    })
+  }
 
   /**
    * Handle form submission for the create action
    */
-  async store({ request }: HttpContext) {}
+  async store({ request, response, auth }: HttpContext) {
+    const data = await request.validateUsing(collectionValidator)
+    const collection = await StoreCollection.handle({
+      user: auth.user!,
+      data,
+    })
+
+    return response.redirect().toRoute('collections.edit', { id: collection.id })
+  }
+
+  /**
+   * Stub an empty child collection
+   */
+  async stub({ request, response, auth }: HttpContext) {
+    const data = await request.validateUsing(collectionStubValidator)
+
+    await StubCollection.handle({
+      user: auth.user!,
+      data,
+    })
+
+    return response.redirect().back()
+  }
 
   /**
    * Show individual record
@@ -43,12 +81,29 @@ export default class CollectionsController {
   /**
    * Edit individual record
    */
-  async edit({ params }: HttpContext) {}
+  async edit({ params, inertia }: HttpContext) {
+    const collection = await Collection.findOrFail(params.id)
+    const taxonomies = await Taxonomy.query().orderBy('name')
+
+    return inertia.render('collections/form', {
+      collection: new CollectionDto(collection),
+      taxonomies: TaxonomyDto.fromArray(taxonomies),
+    })
+  }
 
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request }: HttpContext) {}
+  async update({ params, request, response }: HttpContext) {
+    const data = await request.validateUsing(collectionValidator, { meta: { id: params.id } })
+
+    await UpdateCollection.handle({
+      id: params.id,
+      data,
+    })
+
+    return response.redirect().toRoute('collections.index')
+  }
 
   /**
    * Delete record
