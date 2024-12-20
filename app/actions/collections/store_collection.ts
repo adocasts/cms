@@ -20,7 +20,7 @@ export default class StoreCollection {
     if (!data.statusId) data.statusId = Status.COMING_SOON
     if (!data.collectionTypeId) data.collectionTypeId = CollectionTypes.SERIES
 
-    const { taxonomyIds, postIds, subcollections, asset, ...store } = data
+    const { taxonomyIds, asset, ...store } = data
 
     return db.transaction(async (trx) => {
       const collection = await Collection.create(

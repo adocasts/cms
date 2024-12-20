@@ -14,6 +14,7 @@ export default class TaxonomyDto extends BaseModelDto {
   declare levelIndex: number
   declare assetId: number | null
   declare name: string
+  declare slug: string
   declare owner: UserDto | null
   declare asset: AssetDto | null
   declare parent: TaxonomyDto | null
@@ -34,6 +35,7 @@ export default class TaxonomyDto extends BaseModelDto {
     this.levelIndex = taxonomy.levelIndex
     this.assetId = taxonomy.assetId
     this.name = taxonomy.name
+    this.slug = taxonomy.slug
     this.owner = taxonomy.owner && new UserDto(taxonomy.owner)
     this.asset = taxonomy.asset && new AssetDto(taxonomy.asset)
     this.parent = taxonomy.parent && new TaxonomyDto(taxonomy.parent)

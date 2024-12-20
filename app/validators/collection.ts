@@ -48,6 +48,16 @@ export const collectionValidator = vine.compile(
     youtubePlaylistUrl: vine.string().trim().maxLength(255).nullable(),
     repositoryUrl: vine.string().trim().maxLength(255).nullable(),
     taxonomyIds: vine.array(vine.number().exists(exists('taxonomies', 'id'))).optional(),
+    asset: vine.object({
+      id: vine.number().exists(exists('assets', 'id')).optional(),
+      altText: vine.string().maxLength(100).optional(),
+      credit: vine.string().maxLength(100).optional(),
+    }),
+  })
+)
+
+export const collectionContentValidator = vine.compile(
+  vine.object({
     postIds: vine.array(vine.number().exists(exists('posts', 'id'))).optional(),
     subcollections: vine.array(
       vine.object({
@@ -56,10 +66,5 @@ export const collectionValidator = vine.compile(
         postIds: vine.array(vine.number().exists(exists('posts', 'id'))).optional(),
       })
     ),
-    asset: vine.object({
-      id: vine.number().exists(exists('assets', 'id')).optional(),
-      altText: vine.string().maxLength(100).optional(),
-      credit: vine.string().maxLength(100).optional(),
-    }),
   })
 )

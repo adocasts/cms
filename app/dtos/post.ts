@@ -86,6 +86,8 @@ export default class PostDto extends BaseModelDto {
   declare readMinutesDisplay: string | 0
   declare routeUrl: string
 
+  declare meta: Record<string, any>
+
   constructor(post?: Post) {
     super()
 
@@ -160,5 +162,7 @@ export default class PostDto extends BaseModelDto {
     this.watchMinutes = post.watchMinutes
     this.readMinutesDisplay = post.readMinutesDisplay
     this.routeUrl = post.routeUrl
+
+    this.meta = post.$extras
   }
 }

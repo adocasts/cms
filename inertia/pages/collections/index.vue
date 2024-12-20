@@ -3,7 +3,7 @@ import type { SimplePaginatorDtoContract } from '@adocasts.com/dto/types'
 import { ref, watchEffect } from 'vue'
 import { Link } from '@tuyau/inertia/vue'
 import { StateDesc } from '#enums/states'
-import { Plus, Slash, Trash2 } from 'lucide-vue-next'
+import { Library, Plus, Slash, Trash2 } from 'lucide-vue-next'
 import { router, useForm } from '@inertiajs/vue3'
 import { tuyau } from '~/lib/tuyau'
 import useConfirmDestroyDialog from '~/composables/use_confirm_destroy_dialog'
@@ -117,6 +117,12 @@ async function onDelete(collection: CollectionDto) {
             </div>
           </TableCell>
           <TableCell>
+            <Button variant="ghost" size="sm" as-child>
+              <Link route="collections.edit.content" :params="{ id: collection.id }">
+                <Library class="w-3 h-3" />
+                Edit Content
+              </Link>
+            </Button>
             <Button
               variant="ghost"
               size="sm"

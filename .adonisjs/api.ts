@@ -29,6 +29,10 @@ type PostsGetHead = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/validators/post.ts')['postIndexValidator']>>
   response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['index'], true>
 }
+type PostsSearchGetHead = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/post.ts')['postSearchValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['search'], true>
+}
 type PostsCreateGetHead = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/posts_controller.ts').default['create'], false>
@@ -62,16 +66,24 @@ type CollectionsIdEditGetHead = {
   response: MakeTuyauResponse<import('../app/controllers/collections_controller.ts').default['edit'], false>
 }
 type CollectionsPost = {
-  request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/collections_controller.ts').default['store'], false>
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/collection.ts')['collectionValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/collections_controller.ts').default['store'], true>
 }
 type CollectionsIdPut = {
-  request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/collections_controller.ts').default['update'], false>
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/collection.ts')['collectionValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/collections_controller.ts').default['update'], true>
 }
 type CollectionsIdDelete = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/collections_controller.ts').default['destroy'], false>
+}
+type CollectionsIdEditContentGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/collection_contents_controller.ts').default['edit'], false>
+}
+type CollectionsIdContentPut = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/collection_contents_controller.ts').default['update'], false>
 }
 export interface ApiDefinition {
   'login': {
@@ -113,6 +125,12 @@ export interface ApiDefinition {
     };
     '$get': PostsGetHead;
     '$head': PostsGetHead;
+    'search': {
+      '$url': {
+      };
+      '$get': PostsSearchGetHead;
+      '$head': PostsSearchGetHead;
+    };
     'create': {
       '$url': {
       };
@@ -150,11 +168,22 @@ export interface ApiDefinition {
         };
         '$get': CollectionsIdEditGetHead;
         '$head': CollectionsIdEditGetHead;
+        'content': {
+          '$url': {
+          };
+          '$get': CollectionsIdEditContentGetHead;
+          '$head': CollectionsIdEditContentGetHead;
+        };
       };
       '$url': {
       };
       '$put': CollectionsIdPut;
       '$delete': CollectionsIdDelete;
+      'content': {
+        '$url': {
+        };
+        '$put': CollectionsIdContentPut;
+      };
     };
     '$post': CollectionsPost;
   };
@@ -222,6 +251,13 @@ const routes = [
     path: '/posts',
     method: ["GET","HEAD"],
     types: {} as PostsGetHead,
+  },
+  {
+    params: [],
+    name: 'posts.search',
+    path: '/posts/search',
+    method: ["GET","HEAD"],
+    types: {} as PostsSearchGetHead,
   },
   {
     params: [],
@@ -299,6 +335,20 @@ const routes = [
     path: '/collections/:id',
     method: ["DELETE"],
     types: {} as CollectionsIdDelete,
+  },
+  {
+    params: ["id"],
+    name: 'collections.edit.content',
+    path: '/collections/:id/edit/content',
+    method: ["GET","HEAD"],
+    types: {} as CollectionsIdEditContentGetHead,
+  },
+  {
+    params: ["id"],
+    name: 'collections.update.content',
+    path: '/collections/:id/content',
+    method: ["PUT"],
+    types: {} as CollectionsIdContentPut,
   },
 ] as const;
 export const api = {

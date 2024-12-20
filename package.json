@@ -123,9 +123,11 @@
     "ua-parser-js": "^1.0.39",
     "unplugin-vue-components": "^0.27.4",
     "vue": "^3.5.13",
+    "vue-contenteditable": "^4.1.0",
     "vue-filepond": "^7.0.4",
     "vue-sonner": "^1.2.5",
-    "vue-tippy": "^6.5.0"
+    "vue-tippy": "^6.5.0",
+    "vuedraggable": "^4.1.0"
   },
   "hotHook": {
     "boundaries": [

@@ -19,7 +19,7 @@ export default class UpdateCollection {
     if (!data.statusId) data.statusId = Status.COMING_SOON
     if (!data.collectionTypeId) data.collectionTypeId = CollectionTypes.SERIES
 
-    const { taxonomyIds, postIds, subcollections, asset, ...update } = data
+    const { taxonomyIds, asset, ...update } = data
     const collection = await Collection.findOrFail(id)
 
     collection.merge(update)

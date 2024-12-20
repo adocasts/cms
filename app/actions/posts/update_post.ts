@@ -5,7 +5,7 @@ import { postValidator } from '#validators/post'
 import db from '@adonisjs/lucid/services/db'
 import { Infer } from '@vinejs/vine/types'
 import SyncPostAsset from './sync_post_assets.js'
-import SyncPostTaxonomies from './sync_post_taxonomies.js'
+import SyncTaxonomies from '#actions/taxonomies/sync_taxonomies'
 
 type Params = {
   id: number
@@ -30,8 +30,8 @@ export default class UpdatePost {
       post.useTransaction(trx)
 
       await post.save()
-      await SyncPostTaxonomies.handle({ post, ids: data.taxonomyIds })
-      await SyncPostAsset.handle({ post, asset: data.thumbnail }, trx)
+      await SyncTaxonomies.handle({ resource: post, ids: taxonomyIds })
+      await SyncPostAsset.handle({ post, asset: thumbnail }, trx)
 
       return post
     })

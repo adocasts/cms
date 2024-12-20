@@ -15,6 +15,14 @@ export const postIndexValidator = vine.compile(
   })
 )
 
+export const postSearchValidator = vine.compile(
+  vine.object({
+    term: vine.string(),
+    ignoreIds: vine.array(vine.number()).optional(),
+    limit: vine.number().max(100).optional(),
+  })
+)
+
 export const postValidator = vine.compile(
   vine.object({
     title: vine.string().trim().maxLength(100),

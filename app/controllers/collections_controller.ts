@@ -74,16 +74,14 @@ export default class CollectionsController {
   }
 
   /**
-   * Show individual record
-   */
-  async show({ params }: HttpContext) {}
-
-  /**
    * Edit individual record
    */
   async edit({ params, inertia }: HttpContext) {
     const collection = await Collection.findOrFail(params.id)
     const taxonomies = await Taxonomy.query().orderBy('name')
+
+    await collection.load('asset')
+    await collection.load('taxonomies', (q) => q.select('id'))
 
     return inertia.render('collections/form', {
       collection: new CollectionDto(collection),

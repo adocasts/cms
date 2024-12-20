@@ -1,13 +1,16 @@
 import DestroyPost from '#actions/posts/destroy_post'
 import GetPaginatedPosts from '#actions/posts/get_paginated_posts'
 import GetPost from '#actions/posts/get_post'
+import SearchPosts from '#actions/posts/search_posts'
 import StorePost from '#actions/posts/store_post'
 import UpdatePost from '#actions/posts/update_post'
+import AutocompleteDto from '#dtos/autocomplete'
+import { CollectionPostFormDto } from '#dtos/collection_content_form'
 import PostDto from '#dtos/post'
 import PostFormDto from '#dtos/post_form'
 import TaxonomyDto from '#dtos/taxonomy'
 import Taxonomy from '#models/taxonomy'
-import { postIndexValidator, postValidator } from '#validators/post'
+import { postIndexValidator, postSearchValidator, postValidator } from '#validators/post'
 import type { HttpContext } from '@adonisjs/core/http'
 import router from '@adonisjs/core/services/router'
 
@@ -82,6 +85,18 @@ export default class PostsController {
     })
 
     return response.redirect().toRoute('posts.index')
+  }
+
+  /**
+   * Search posts by term
+   */
+  async search({ request }: HttpContext) {
+    const data = await request.validateUsing(postSearchValidator)
+    const posts = await SearchPosts.handle(data)
+    return {
+      options: AutocompleteDto.fromArray(posts),
+      data: CollectionPostFormDto.fromArray(posts),
+    }
   }
 
   /**
