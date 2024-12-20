@@ -5,6 +5,7 @@ import AssetDto from '#dtos/asset'
 import HistoryDto from '#dtos/history'
 import PostDto from '#dtos/post'
 import CollectionDto from '#dtos/collection'
+import TaxonomyTypes from '#enums/taxonomy_types'
 
 export default class TaxonomyDto extends BaseModelDto {
   declare id: number
@@ -12,6 +13,7 @@ export default class TaxonomyDto extends BaseModelDto {
   declare rootParentId: number | null
   declare parentId: number | null
   declare levelIndex: number
+  declare taxonomyTypeId: TaxonomyTypes
   declare assetId: number | null
   declare name: string
   declare slug: string
@@ -24,6 +26,8 @@ export default class TaxonomyDto extends BaseModelDto {
   declare posts: PostDto[]
   declare collections: CollectionDto[]
 
+  declare meta: Record<string, any>
+
   constructor(taxonomy?: Taxonomy) {
     super()
 
@@ -33,6 +37,7 @@ export default class TaxonomyDto extends BaseModelDto {
     this.rootParentId = taxonomy.rootParentId
     this.parentId = taxonomy.parentId
     this.levelIndex = taxonomy.levelIndex
+    this.taxonomyTypeId = taxonomy.taxonomyTypeId
     this.assetId = taxonomy.assetId
     this.name = taxonomy.name
     this.slug = taxonomy.slug
@@ -44,5 +49,7 @@ export default class TaxonomyDto extends BaseModelDto {
     this.progressionHistory = HistoryDto.fromArray(taxonomy.progressionHistory)
     this.posts = PostDto.fromArray(taxonomy.posts)
     this.collections = CollectionDto.fromArray(taxonomy.collections)
+
+    this.meta = taxonomy.$extras
   }
 }

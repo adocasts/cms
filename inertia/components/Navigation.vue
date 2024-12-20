@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CollectionTypes from '#enums/collection_types'
 import PostTypes from '#enums/post_types'
+import TaxonomyTypes from '#enums/taxonomy_types'
 import { Link } from '@inertiajs/vue3'
 import { Menu, Slash, Route, Plus, EllipsisVertical } from 'lucide-vue-next'
 
@@ -111,9 +112,14 @@ const links = [
         <MenubarTrigger>Taxonomies</MenubarTrigger>
         <MenubarContent>
           <MenubarItem :as="Link" href="/taxonomies"> All Taxonomies </MenubarItem>
-          <MenubarItem :as="Link" href="/taxonomies/contents"> Content Taxonomies </MenubarItem>
-          <MenubarItem :as="Link" href="/taxonomies/discussions">
+          <MenubarItem :as="Link" :href="`/taxonomies?taxonomyTypeId=${TaxonomyTypes.CONTENT}`">
+            Content Taxonomies
+          </MenubarItem>
+          <MenubarItem :as="Link" :href="`/taxonomies?taxonomyTypeId=${TaxonomyTypes.DISCUSSION}`">
             Discussion Taxonomies
+          </MenubarItem>
+          <MenubarItem :as="Link" href="/taxonomies?rootParentId=1">
+            AdonisJS Taxonomies
           </MenubarItem>
 
           <MenubarSeparator />

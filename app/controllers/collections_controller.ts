@@ -49,14 +49,19 @@ export default class CollectionsController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request, response, auth }: HttpContext) {
+  async store({ request, response, auth, session }: HttpContext) {
     const data = await request.validateUsing(collectionValidator)
     const collection = await StoreCollection.handle({
       user: auth.user!,
       data,
     })
 
-    return response.redirect().toRoute('collections.edit', { id: collection.id })
+    session.flash(
+      'success',
+      'Collection created successfully, you can now add content to this collection'
+    )
+
+    return response.redirect().toRoute('collections.edit.content', { id: collection.id })
   }
 
   /**
@@ -92,13 +97,15 @@ export default class CollectionsController {
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request, response }: HttpContext) {
+  async update({ params, request, response, session }: HttpContext) {
     const data = await request.validateUsing(collectionValidator, { meta: { id: params.id } })
 
     await UpdateCollection.handle({
       id: params.id,
       data,
     })
+
+    session.flash('success', 'Collection updated successfully')
 
     return response.redirect().toRoute('collections.index')
   }

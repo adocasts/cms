@@ -13,6 +13,7 @@ import History from '#models/history'
 import HistoryTypes from '#enums/history_types'
 import { ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 import SlugService from '#services/slug_service'
+import TaxonomyTypes from '#enums/taxonomy_types'
 
 export default class Taxonomy extends AppBaseModel {
   @column({ isPrimary: true })
@@ -29,6 +30,9 @@ export default class Taxonomy extends AppBaseModel {
 
   @column()
   declare levelIndex: number
+
+  @column()
+  declare taxonomyTypeId: TaxonomyTypes
 
   @column()
   declare assetId: number | null

@@ -82,8 +82,32 @@ type CollectionsIdEditContentGetHead = {
   response: MakeTuyauResponse<import('../app/controllers/collection_contents_controller.ts').default['edit'], false>
 }
 type CollectionsIdContentPut = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/collection.ts')['collectionContentValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/collection_contents_controller.ts').default['update'], true>
+}
+type TaxonomiesGetHead = {
   request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/collection_contents_controller.ts').default['update'], false>
+  response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['index'], false>
+}
+type TaxonomiesCreateGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['create'], false>
+}
+type TaxonomiesPost = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['store'], false>
+}
+type TaxonomiesIdEditGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['edit'], false>
+}
+type TaxonomiesIdPut = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['update'], false>
+}
+type TaxonomiesIdDelete = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['destroy'], false>
 }
 export interface ApiDefinition {
   'login': {
@@ -186,6 +210,31 @@ export interface ApiDefinition {
       };
     };
     '$post': CollectionsPost;
+  };
+  'taxonomies': {
+    '$url': {
+    };
+    '$get': TaxonomiesGetHead;
+    '$head': TaxonomiesGetHead;
+    'create': {
+      '$url': {
+      };
+      '$get': TaxonomiesCreateGetHead;
+      '$head': TaxonomiesCreateGetHead;
+    };
+    '$post': TaxonomiesPost;
+    ':id': {
+      'edit': {
+        '$url': {
+        };
+        '$get': TaxonomiesIdEditGetHead;
+        '$head': TaxonomiesIdEditGetHead;
+      };
+      '$url': {
+      };
+      '$put': TaxonomiesIdPut;
+      '$delete': TaxonomiesIdDelete;
+    };
   };
 }
 const routes = [
@@ -349,6 +398,48 @@ const routes = [
     path: '/collections/:id/content',
     method: ["PUT"],
     types: {} as CollectionsIdContentPut,
+  },
+  {
+    params: [],
+    name: 'taxonomies.index',
+    path: '/taxonomies',
+    method: ["GET","HEAD"],
+    types: {} as TaxonomiesGetHead,
+  },
+  {
+    params: [],
+    name: 'taxonomies.create',
+    path: '/taxonomies/create',
+    method: ["GET","HEAD"],
+    types: {} as TaxonomiesCreateGetHead,
+  },
+  {
+    params: [],
+    name: 'taxonomies.store',
+    path: '/taxonomies',
+    method: ["POST"],
+    types: {} as TaxonomiesPost,
+  },
+  {
+    params: ["id"],
+    name: 'taxonomies.edit',
+    path: '/taxonomies/:id/edit',
+    method: ["GET","HEAD"],
+    types: {} as TaxonomiesIdEditGetHead,
+  },
+  {
+    params: ["id"],
+    name: 'taxonomies.update',
+    path: '/taxonomies/:id',
+    method: ["PUT"],
+    types: {} as TaxonomiesIdPut,
+  },
+  {
+    params: ["id"],
+    name: 'taxonomies.destroy',
+    path: '/taxonomies/:id',
+    method: ["DELETE"],
+    types: {} as TaxonomiesIdDelete,
   },
 ] as const;
 export const api = {

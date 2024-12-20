@@ -19,7 +19,7 @@ export default class CollectionContentsController {
 
   @inject()
   async update(
-    { params, request, response, auth }: HttpContext,
+    { params, request, response, auth, session }: HttpContext,
     syncCollectionContent: SyncCollectionContent
   ) {
     const data = await request.validateUsing(collectionContentValidator)
@@ -29,6 +29,8 @@ export default class CollectionContentsController {
       collectionId: params.id,
       data,
     })
+
+    session.flash('success', 'Collection content updated successfully')
 
     return response.redirect().back()
   }
