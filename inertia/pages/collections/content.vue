@@ -35,6 +35,14 @@ async function onSubmit() {
     { preserveScroll: true }
   )
 }
+
+function getNewModuleId() {
+  let minId = Math.min(...form.subcollections.map((col) => col.id))
+
+  if (minId > 0) minId = 0
+
+  return minId - 1
+}
 </script>
 
 <template>
@@ -94,7 +102,10 @@ async function onSubmit() {
           variant="secondary"
           @click="
             form.subcollections.push(
-              new CollectionModuleFormDto({ order: form.subcollections.length + 1 })
+              new CollectionModuleFormDto({
+                id: getNewModuleId(),
+                order: form.subcollections.length + 1,
+              })
             )
           "
         >

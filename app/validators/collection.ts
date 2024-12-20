@@ -61,7 +61,10 @@ export const collectionContentValidator = vine.compile(
     postIds: vine.array(vine.number().exists(exists('posts', 'id'))).optional(),
     subcollections: vine.array(
       vine.object({
-        id: vine.number().exists(exists('collections', 'id')).optional(),
+        id: vine.number().exists(async (db, value, field) => {
+          if (Number(value) < 0) return true // negatives indicate new records
+          return exists('collections', 'id')(db, value, field)
+        }),
         name: vine.string().trim().maxLength(100),
         postIds: vine.array(vine.number().exists(exists('posts', 'id'))).optional(),
       })

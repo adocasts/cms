@@ -58,7 +58,8 @@ export default class SyncCollectionContent {
   }
 
   async findOrCreateModule(module: Data['subcollections'][0], trx: TransactionClientContract) {
-    if (module.id) {
+    // negative id values indicate new modules
+    if (module.id > -1) {
       const record = await Collection.findOrFail(module.id)
       record.useTransaction(trx)
       return record

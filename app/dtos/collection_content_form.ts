@@ -31,7 +31,7 @@ export class CollectionPostFormDto {
 }
 
 export class CollectionModuleFormDto {
-  declare id?: number
+  declare id: number
   declare name: string
   declare order: number
   declare posts: CollectionPostFormDto[]
@@ -39,7 +39,7 @@ export class CollectionModuleFormDto {
   constructor(collection?: CollectionDto | Partial<CollectionModuleFormDto>) {
     if (!collection) return
 
-    this.id = collection.id
+    this.id = collection.id!
     this.name = collection.name ?? 'My cool module'
 
     if ('moduleNumber' in collection) {
