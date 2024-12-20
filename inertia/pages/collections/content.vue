@@ -4,8 +4,9 @@ import PostDto from '#dtos/post'
 import { CollectionModuleFormDto, CollectionPostFormDto } from '#dtos/collection_content_form'
 import { useForm } from '@inertiajs/vue3'
 import { Link } from '@tuyau/inertia/vue'
-import { BookCheck } from 'lucide-vue-next'
-import { unref } from 'vue'
+import { BookCheck, BookPlus } from 'lucide-vue-next'
+import { ref, unref } from 'vue'
+import { tuyau } from '~/lib/tuyau'
 
 const props = defineProps<{
   collection: CollectionDto
@@ -13,10 +14,27 @@ const props = defineProps<{
   posts: PostDto[]
 }>()
 
+const isAddingRootPost = ref(false)
 const form = useForm({
   subcollections: CollectionModuleFormDto.fromArray(unref(props.modules)),
   posts: CollectionPostFormDto.fromArray(unref(props.posts)),
 })
+
+async function onSubmit() {
+  const action = form.transform((data) => ({
+    postIds: data.posts.map((post) => post.id),
+    subcollections: data.subcollections.map((col) => ({
+      id: col.id,
+      name: col.name,
+      postIds: col.posts.map((post) => post.id),
+    })),
+  }))
+
+  await action.put(
+    tuyau.$url('collections.update.content', { params: { id: props.collection.id } }),
+    { preserveScroll: true }
+  )
+}
 </script>
 
 <template>
@@ -50,7 +68,7 @@ const form = useForm({
     </Breadcrumb>
 
     <div class="flex justify-end items-center gap-1.5">
-      <Button @click="">
+      <Button @click="onSubmit">
         <BookCheck class="w-4 h-4" />
         Update Content
       </Button>
@@ -63,6 +81,36 @@ const form = useForm({
     >
       <SortableModules v-model="form.subcollections" />
       <SortableLessons v-model="form.posts" />
+
+      <PostAutocomplete
+        v-if="isAddingRootPost"
+        :ignore-ids="form.posts.map((post) => post.id)"
+        :next-order="form.posts.length + 1"
+        @add="form.posts.push($event)"
+      />
+
+      <div class="flex items-center gap-3">
+        <Button
+          variant="secondary"
+          @click="
+            form.subcollections.push(
+              new CollectionModuleFormDto({ order: form.subcollections.length + 1 })
+            )
+          "
+        >
+          <BookPlus class="w-4 h-4" />
+          Add New Module
+        </Button>
+
+        <Button v-if="!isAddingRootPost" variant="secondary" @click="isAddingRootPost = true">
+          <BookPlus class="w-4 h-4" />
+          Add New Post
+        </Button>
+        <Button v-else @click="isAddingRootPost = false">
+          <BookPlus class="w-4 h-4" />
+          Cancel Add Post
+        </Button>
+      </div>
     </div>
   </div>
 </template>

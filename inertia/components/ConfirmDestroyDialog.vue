@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
+import { Link } from '@inertiajs/vue3'
 
 export type ShowProps = {
   title: string

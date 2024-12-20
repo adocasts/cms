@@ -1,58 +1,32 @@
 <script setup lang="ts">
 import { CollectionModuleFormDto, CollectionPostFormDto } from '#dtos/collection_content_form'
-import { BookMinus, BookPlus } from 'lucide-vue-next'
+import { BookMinus, BookPlus, Trash2 } from 'lucide-vue-next'
 import Sortable from 'vuedraggable'
 import ContentEditable from 'vue-contenteditable'
-import { computed } from 'vue'
-import type AutocompleteDto from '#dtos/autocomplete'
-import { tuyau } from '~/lib/tuyau'
-import { useForm } from '@inertiajs/vue3'
-import { toast } from 'vue-sonner'
+import { computed, ref } from 'vue'
+import useConfirmDestroyDialog from '~/composables/use_confirm_destroy_dialog'
 
-type PostModuleAutocomplete = {
-  moduleId?: number
-  postId: number | null
-  postOptions: AutocompleteDto[]
-  postData: CollectionPostFormDto[]
-}
-
+const destroy = useConfirmDestroyDialog()
 const modules = defineModel<CollectionModuleFormDto[]>({ default: [] })
-const post = useForm<PostModuleAutocomplete>({
-  moduleId: undefined, // radix-ui wants undefined instead of null
-  postId: null,
-  postOptions: [],
-  postData: [],
-})
+const postEditModuleId = ref<number | undefined>(undefined)
+const postModuleIndex = computed(() =>
+  modules.value.findIndex((mod) => mod.id === postEditModuleId.value)
+)
 
-const postModuleIndex = computed(() => modules.value.findIndex((mod) => mod.id === post.moduleId))
-const postModule = computed(() => modules.value.at(postModuleIndex.value))
-
-async function onPostSearch(term: string) {
-  if (!term) return (post.postOptions = [])
-
-  const ignoreIds = postModule.value?.posts.map((post) => post.id)
-  const response = await tuyau.posts.search.$get({
-    query: { term, ignoreIds },
+function onDeleteModule(module: CollectionModuleFormDto) {
+  destroy.value?.show({
+    title: 'Delete Module?',
+    message: `Are you sure you'd like to delete the module "${module.name}"? Once deleted, it'll be gone forever and all of it's posts will be disassociated from this collection.`,
+    async onConfirm() {
+      modules.value = modules.value.filter((mod) => mod.id !== module.id)
+    },
   })
-
-  post.postData = response.data.data
-  post.postOptions = response.data.options
 }
 
-function onPostCommit(id?: number) {
-  if (!id) return post.reset()
-
-  const adding = post.postData.find((item) => item.id === post.postId)
-
-  if (!adding) {
-    return toast.error('Could not find the desired post')
-  }
-
-  adding.order = (postModule.value?.posts.length ?? 1) - 1
-
-  modules.value[postModuleIndex.value].posts.push(adding)
-
-  post.postId = null
+function onRemovePost(post: CollectionPostFormDto) {
+  modules.value[postModuleIndex.value].posts = modules.value[postModuleIndex.value].posts.filter(
+    (item) => item.id !== post.id
+  )
 }
 </script>
 
@@ -63,57 +37,77 @@ function onPostCommit(id?: number) {
         <div
           class="flex items-center justify-between rounded-md px-2 py-2 hover:bg-slate-50 duration-300 group draggable relative"
         >
-          <div class="flex items-center gap-4">
-            <SortHandle />
-            <ContentEditable
-              v-model="modules[index].name"
-              class="font-bold cursor-pointer"
-              tag="div"
-              no-nl
-              no-html
-            />
-            <span class="text-slate-400 text-sm slashed-zero hidden md:inline-block">
-              {{ module.posts?.length ?? 0 }} Posts
-            </span>
-          </div>
+          <ContextMenu>
+            <ContextMenuTrigger>
+              <div class="flex items-center gap-4">
+                <SortHandle />
+                <ContentEditable
+                  v-model="modules[index].name"
+                  class="font-bold cursor-pointer"
+                  tag="div"
+                  no-nl
+                  no-html
+                />
+                <span class="text-slate-400 text-sm slashed-zero hidden md:inline-block">
+                  {{ module.posts?.length ?? 0 }} Posts
+                </span>
+              </div>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+              <ContextMenuItem
+                v-if="postEditModuleId !== module.id"
+                @click="postEditModuleId = module.id"
+              >
+                <BookPlus class="w-3 h-3" />
+                Add Post
+              </ContextMenuItem>
+              <ContextMenuItem v-else @click="postEditModuleId = undefined">
+                <BookMinus class="w-3 h-3" />
+                Cancel Add Post
+              </ContextMenuItem>
+              <ContextMenuItem @click="onDeleteModule(module)">
+                <Trash2 class="w-3 h-3" />
+                Delete Module
+              </ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
 
           <div class="flex gap-2 items-center justify-end">
             <Button
-              v-if="post.moduleId !== module.id"
+              v-if="postEditModuleId !== module.id"
               variant="secondary"
               size="sm"
-              @click="post.moduleId = module.id"
+              @click="postEditModuleId = module.id"
             >
               <BookPlus class="w-4 h-4" />
               Add Posts
             </Button>
-            <Button v-else size="sm" @click="post.moduleId = undefined">
+            <Button v-else size="sm" @click="postEditModuleId = undefined">
               <BookMinus class="w-4 h-4" />
               Cancel
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              class="hover:text-red-500"
+              @click="onDeleteModule(module)"
+            >
+              <Trash2 class="w-4 h-4" />
+              Delete Module
             </Button>
           </div>
         </div>
 
-        <SortableLessons v-model="modules[index].posts" :module="module" />
+        <SortableLessons v-model="modules[index].posts" :module-number="index + 1" />
 
-        <div v-if="post.moduleId == module.id" class="px-4 pt-2 ml-[3ch]">
-          <Autocomplete
-            v-model="post.postId"
-            :options="post.postOptions"
-            @search="onPostSearch"
-            @update:modelValue="onPostCommit"
-          />
-        </div>
+        <PostAutocomplete
+          v-if="postEditModuleId === module.id"
+          class="px-4 pt-2 ml-[3ch]"
+          :collection="module"
+          :next-order="(module.posts.length ?? 1) - 1"
+          @add="modules[postModuleIndex].posts.push($event)"
+        />
       </li>
     </template>
   </Sortable>
-  <div>
-    <Button
-      variant="secondary"
-      @click="modules.push(new CollectionModuleFormDto({ order: modules.length + 1 }))"
-    >
-      <BookPlus class="w-4 h-4" />
-      Add New Module
-    </Button>
-  </div>
 </template>

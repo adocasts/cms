@@ -128,6 +128,7 @@ declare module 'vue' {
     Popover: typeof import('./inertia/components/ui/popover/Popover.vue')['default']
     PopoverContent: typeof import('./inertia/components/ui/popover/PopoverContent.vue')['default']
     PopoverTrigger: typeof import('./inertia/components/ui/popover/PopoverTrigger.vue')['default']
+    PostAutocomplete: typeof import('./inertia/components/PostAutocomplete.vue')['default']
     Select: typeof import('./inertia/components/ui/select/Select.vue')['default']
     SelectContent: typeof import('./inertia/components/ui/select/SelectContent.vue')['default']
     SelectGroup: typeof import('./inertia/components/ui/select/SelectGroup.vue')['default']
