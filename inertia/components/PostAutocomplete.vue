@@ -3,6 +3,7 @@ import AutocompleteDto from '#dtos/autocomplete'
 import CollectionDto from '#dtos/collection'
 import { CollectionModuleFormDto, CollectionPostFormDto } from '#dtos/collection_content_form'
 import { useForm } from '@inertiajs/vue3'
+import { computed } from 'vue'
 import { toast } from 'vue-sonner'
 import { tuyau } from '~/lib/tuyau'
 
@@ -26,6 +27,14 @@ const post = useForm<PostModuleAutocomplete>({
   postOptions: [],
   postData: [],
 })
+
+const options = computed(() =>
+  post.postOptions.filter((option) => {
+    const isIgnored = props.ignoreIds?.includes(option.id)
+    const isInCollection = props.collection?.posts.find((post) => post.id === option.id)
+    return !isIgnored && !isInCollection
+  })
+)
 
 async function onPostSearch(term: string) {
   if (!term) return (post.postOptions = [])
@@ -65,7 +74,7 @@ function getIgnoreIds() {
   <div>
     <Autocomplete
       v-model="post.postId"
-      :options="post.postOptions"
+      :options="options"
       @search="onPostSearch"
       @update:modelValue="onPostCommit"
     />

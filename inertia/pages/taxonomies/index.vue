@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Link } from '@tuyau/inertia/vue'
 import { Link as ILink } from '@inertiajs/vue3'
-import { Library, Plus, Trash2 } from 'lucide-vue-next'
+import { CornerLeftDown, Library, Plus, Trash2 } from 'lucide-vue-next'
 import { router } from '@inertiajs/vue3'
 import { tuyau } from '~/lib/tuyau'
 import useConfirmDestroyDialog from '~/composables/use_confirm_destroy_dialog'
@@ -12,17 +12,13 @@ import { computed } from 'vue'
 const props = defineProps<{
   taxonomyTypeId?: TaxonomyTypes
   parent?: TaxonomyDto
-  root?: TaxonomyDto
   taxonomies: TaxonomyDto[]
 }>()
 
 const destroy = useConfirmDestroyDialog()
-const isNested = computed(() => props.parent || props.root)
 const pageTitle = computed(() => {
-  if (!isNested.value) return 'Taxonomies'
-  return [props.root && props.root.name, props.parent && props.parent.name]
-    .filter(Boolean)
-    .join(' / ')
+  if (props.parent) return props.parent.name
+  return 'Taxonomies'
 })
 
 async function onDelete(taxonomy: TaxonomyDto) {
@@ -46,12 +42,12 @@ async function onDelete(taxonomy: TaxonomyDto) {
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator class="hidden md:block" />
-        <BreadcrumbItem v-if="isNested" class="hidden md:block">
+        <BreadcrumbItem v-if="parent" class="hidden md:block">
           <BreadcrumbLink as-child>
             <Link route="taxonomies.index"> Taxonomies </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbSeparator v-if="isNested" class="hidden md:block" />
+        <BreadcrumbSeparator v-if="parent" class="hidden md:block" />
         <BreadcrumbItem v-if="taxonomyTypeId" class="hidden md:block">
           <BreadcrumbLink as-child>
             <ILink :href="tuyau.$url('taxonomies.index', { query: { taxonomyTypeId } })">
@@ -67,7 +63,13 @@ async function onDelete(taxonomy: TaxonomyDto) {
     </Breadcrumb>
 
     <div class="flex items-center gap-3">
-      <Button :as="Link" route="taxonomies.create">
+      <Button v-if="parent" as-child>
+        <ILink :href="tuyau.$url('taxonomies.create', { query: { parentId: parent.id } })">
+          <Plus class="w-3 h-3" />
+          Add New Child
+        </ILink>
+      </Button>
+      <Button v-else :as="Link" route="taxonomies.create">
         <Plus class="w-4 h-4" />
         New Taxonomy
       </Button>
@@ -79,7 +81,7 @@ async function onDelete(taxonomy: TaxonomyDto) {
       <TableHeader class="bg-slate-100">
         <TableRow>
           <TableHead>Name</TableHead>
-          <TableHead v-if="isNested">Parent</TableHead>
+          <TableHead v-if="parent">Parent</TableHead>
           <TableHead>Type</TableHead>
           <TableHead>Content</TableHead>
           <TableHead></TableHead>
@@ -97,7 +99,7 @@ async function onDelete(taxonomy: TaxonomyDto) {
               </a>
             </div>
           </TableCell>
-          <TableCell v-if="isNested">
+          <TableCell v-if="parent">
             <Link
               v-if="taxonomy.parent"
               route="taxonomies.edit"
@@ -119,7 +121,7 @@ async function onDelete(taxonomy: TaxonomyDto) {
           <TableCell>
             <div class="flex items-center justify-end gap-3">
               <Button
-                v-if="!isNested && Number(taxonomy.meta.children_count)"
+                v-if="!parent && Number(taxonomy.meta.children_count)"
                 variant="secondary"
                 size="sm"
                 as-child
@@ -127,11 +129,20 @@ async function onDelete(taxonomy: TaxonomyDto) {
                 <ILink
                   :href="
                     tuyau.$url('taxonomies.index', {
-                      query: { rootParentId: taxonomy.id, taxonomyTypeId },
+                      query: { parentId: taxonomy.id, taxonomyTypeId },
                     })
                   "
                 >
+                  <CornerLeftDown class="w-3 h-3" />
                   View Children
+                </ILink>
+              </Button>
+              <Button v-if="!parent" variant="secondary" size="sm" as-child>
+                <ILink
+                  :href="tuyau.$url('taxonomies.create', { query: { parentId: taxonomy.id } })"
+                >
+                  <Plus class="w-3 h-3" />
+                  Add Child
                 </ILink>
               </Button>
               <Button

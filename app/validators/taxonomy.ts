@@ -6,6 +6,5 @@ export const taxonomyIndexValidator = vine.compile(
   vine.object({
     taxonomyTypeId: vine.number().enum(TaxonomyTypes).optional(),
     parentId: vine.number().exists(exists('taxonomies', 'id')).optional(),
-    rootParentId: vine.number().exists(exists('taxonomies', 'id')).optional(),
   })
 )

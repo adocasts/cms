@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import Sortable from 'vuedraggable'
 import { DateTime } from 'luxon'
-import { CollectionModuleFormDto, CollectionPostFormDto } from '#dtos/collection_content_form'
+import { CollectionPostFormDto } from '#dtos/collection_content_form'
 import { Link } from '@tuyau/inertia/vue'
-import { CalendarClock } from 'lucide-vue-next'
+import { CalendarClock, X } from 'lucide-vue-next'
 
 defineProps<{
   moduleNumber?: number
@@ -51,7 +51,19 @@ const posts = defineModel<CollectionPostFormDto[]>({ default: [] })
           </span>
         </div>
 
-        <div class="flex justify-end items-center gap-2"></div>
+        <div
+          class="flex justify-end items-center gap-2 opacity-0 group-hover:opacity-100 duration-300"
+        >
+          <Button
+            size="sm"
+            variant="secondary"
+            class="hover:text-red-500"
+            @click="posts.splice(index, 1)"
+          >
+            <X class="w-3 h-3" />
+            Remove
+          </Button>
+        </div>
       </li>
     </template>
   </Sortable>

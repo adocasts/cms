@@ -12,20 +12,14 @@ export default class TaxonomiesController {
     const data = await request.validateUsing(taxonomyIndexValidator)
     const taxonomies = await GetTaxonomies.handle(data)
     let parent: Taxonomy | null = null
-    let root: Taxonomy | null = null
 
     if (data.parentId) {
       parent = await Taxonomy.findOrFail(data.parentId)
     }
 
-    if (data.rootParentId) {
-      root = await Taxonomy.findOrFail(data.rootParentId)
-    }
-
     return inertia.render('taxonomies/index', {
       taxonomies: TaxonomyDto.fromArray(taxonomies),
       parent: parent ? new TaxonomyDto(parent) : null,
-      root: root ? new TaxonomyDto(root) : null,
     })
   }
 
