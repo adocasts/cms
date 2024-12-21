@@ -18,12 +18,26 @@ import QuestionDto from '#dtos/question'
 import LessonRequestDto from '#dtos/lesson_request'
 import RequestVoteDto from '#dtos/request_vote'
 import InvoiceDto from '#dtos/invoice'
+import StripeSubscriptionStatuses from '#enums/stripe_subscription_statuses'
+import Roles from '#enums/roles'
+import Plans from '#enums/plans'
 
 export default class UserDto extends BaseModelDto {
   declare id: number
-  declare roleId: number
-  declare planId: number
+  declare roleId: Roles
+  declare planId: Plans
   declare username: string
+  declare email: string
+  declare stripeCustomerId: string | null
+  declare stripeSubscriptionStatus: StripeSubscriptionStatuses | null
+  declare avatarUrl: string
+  declare isEnabledProfile: boolean
+  declare isEnabledMiniPlayer: boolean
+  declare isEnabledAutoplayNext: boolean
+  declare isEnabledMentions: boolean
+  declare emailVerified: string | null
+  declare createdAt: string
+  declare updatedAt: string
   declare memberDuration?: string | null
   declare avatar: string
   declare avatarLarge: string
@@ -64,6 +78,17 @@ export default class UserDto extends BaseModelDto {
     this.roleId = user.roleId
     this.planId = user.planId
     this.username = user.username
+    this.email = user.email
+    this.stripeCustomerId = user.stripeCustomerId
+    this.stripeSubscriptionStatus = user.stripeSubscriptionStatus
+    this.avatarUrl = user.avatarUrl
+    this.isEnabledProfile = user.isEnabledProfile
+    this.isEnabledMiniPlayer = user.isEnabledMiniPlayer
+    this.isEnabledAutoplayNext = user.isEnabledAutoplayNext
+    this.isEnabledMentions = user.isEnabledMentions
+    this.emailVerified = user.emailVerified
+    this.createdAt = user.createdAt.toISO()!
+    this.updatedAt = user.updatedAt.toISO()!
     this.memberDuration = user.memberDuration
     this.avatar = user.avatar
     this.avatarLarge = user.avatarLarge

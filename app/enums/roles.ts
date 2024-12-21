@@ -12,5 +12,11 @@ export const RoleWeights = [
   Roles.ADMIN,
 ]
 
-export default Roles
+export const RoleDesc: Record<Roles, string> = {
+  [Roles.USER]: 'User',
+  [Roles.ADMIN]: 'Admin',
+  [Roles.CONTRIBUTOR_LVL_1]: 'Contributor (Lvl 1)',
+  [Roles.CONTRIBUTOR_LVL_2]: 'Contributor (Lvl 2)',
+}
 
+export default Roles

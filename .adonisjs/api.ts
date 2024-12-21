@@ -90,24 +90,40 @@ type TaxonomiesGetHead = {
   response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['index'], true>
 }
 type TaxonomiesCreateGetHead = {
-  request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['create'], false>
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/taxonomy.ts')['taxonomyCreateValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['create'], true>
 }
 type TaxonomiesPost = {
-  request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['store'], false>
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/taxonomy.ts')['taxonomyValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['store'], true>
 }
 type TaxonomiesIdEditGetHead = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['edit'], false>
 }
 type TaxonomiesIdPut = {
-  request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['update'], false>
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/taxonomy.ts')['taxonomyValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['update'], true>
 }
 type TaxonomiesIdDelete = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['destroy'], false>
+}
+type UsersGetHead = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/user.ts')['userIndexValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/users_controller.ts').default['index'], true>
+}
+type UsersIdGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/users_controller.ts').default['show'], false>
+}
+type UsersIdRolePatch = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/user.ts')['userRoleValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/users_controller.ts').default['role'], true>
+}
+type UsersIdDelete = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/users_controller.ts').default['destroy'], false>
 }
 export interface ApiDefinition {
   'login': {
@@ -234,6 +250,24 @@ export interface ApiDefinition {
       };
       '$put': TaxonomiesIdPut;
       '$delete': TaxonomiesIdDelete;
+    };
+  };
+  'users': {
+    '$url': {
+    };
+    '$get': UsersGetHead;
+    '$head': UsersGetHead;
+    ':id': {
+      '$url': {
+      };
+      '$get': UsersIdGetHead;
+      '$head': UsersIdGetHead;
+      'role': {
+        '$url': {
+        };
+        '$patch': UsersIdRolePatch;
+      };
+      '$delete': UsersIdDelete;
     };
   };
 }
@@ -440,6 +474,34 @@ const routes = [
     path: '/taxonomies/:id',
     method: ["DELETE"],
     types: {} as TaxonomiesIdDelete,
+  },
+  {
+    params: [],
+    name: 'users.index',
+    path: '/users',
+    method: ["GET","HEAD"],
+    types: {} as UsersGetHead,
+  },
+  {
+    params: ["id"],
+    name: 'users.show',
+    path: '/users/:id',
+    method: ["GET","HEAD"],
+    types: {} as UsersIdGetHead,
+  },
+  {
+    params: ["id"],
+    name: 'users.update.role',
+    path: '/users/:id/role',
+    method: ["PATCH"],
+    types: {} as UsersIdRolePatch,
+  },
+  {
+    params: ["id"],
+    name: 'users.destroy',
+    path: '/users/:id',
+    method: ["DELETE"],
+    types: {} as UsersIdDelete,
   },
 ] as const;
 export const api = {

@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+const UsersController = () => import('#controllers/users_controller')
 const TaxonomiesController = () => import('#controllers/taxonomies_controller')
 const CollectionContentsController = () => import('#controllers/collection_contents_controller')
 const CollectionsController = () => import('#controllers/collections_controller')
@@ -68,5 +69,12 @@ router.group(() => {
   router.get('/taxonomies/:id/edit', [TaxonomiesController, 'edit']).as('taxonomies.edit')
   router.put('/taxonomies/:id', [TaxonomiesController, 'update']).as('taxonomies.update')
   router.delete('/taxonomies/:id', [TaxonomiesController, 'destroy']).as('taxonomies.destroy')
+
+  //* USERS
+  router.get('/users', [UsersController, 'index']).as('users.index')
+  router.get('/users/:id', [UsersController, 'show']).as('users.show')
+  router.patch('/users/:id/role', [UsersController, 'role']).as('users.update.role')
+  router.delete('/users/:id', [UsersController, 'destroy']).as('users.destroy')
+
 
 }).middleware([middleware.auth()])

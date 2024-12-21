@@ -62,10 +62,10 @@ export default class User extends compose(AppBaseModel, AuthFinder) {
   declare id: number
 
   @column()
-  declare roleId: number
+  declare roleId: Roles
 
   @column()
-  declare planId: number
+  declare planId: Plans
 
   @column()
   // @slugify({

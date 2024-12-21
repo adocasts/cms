@@ -5,5 +5,11 @@ enum Plans {
   FOREVER = 4,
 }
 
-export default Plans
+export const PlanDesc: Record<Plans, string> = {
+  [Plans.FREE]: 'Free',
+  [Plans.PLUS_MONTHLY]: 'Plus (Monthly)',
+  [Plans.PLUS_ANNUAL]: 'Plus (Annually)',
+  [Plans.FOREVER]: 'Plus (Forever)',
+}
 
+export default Plans
