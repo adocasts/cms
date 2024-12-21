@@ -34,13 +34,6 @@ const form = useForm({
     credit: props.collection?.asset?.credit ?? '',
   },
   taxonomyIds: props.collection?.taxonomies.map((tax) => tax.id) ?? [],
-  postIds: props.collection?.posts.map((post) => post.id) ?? [],
-  subcollections:
-    props.collection?.children.map((child) => ({
-      id: child.id,
-      name: child.name,
-      postIds: child.posts.map((post) => post.id),
-    })) ?? [],
 })
 
 function onSubmit(stateId: States = form.stateId) {

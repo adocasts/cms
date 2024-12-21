@@ -17,6 +17,11 @@ export default class TaxonomyDto extends BaseModelDto {
   declare assetId: number | null
   declare name: string
   declare slug: string
+  declare description: string
+  declare pageTitle: string
+  declare metaDescription: string
+  declare createdAt: string
+  declare updatedAt: string
   declare owner: UserDto | null
   declare asset: AssetDto | null
   declare parent: TaxonomyDto | null
@@ -41,6 +46,11 @@ export default class TaxonomyDto extends BaseModelDto {
     this.assetId = taxonomy.assetId
     this.name = taxonomy.name
     this.slug = taxonomy.slug
+    this.description = taxonomy.description
+    this.pageTitle = taxonomy.pageTitle
+    this.metaDescription = taxonomy.metaDescription
+    this.createdAt = taxonomy.createdAt.toISO()!
+    this.updatedAt = taxonomy.updatedAt.toISO()!
     this.owner = taxonomy.owner && new UserDto(taxonomy.owner)
     this.asset = taxonomy.asset && new AssetDto(taxonomy.asset)
     this.parent = taxonomy.parent && new TaxonomyDto(taxonomy.parent)

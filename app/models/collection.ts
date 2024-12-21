@@ -164,7 +164,7 @@ export default class Collection extends AppBaseModel {
 
   @beforeSave()
   static async slugifyUsername(collection: Collection) {
-    if (collection.$dirty.name && !collection.$dirty.slug) {
+    if (collection.$dirty.name && !collection.$dirty.slug && !collection.slug) {
       const slugify = new SlugService<typeof Collection>({
         strategy: 'dbIncrement',
         fields: ['name'],

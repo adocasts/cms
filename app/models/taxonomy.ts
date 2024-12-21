@@ -83,6 +83,11 @@ export default class Taxonomy extends AppBaseModel {
   })
   declare children: HasMany<typeof Taxonomy>
 
+  @hasMany(() => Taxonomy, {
+    foreignKey: 'rootParentId',
+  })
+  declare rootChildren: HasMany<typeof Taxonomy>
+
   @hasMany(() => History, {
     onQuery: (q) => q.where('historyTypeId', HistoryTypes.VIEW),
   })
@@ -106,12 +111,12 @@ export default class Taxonomy extends AppBaseModel {
 
   @beforeSave()
   static async slugifyUsername(taxonomy: Taxonomy) {
-    if (taxonomy.$dirty.name && !taxonomy.$dirty.slug) {
+    if (taxonomy.$dirty.name && !taxonomy.$dirty.slug && !taxonomy.slug) {
       const slugify = new SlugService<typeof Taxonomy>({
         strategy: 'dbIncrement',
         fields: ['name'],
       })
-      taxonomy.name = await slugify.make(Taxonomy, 'slug', taxonomy.name)
+      taxonomy.slug = await slugify.make(Taxonomy, 'slug', taxonomy.name)
     }
   }
 

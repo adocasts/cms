@@ -134,7 +134,7 @@ async function onDelete(taxonomy: TaxonomyDto) {
                   "
                 >
                   <CornerLeftDown class="w-3 h-3" />
-                  View Children
+                  View {{ taxonomy.meta.children_count }} Children
                 </ILink>
               </Button>
               <Button v-if="!parent" variant="secondary" size="sm" as-child>

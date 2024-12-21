@@ -86,8 +86,8 @@ type CollectionsIdContentPut = {
   response: MakeTuyauResponse<import('../app/controllers/collection_contents_controller.ts').default['update'], true>
 }
 type TaxonomiesGetHead = {
-  request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['index'], false>
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/taxonomy.ts')['taxonomyIndexValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/taxonomies_controller.ts').default['index'], true>
 }
 type TaxonomiesCreateGetHead = {
   request: unknown
