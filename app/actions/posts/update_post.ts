@@ -7,18 +7,25 @@ import { Infer } from '@vinejs/vine/types'
 import SyncPostAsset from './sync_post_assets.js'
 import SyncTaxonomies from '#actions/taxonomies/sync_taxonomies'
 
-type Params = {
-  id: number
-  data: Infer<typeof postValidator>
-}
+type Data = Infer<typeof postValidator>
 
 export default class UpdatePost {
-  static async handle({ id, data }: Params) {
+  static async byId(id: number, data: Data) {
+    const post = await Post.findOrFail(id)
+    await this.#update(post, data)
+    return post
+  }
+
+  static async handle(post: Post, data: Data) {
+    await this.#update(post, data)
+    return post
+  }
+
+  static async #update(post: Post, data: Data) {
     if (!data.stateId) data.stateId = States.DRAFT
     if (!data.postTypeId) data.postTypeId = PostTypes.LESSON
 
     const { thumbnail, publishAtDate, publishAtTime, taxonomyIds, ...update } = data
-    const post = await Post.findOrFail(id)
 
     post.merge(update)
 

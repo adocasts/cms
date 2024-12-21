@@ -11,6 +11,11 @@ export default class DestroyPost {
     return post
   }
 
+  static async handle(post: Post) {
+    await this.#destroy(post)
+    return post
+  }
+
   static async #destroy(post: Post) {
     const deletable = await db.transaction(async (trx) => {
       post.useTransaction(trx)

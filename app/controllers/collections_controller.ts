@@ -1,3 +1,4 @@
+import DestroyCollection from '#actions/collections/destroy_collection'
 import GetPaginatedCollections from '#actions/collections/get_paginated_collections'
 import StoreCollection from '#actions/collections/store_collection'
 import StubCollection from '#actions/collections/stub_collection'
@@ -18,7 +19,9 @@ export default class CollectionsController {
   /**
    * Display a list of resource
    */
-  async index({ request, inertia }: HttpContext) {
+  async index({ request, inertia, bouncer }: HttpContext) {
+    await bouncer.with('CollectionPolicy').authorize('viewList')
+
     const data = await request.validateUsing(collectionIndexValidator)
     const paginator = await GetPaginatedCollections.handle(data)
 
@@ -38,7 +41,9 @@ export default class CollectionsController {
   /**
    * Display form to create a new record
    */
-  async create({ inertia }: HttpContext) {
+  async create({ inertia, bouncer }: HttpContext) {
+    await bouncer.with('CollectionPolicy').authorize('create')
+
     const taxonomies = await Taxonomy.query().orderBy('name')
 
     return inertia.render('collections/form', {
@@ -49,7 +54,9 @@ export default class CollectionsController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request, response, auth, session }: HttpContext) {
+  async store({ request, response, auth, session, bouncer }: HttpContext) {
+    await bouncer.with('CollectionPolicy').authorize('create')
+
     const data = await request.validateUsing(collectionValidator)
     const collection = await StoreCollection.handle({
       user: auth.user!,
@@ -65,23 +72,11 @@ export default class CollectionsController {
   }
 
   /**
-   * Stub an empty child collection
-   */
-  async stub({ request, response, auth }: HttpContext) {
-    const data = await request.validateUsing(collectionStubValidator)
-
-    await StubCollection.handle({
-      user: auth.user!,
-      data,
-    })
-
-    return response.redirect().back()
-  }
-
-  /**
    * Edit individual record
    */
-  async edit({ params, inertia }: HttpContext) {
+  async edit({ params, inertia, bouncer }: HttpContext) {
+    await bouncer.with('CollectionPolicy').authorize('update')
+
     const collection = await Collection.findOrFail(params.id)
     const taxonomies = await Taxonomy.query().orderBy('name')
 
@@ -97,7 +92,9 @@ export default class CollectionsController {
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request, response, session }: HttpContext) {
+  async update({ params, request, response, session, bouncer }: HttpContext) {
+    await bouncer.with('CollectionPolicy').authorize('update')
+
     const data = await request.validateUsing(collectionValidator, { meta: { id: params.id } })
 
     await UpdateCollection.handle({
@@ -113,5 +110,15 @@ export default class CollectionsController {
   /**
    * Delete record
    */
-  async destroy({ params }: HttpContext) {}
+  async destroy({ params, response, session, bouncer }: HttpContext) {
+    const collection = await Collection.findOrFail(params.id)
+
+    await bouncer.with('CollectionPolicy').authorize('destroy', collection)
+
+    await DestroyCollection.handle(collection)
+
+    session.flash('success', 'Collection deleted successfully')
+
+    return response.redirect().toRoute('collections.index')
+  }
 }

@@ -6,7 +6,8 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class AssetsController {
   @inject()
-  async store({ response }: HttpContext, storeAsset: StoreAsset) {
+  async store({ response, bouncer }: HttpContext, storeAsset: StoreAsset) {
+    await bouncer.with('AssetPolicy').authorize('store')
     return response.status(200).json(await storeAsset.handle())
   }
 
@@ -16,7 +17,8 @@ export default class AssetsController {
   }
 
   @inject()
-  async destroy({ response }: HttpContext, destroyAsset: DestroyAsset) {
+  async destroy({ response, bouncer }: HttpContext, destroyAsset: DestroyAsset) {
+    await bouncer.with('AssetPolicy').authorize('destroy')
     await destroyAsset.handle()
     return response.status(204)
   }

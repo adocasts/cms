@@ -4,15 +4,20 @@ import { taxonomyValidator } from '#validators/taxonomy'
 import db from '@adonisjs/lucid/services/db'
 import { Infer } from '@vinejs/vine/types'
 
-type Params = {
-  id: number
-  data: Infer<typeof taxonomyValidator>
-}
+type Data = Infer<typeof taxonomyValidator>
 
 export default class UpdateTaxonomy {
-  static async handle({ id, data }: Params) {
-    const { asset, ...update } = data
+  static async byId(id: number, data: Data) {
     const taxonomy = await Taxonomy.findOrFail(id)
+    return this.#update(taxonomy, data)
+  }
+
+  static async handle(taxonomy: Taxonomy, data: Data) {
+    return this.#update(taxonomy, data)
+  }
+
+  static async #update(taxonomy: Taxonomy, data: Data) {
+    const { asset, ...update } = data
 
     taxonomy.merge(update)
 

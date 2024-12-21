@@ -7,7 +7,9 @@ import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class CollectionContentsController {
-  async edit({ params, inertia }: HttpContext) {
+  async edit({ params, inertia, bouncer }: HttpContext) {
+    await bouncer.with('CollectionPolicy').authorize('update')
+
     const { collection, modules, posts } = await GetCollectionContent.byId(params.id)
 
     return inertia.render('collections/content', {
@@ -19,9 +21,11 @@ export default class CollectionContentsController {
 
   @inject()
   async update(
-    { params, request, response, auth, session }: HttpContext,
+    { params, request, response, auth, session, bouncer }: HttpContext,
     syncCollectionContent: SyncCollectionContent
   ) {
+    await bouncer.with('CollectionPolicy').authorize('update')
+
     const data = await request.validateUsing(collectionContentValidator)
 
     await syncCollectionContent.handle({

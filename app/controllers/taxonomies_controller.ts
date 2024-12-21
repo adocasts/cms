@@ -15,7 +15,9 @@ export default class TaxonomiesController {
   /**
    * Display a list of resource
    */
-  async index({ inertia, request }: HttpContext) {
+  async index({ inertia, request, bouncer }: HttpContext) {
+    await bouncer.with('TaxonomyPolicy').authorize('viewList')
+
     const data = await request.validateUsing(taxonomyIndexValidator)
     const taxonomies = await GetTaxonomies.handle(data)
     let parent: Taxonomy | null = null
@@ -33,7 +35,9 @@ export default class TaxonomiesController {
   /**
    * Display form to create a new record
    */
-  async create({ inertia, request }: HttpContext) {
+  async create({ inertia, request, bouncer }: HttpContext) {
+    await bouncer.with('TaxonomyPolicy').authorize('create')
+
     const { parentId } = await request.validateUsing(taxonomyCreateValidator)
     const parent = parentId ? await Taxonomy.findOrFail(parentId) : null
     console.log({
@@ -48,7 +52,9 @@ export default class TaxonomiesController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request, response, auth, session }: HttpContext) {
+  async store({ request, response, auth, session, bouncer }: HttpContext) {
+    await bouncer.with('TaxonomyPolicy').authorize('create')
+
     const data = await request.validateUsing(taxonomyValidator)
 
     const taxonomy = await StoreTaxonomy.handle({
@@ -66,9 +72,11 @@ export default class TaxonomiesController {
   /**
    * Edit individual record
    */
-  async edit({ params, inertia }: HttpContext) {
+  async edit({ params, inertia, bouncer }: HttpContext) {
     const taxonomy = await Taxonomy.findOrFail(params.id)
     const parent = await taxonomy.related('parent').query().first()
+
+    await bouncer.with('TaxonomyPolicy').authorize('update', taxonomy)
 
     return inertia.render('taxonomies/form', {
       taxonomy: new TaxonomyDto(taxonomy),
@@ -79,12 +87,14 @@ export default class TaxonomiesController {
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request, response, session }: HttpContext) {
+  async update({ params, request, response, session, bouncer }: HttpContext) {
+    const taxonomy = await Taxonomy.findOrFail(params.id)
+
+    await bouncer.with('TaxonomyPolicy').authorize('update', taxonomy)
+
     const data = await request.validateUsing(taxonomyValidator, { meta: { id: params.id } })
-    const taxonomy = await UpdateTaxonomy.handle({
-      id: params.id,
-      data,
-    })
+
+    await UpdateTaxonomy.handle(taxonomy, data)
 
     session.flash('success', 'Taxonomy updated successfully')
 
@@ -96,8 +106,12 @@ export default class TaxonomiesController {
   /**
    * Delete record
    */
-  async destroy({ params, response, session }: HttpContext) {
-    const taxonomy = await DestroyTaxonomy.byId(params.id)
+  async destroy({ params, response, session, bouncer }: HttpContext) {
+    const taxonomy = await Taxonomy.findOrFail(params.id)
+
+    await bouncer.with('TaxonomyPolicy').authorize('destroy', taxonomy)
+
+    await DestroyTaxonomy.handle(taxonomy)
 
     session.flash('success', 'Taxonomy deleted successfully')
 

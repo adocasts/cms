@@ -17,6 +17,7 @@ export default defineConfig({
     () => import('@adocasts.com/dto/commands'),
     () => import('@adocasts.com/actions/commands'),
     () => import('@tuyau/core/commands'),
+    () => import('@adonisjs/bouncer/commands')
   ],
 
   /*
@@ -47,7 +48,8 @@ export default defineConfig({
     () => import('@adonisjs/inertia/inertia_provider'),
     () => import('@adonisjs/mail/mail_provider'),
     () => import('@tuyau/core/tuyau_provider'),
-    () => import('@adonisjs/drive/drive_provider')
+    () => import('@adonisjs/drive/drive_provider'),
+    () => import('@adonisjs/bouncer/bouncer_provider')
   ],
 
   /*

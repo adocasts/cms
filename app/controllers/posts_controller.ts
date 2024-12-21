@@ -9,6 +9,7 @@ import { CollectionPostFormDto } from '#dtos/collection_content_form'
 import PostDto from '#dtos/post'
 import PostFormDto from '#dtos/post_form'
 import TaxonomyDto from '#dtos/taxonomy'
+import Post from '#models/post'
 import Taxonomy from '#models/taxonomy'
 import { postIndexValidator, postSearchValidator, postValidator } from '#validators/post'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -18,7 +19,9 @@ export default class PostsController {
   /**
    * Display a list of resource
    */
-  async index({ request, inertia }: HttpContext) {
+  async index({ request, inertia, bouncer }: HttpContext) {
+    await bouncer.with('PostPolicy').authorize('viewList')
+
     const data = await request.validateUsing(postIndexValidator)
     const paginator = await GetPaginatedPosts.handle(data)
 
@@ -38,7 +41,9 @@ export default class PostsController {
   /**
    * Display form to create a new record
    */
-  async create({ inertia }: HttpContext) {
+  async create({ inertia, bouncer }: HttpContext) {
+    await bouncer.with('PostPolicy').authorize('create')
+
     const taxonomies = await Taxonomy.query().orderBy('name')
 
     return inertia.render('posts/form', {
@@ -49,7 +54,9 @@ export default class PostsController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request, response, auth }: HttpContext) {
+  async store({ request, response, auth, bouncer }: HttpContext) {
+    await bouncer.with('PostPolicy').authorize('create')
+
     const data = await request.validateUsing(postValidator)
 
     await StorePost.handle({
@@ -63,9 +70,11 @@ export default class PostsController {
   /**
    * Edit individual record
    */
-  async edit({ params, inertia }: HttpContext) {
+  async edit({ params, inertia, bouncer }: HttpContext) {
     const post = await GetPost.byId(params.id)
     const taxonomies = await Taxonomy.query().orderBy('name')
+
+    await bouncer.with('PostPolicy').authorize('update', post)
 
     return inertia.render('posts/form', {
       post: new PostFormDto(post),
@@ -76,13 +85,14 @@ export default class PostsController {
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request, response }: HttpContext) {
+  async update({ params, request, response, bouncer }: HttpContext) {
+    const post = await Post.findOrFail(params.id)
+
+    await bouncer.with('PostPolicy').authorize('update', post)
+
     const data = await request.validateUsing(postValidator, { meta: { id: params.id } })
 
-    await UpdatePost.handle({
-      id: params.id,
-      data,
-    })
+    await UpdatePost.handle(post, data)
 
     return response.redirect().toRoute('posts.index')
   }
@@ -90,9 +100,12 @@ export default class PostsController {
   /**
    * Search posts by term
    */
-  async search({ request }: HttpContext) {
+  async search({ request, bouncer }: HttpContext) {
+    await bouncer.with('PostPolicy').authorize('viewList')
+
     const data = await request.validateUsing(postSearchValidator)
     const posts = await SearchPosts.handle(data)
+
     return {
       options: AutocompleteDto.fromArray(posts),
       data: CollectionPostFormDto.fromArray(posts),
@@ -102,8 +115,12 @@ export default class PostsController {
   /**
    * Delete record
    */
-  async destroy({ params, response, session }: HttpContext) {
-    const post = await DestroyPost.byId(params.id)
+  async destroy({ params, response, session, bouncer }: HttpContext) {
+    const post = await Post.findOrFail(params.id)
+
+    await bouncer.with('PostPolicy').authorize('destroy', post)
+
+    await DestroyPost.handle(post)
 
     session.flash('success', `Your post "${post.title}" has been deleted`)
 

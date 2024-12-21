@@ -9,6 +9,11 @@ export default class DestroyTaxonomy {
     return taxonomy
   }
 
+  static async handle(taxonomy: Taxonomy) {
+    await this.#destroy(taxonomy)
+    return taxonomy
+  }
+
   static async #destroy(taxonomy: Taxonomy) {
     const children = await taxonomy.related('rootChildren').query().select('id')
     const cascadeIds = [...children.map((child) => child.id), taxonomy.id]

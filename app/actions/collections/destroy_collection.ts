@@ -9,6 +9,11 @@ export default class DestroyCollection {
     return collection
   }
 
+  static async handle(collection: Collection) {
+    await this.#destroy(collection)
+    return collection
+  }
+
   static async #destroy(collection: Collection) {
     const children = await collection.related('children').query().select('id')
     const cascadeIds = [...children.map((child) => child.id), collection.id]
