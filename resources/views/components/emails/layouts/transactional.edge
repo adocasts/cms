@@ -200,7 +200,7 @@
                     ">
                   <tr style="vertical-align: middle" valign="middle">
                     <td class="content">
-                      @!section('content')
+                      {{{ await $slots.main() }}}
                     </td>
                   </tr>
                 </table>

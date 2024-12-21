@@ -32,6 +32,7 @@ emitter.on('role:upgrade:contributor_lvl_2', async ({ user, oldRole, newRole }) 
 })
 
 emitter.on('role:upgrade:admin', async ({ user, oldRole, newRole }) => {
+  console.log(`updating ${user.username} to admin`)
   await mail.sendLater((message) => {
     message
       .to(user.email)
