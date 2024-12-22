@@ -1,9 +1,12 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, computed } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeSave, column, computed, hasMany } from '@adonisjs/lucid/orm'
 import Env from '#start/env'
 import UtilityService from '#services/utility_service'
 import Plans from '#enums/plans'
 import CouponDurations from '#enums/coupon_durations'
+import User from './user.js'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
+import SlugService from '#services/slug_service'
 
 export default class Plan extends BaseModel {
   @column({ isPrimary: true })
@@ -28,7 +31,7 @@ export default class Plan extends BaseModel {
   declare price: number
 
   @column()
-  declare isActive: true
+  declare isActive: boolean
 
   @column()
   declare couponCode: string | null
@@ -123,5 +126,19 @@ export default class Plan extends BaseModel {
   @computed()
   get displaySalePrice() {
     return UtilityService.formatCurrency(this.salePrice, 'USD')
+  }
+
+  @hasMany(() => User)
+  declare users: HasMany<typeof User>
+
+  @beforeSave()
+  static async slugifyUsername(plan: Plan) {
+    if (plan.$dirty.name && !plan.$dirty.slug && !plan.slug) {
+      const slugify = new SlugService<typeof Plan>({
+        strategy: 'dbIncrement',
+        fields: ['name'],
+      })
+      plan.slug = await slugify.make(Plan, 'slug', plan.name)
+    }
   }
 }

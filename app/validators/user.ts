@@ -7,6 +7,7 @@ export const userIndexValidator = vine.compile(
     perPage: vine.number().min(1).max(100).optional(),
     term: vine.string().optional(),
     roleId: vine.number().exists(exists('roles', 'id')).optional(),
+    planId: vine.number().exists(exists('plans', 'id')).optional(),
   })
 )
 

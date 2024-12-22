@@ -9,7 +9,7 @@ export default class PlanDto extends BaseModelDto {
   declare stripePriceId: string | null
   declare stripePriceTestId: string | null
   declare price: number
-  declare isActive: true
+  declare isActive: boolean
   declare couponCode: string | null
   declare couponDiscountFixed: number | null
   declare couponDiscountPercent: number | null
@@ -26,6 +26,8 @@ export default class PlanDto extends BaseModelDto {
   declare salePrice: number
   declare displayPrice: string
   declare displaySalePrice: string
+
+  declare meta: Record<string, any>
 
   constructor(plan?: Plan) {
     super()
@@ -55,5 +57,7 @@ export default class PlanDto extends BaseModelDto {
     this.salePrice = plan.salePrice
     this.displayPrice = plan.displayPrice
     this.displaySalePrice = plan.displaySalePrice
+
+    this.meta = plan.$extras
   }
 }

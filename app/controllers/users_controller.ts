@@ -18,6 +18,7 @@ export default class UsersController {
 
     return inertia.render('users/index', {
       roleId: data.roleId,
+      planId: data.planId,
       term: data.term,
       users: UserDto.fromPaginator(paginator, {
         start: paginator.firstPage,

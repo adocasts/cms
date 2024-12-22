@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+const PlansController = () => import('#controllers/plans_controller')
 const RolesController = () => import('#controllers/roles_controller')
 const UsersController = () => import('#controllers/users_controller')
 const TaxonomiesController = () => import('#controllers/taxonomies_controller')
@@ -84,5 +85,16 @@ router.group(() => {
   router.get('/roles/:id/edit', [RolesController, 'edit']).as('roles.edit')
   router.put('/roles/:id', [RolesController, 'update']).as('roles.update')
   router.delete('/roles/:id', [RolesController, 'destroy']).as('roles.destroy')
+
+  //* PLANS
+  router.get('/plans', [PlansController, 'index']).as('plans.index')
+  router.get('/plans/create', [PlansController, 'create']).as('plans.create')
+  router.post('/plans', [PlansController, 'store']).as('plans.store')
+  router.get('/plans/:id/edit', [PlansController, 'edit']).as('plans.edit')
+  router.put('/plans/:id', [PlansController, 'update']).as('plans.update')
+  router.patch('/plans/:id/activate', [PlansController, 'activate']).as('plans.activate')
+  router.patch('/plans/:id/deactivate', [PlansController, 'deactivate']).as('plans.deactivate')
+  router.delete('/plans/:id', [PlansController, 'destroy']).as('plans.destroy')
+
 
 }).middleware([middleware.auth()])

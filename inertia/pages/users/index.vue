@@ -6,11 +6,12 @@ import { useForm } from '@inertiajs/vue3'
 import { tuyau } from '~/lib/tuyau'
 import Roles, { RoleDesc } from '#enums/roles'
 import UserDto from '#dtos/user'
-import { PlanDesc } from '#enums/plans'
+import Plans, { PlanDesc } from '#enums/plans'
 import { ref, watchEffect } from 'vue'
 
 const props = defineProps<{
   roleId: Roles
+  planId: Plans
   users: SimplePaginatorDtoContract<UserDto>
   term: string
 }>()
@@ -31,14 +32,18 @@ watchEffect(() => (users.value = props.users))
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator class="hidden md:block" />
-        <BreadcrumbItem v-if="roleId" class="hidden md:block">
+        <BreadcrumbItem v-if="roleId || planId" class="hidden md:block">
           <BreadcrumbLink as-child>
             <Link route="users.index"> Users </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator v-if="roleId" class="hidden md:block" />
-        <BreadcrumbItem>
+        <BreadcrumbItem v-if="roleId">
           <BreadcrumbPage>{{ roleId ? RoleDesc[roleId] : 'Users' }}</BreadcrumbPage>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator v-if="planId" class="hidden md:block" />
+        <BreadcrumbItem>
+          <BreadcrumbPage>{{ planId ? PlanDesc[planId] : 'Users' }}</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

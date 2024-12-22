@@ -145,6 +145,42 @@ type RolesIdPut = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/validators/role.ts')['roleValidator']>>
   response: MakeTuyauResponse<import('../app/controllers/roles_controller.ts').default['update'], true>
 }
+type RolesIdDelete = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/roles_controller.ts').default['destroy'], false>
+}
+type PlansGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['index'], false>
+}
+type PlansCreateGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['create'], false>
+}
+type PlansPost = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['store'], false>
+}
+type PlansIdEditGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['edit'], false>
+}
+type PlansIdPut = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['update'], false>
+}
+type PlansIdActivatePatch = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['activate'], false>
+}
+type PlansIdDeactivatePatch = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['deactivate'], false>
+}
+type PlansIdDelete = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['destroy'], false>
+}
 export interface ApiDefinition {
   'login': {
     '$url': {
@@ -312,6 +348,42 @@ export interface ApiDefinition {
       '$url': {
       };
       '$put': RolesIdPut;
+      '$delete': RolesIdDelete;
+    };
+  };
+  'plans': {
+    '$url': {
+    };
+    '$get': PlansGetHead;
+    '$head': PlansGetHead;
+    'create': {
+      '$url': {
+      };
+      '$get': PlansCreateGetHead;
+      '$head': PlansCreateGetHead;
+    };
+    '$post': PlansPost;
+    ':id': {
+      'edit': {
+        '$url': {
+        };
+        '$get': PlansIdEditGetHead;
+        '$head': PlansIdEditGetHead;
+      };
+      '$url': {
+      };
+      '$put': PlansIdPut;
+      'activate': {
+        '$url': {
+        };
+        '$patch': PlansIdActivatePatch;
+      };
+      'deactivate': {
+        '$url': {
+        };
+        '$patch': PlansIdDeactivatePatch;
+      };
+      '$delete': PlansIdDelete;
     };
   };
 }
@@ -581,6 +653,69 @@ const routes = [
     path: '/roles/:id',
     method: ["PUT"],
     types: {} as RolesIdPut,
+  },
+  {
+    params: ["id"],
+    name: 'roles.destroy',
+    path: '/roles/:id',
+    method: ["DELETE"],
+    types: {} as RolesIdDelete,
+  },
+  {
+    params: [],
+    name: 'plans.index',
+    path: '/plans',
+    method: ["GET","HEAD"],
+    types: {} as PlansGetHead,
+  },
+  {
+    params: [],
+    name: 'plans.create',
+    path: '/plans/create',
+    method: ["GET","HEAD"],
+    types: {} as PlansCreateGetHead,
+  },
+  {
+    params: [],
+    name: 'plans.store',
+    path: '/plans',
+    method: ["POST"],
+    types: {} as PlansPost,
+  },
+  {
+    params: ["id"],
+    name: 'plans.edit',
+    path: '/plans/:id/edit',
+    method: ["GET","HEAD"],
+    types: {} as PlansIdEditGetHead,
+  },
+  {
+    params: ["id"],
+    name: 'plans.update',
+    path: '/plans/:id',
+    method: ["PUT"],
+    types: {} as PlansIdPut,
+  },
+  {
+    params: ["id"],
+    name: 'plans.activate',
+    path: '/plans/:id/activate',
+    method: ["PATCH"],
+    types: {} as PlansIdActivatePatch,
+  },
+  {
+    params: ["id"],
+    name: 'plans.deactivate',
+    path: '/plans/:id/deactivate',
+    method: ["PATCH"],
+    types: {} as PlansIdDeactivatePatch,
+  },
+  {
+    params: ["id"],
+    name: 'plans.destroy',
+    path: '/plans/:id',
+    method: ["DELETE"],
+    types: {} as PlansIdDelete,
   },
 ] as const;
 export const api = {
