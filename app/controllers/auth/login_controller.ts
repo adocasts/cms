@@ -7,7 +7,7 @@ import app from '@adonisjs/core/services/app'
 export default class LoginController {
   async show({ inertia, response }: HttpContext) {
     if (app.inProduction) {
-      return response.redirect('https://adocasts.com/login?return=cms')
+      return response.redirect('https://adocasts.com/signin?action=cms')
     }
 
     return inertia.render('auth/login')
