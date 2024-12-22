@@ -20,6 +20,10 @@ export default class AuthMiddleware {
     } = {}
   ) {
     await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
+
+    // require user to at least have access to the dashboard to access cms
+    await ctx.bouncer.with('CmsPolicy').authorize('viewDashboard')
+
     return next()
   }
 }

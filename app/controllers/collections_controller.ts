@@ -1,17 +1,12 @@
 import DestroyCollection from '#actions/collections/destroy_collection'
 import GetPaginatedCollections from '#actions/collections/get_paginated_collections'
 import StoreCollection from '#actions/collections/store_collection'
-import StubCollection from '#actions/collections/stub_collection'
 import UpdateCollection from '#actions/collections/update_collection'
 import CollectionDto from '#dtos/collection'
 import TaxonomyDto from '#dtos/taxonomy'
 import Collection from '#models/collection'
 import Taxonomy from '#models/taxonomy'
-import {
-  collectionIndexValidator,
-  collectionStubValidator,
-  collectionValidator,
-} from '#validators/collection'
+import { collectionIndexValidator, collectionValidator } from '#validators/collection'
 import type { HttpContext } from '@adonisjs/core/http'
 import router from '@adonisjs/core/services/router'
 

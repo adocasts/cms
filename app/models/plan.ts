@@ -1,14 +1,15 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeSave, column, computed, hasMany } from '@adonisjs/lucid/orm'
+import { beforeSave, column, computed, hasMany } from '@adonisjs/lucid/orm'
 import Env from '#start/env'
 import UtilityService from '#services/utility_service'
 import Plans from '#enums/plans'
 import CouponDurations from '#enums/coupon_durations'
-import User from './user.js'
+import User from '#models/user'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import SlugService from '#services/slug_service'
+import AppBaseModel from '#models/app_base_model'
 
-export default class Plan extends BaseModel {
+export default class Plan extends AppBaseModel {
   @column({ isPrimary: true })
   declare id: number
 
@@ -59,6 +60,9 @@ export default class Plan extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @hasMany(() => User)
+  declare users: HasMany<typeof User>
 
   @computed()
   get mode() {
@@ -127,9 +131,6 @@ export default class Plan extends BaseModel {
   get displaySalePrice() {
     return UtilityService.formatCurrency(this.salePrice, 'USD')
   }
-
-  @hasMany(() => User)
-  declare users: HasMany<typeof User>
 
   @beforeSave()
   static async slugifyUsername(plan: Plan) {

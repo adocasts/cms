@@ -1,5 +1,6 @@
 import HttpStatus from '#enums/http_statuses'
 import Plan from '#models/plan'
+import User from '#models/user'
 import { Exception } from '@adonisjs/core/exceptions'
 
 export default class DestroyPlan {
@@ -13,7 +14,7 @@ export default class DestroyPlan {
   }
 
   static async #destroy(plan: Plan) {
-    const users = await plan.related('users').query().getCount()
+    const users = await User.query().where('planId', plan.id).getCount()
 
     if (Number(users) > 0) {
       throw new Exception(

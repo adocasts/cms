@@ -26,8 +26,8 @@ export default class CollectionDto extends BaseModelDto {
   declare description: string
   declare pageTitle: string
   declare metaDescription: string
-  declare youtubePlaylistUrl: string
-  declare repositoryUrl: string
+  declare youtubePlaylistUrl: string | null
+  declare repositoryUrl: string | null
   declare sortOrder: number
   declare moduleNumber: number
   declare owner: UserDto | null

@@ -9,7 +9,7 @@ type Params = Infer<typeof planIndexValidator>
 export default class GetPaginatedPlans {
   static async handle({ page = 1, perPage = 25 }: Params) {
     return Plan.query()
-      .withCount('users', (query) =>
+      .withCount<'users'>('users', (query) =>
         query
           .where('planId', Plans.FOREVER)
           .orWhere('planId', Plans.FREE)

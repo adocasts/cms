@@ -58,7 +58,7 @@ export default class DestroyPost {
   static async #destroyAssets(post: Post, trx: TransactionClientContract) {
     const assets = await post.related('assets').query().select(['id', 'filename'])
     const assetIds = assets.map((a) => a.id)
-    const unusedQuery = Asset.query()
+    const unusedQuery = Asset.query({ client: trx })
       .whereIn('id', assetIds)
       .whereDoesntHave('collections', (query) => query)
       .whereDoesntHave('posts', (query) => query)

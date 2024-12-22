@@ -14,7 +14,7 @@ export default class UpdateUserRole {
   }
 
   static async #updateRole(user: User, data: Data) {
-    const oldRole = await user.related('role').query().firstOrFail()
+    const oldRole = await user.related<'role'>('role').query().firstOrFail()
     const newRole = await Role.findOrFail(data.roleId)
 
     await user.merge(data).save()
