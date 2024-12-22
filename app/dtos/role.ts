@@ -10,6 +10,8 @@ export default class RoleDto extends BaseModelDto {
   declare updatedAt: string
   declare users: UserDto[]
 
+  declare meta: Record<string, any>
+
   constructor(role?: Role) {
     super()
 
@@ -20,5 +22,7 @@ export default class RoleDto extends BaseModelDto {
     this.createdAt = role.createdAt.toISO()!
     this.updatedAt = role.updatedAt.toISO()!
     this.users = UserDto.fromArray(role.users)
+
+    this.meta = role.$extras
   }
 }

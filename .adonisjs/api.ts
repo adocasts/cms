@@ -125,6 +125,26 @@ type UsersIdDelete = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/users_controller.ts').default['destroy'], false>
 }
+type RolesGetHead = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/role.ts')['roleIndexValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/roles_controller.ts').default['index'], true>
+}
+type RolesCreateGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/roles_controller.ts').default['create'], false>
+}
+type RolesPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/role.ts')['roleValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/roles_controller.ts').default['store'], true>
+}
+type RolesIdEditGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/roles_controller.ts').default['edit'], false>
+}
+type RolesIdPut = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/role.ts')['roleValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/roles_controller.ts').default['update'], true>
+}
 export interface ApiDefinition {
   'login': {
     '$url': {
@@ -268,6 +288,30 @@ export interface ApiDefinition {
         '$patch': UsersIdRolePatch;
       };
       '$delete': UsersIdDelete;
+    };
+  };
+  'roles': {
+    '$url': {
+    };
+    '$get': RolesGetHead;
+    '$head': RolesGetHead;
+    'create': {
+      '$url': {
+      };
+      '$get': RolesCreateGetHead;
+      '$head': RolesCreateGetHead;
+    };
+    '$post': RolesPost;
+    ':id': {
+      'edit': {
+        '$url': {
+        };
+        '$get': RolesIdEditGetHead;
+        '$head': RolesIdEditGetHead;
+      };
+      '$url': {
+      };
+      '$put': RolesIdPut;
     };
   };
 }
@@ -502,6 +546,41 @@ const routes = [
     path: '/users/:id',
     method: ["DELETE"],
     types: {} as UsersIdDelete,
+  },
+  {
+    params: [],
+    name: 'roles.index',
+    path: '/roles',
+    method: ["GET","HEAD"],
+    types: {} as RolesGetHead,
+  },
+  {
+    params: [],
+    name: 'roles.create',
+    path: '/roles/create',
+    method: ["GET","HEAD"],
+    types: {} as RolesCreateGetHead,
+  },
+  {
+    params: [],
+    name: 'roles.store',
+    path: '/roles',
+    method: ["POST"],
+    types: {} as RolesPost,
+  },
+  {
+    params: ["id"],
+    name: 'roles.edit',
+    path: '/roles/:id/edit',
+    method: ["GET","HEAD"],
+    types: {} as RolesIdEditGetHead,
+  },
+  {
+    params: ["id"],
+    name: 'roles.update',
+    path: '/roles/:id',
+    method: ["PUT"],
+    types: {} as RolesIdPut,
   },
 ] as const;
 export const api = {

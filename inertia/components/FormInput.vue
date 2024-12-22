@@ -10,6 +10,7 @@ const props = withDefaults(
     error?: string
     disabled?: boolean
     required?: boolean
+    max?: number
   }>(),
   {
     type: 'string',
@@ -64,6 +65,12 @@ defineExpose({ inputEl })
           <slot />
         </SelectContent>
       </Select>
+      <Textarea
+        v-else-if="type === 'textarea'"
+        v-model="internalValue"
+        ref="inputEl"
+        :disabled="disabled"
+      />
       <slot v-else-if="type === 'group'" />
       <Input
         v-else
@@ -75,8 +82,16 @@ defineExpose({ inputEl })
         :required="required"
       />
     </Label>
-    <div v-show="error" class="text-red-500 text-sm">
-      {{ error }}
+    <div class="flex items-center justify-between gap-3">
+      <div v-show="error" class="flex-1 text-red-500 text-xs">
+        {{ error }}
+      </div>
+      <div v-if="typeof internalValue === 'string' && max" class="text-slate-500 text-xs">
+        {{ internalValue.length }} / {{ max }}
+      </div>
+      <div v-else-if="typeof internalValue === 'number' && max" class="text-slate-500 text-xs">
+        Max of {{ max }}
+      </div>
     </div>
   </div>
 </template>

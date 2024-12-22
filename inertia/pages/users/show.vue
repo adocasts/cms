@@ -51,17 +51,19 @@ const form = useForm({
       class="w-full lg:w-1/3 flex flex-col gap-4 p-3 lg:p-6 bg-white shadow-xl rounded-lg border border-slate-200"
     >
       <h4 class="text-lg font-bold">Change User's Role</h4>
-      <FormInput type="select" label="Role" v-model="form.roleId" :errors="form.errors.roleId">
-        <SelectItem v-for="name in enumKeys(Roles)" :key="name" :value="Roles[name]">
-          {{ RoleDesc[Roles[name]] }}
-        </SelectItem>
-      </FormInput>
+      <form
+        @submit.prevent="form.patch(tuyau.$url('users.update.role', { params: { id: user.id } }))"
+      >
+        <FormInput type="select" v-model="form.roleId" :errors="form.errors.roleId">
+          <SelectItem v-for="name in enumKeys(Roles)" :key="name" :value="Roles[name]">
+            {{ RoleDesc[Roles[name]] }}
+          </SelectItem>
+        </FormInput>
 
-      <div class="flex justify-end">
-        <Button @click="form.patch(tuyau.$url('users.update.role', { params: { id: user.id } }))">
-          Update Role
-        </Button>
-      </div>
+        <div class="flex justify-end mt-4">
+          <Button type="submit"> Update Role </Button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
