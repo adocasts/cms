@@ -3,5 +3,9 @@ enum CouponDurations {
   ONCE = 2,
 }
 
-export default CouponDurations
+export const CouponDurationDesc: Record<CouponDurations, string> = {
+  [CouponDurations.FOREVER]: 'Forever',
+  [CouponDurations.ONCE]: 'Once',
+}
 
+export default CouponDurations

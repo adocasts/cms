@@ -150,24 +150,24 @@ type RolesIdDelete = {
   response: MakeTuyauResponse<import('../app/controllers/roles_controller.ts').default['destroy'], false>
 }
 type PlansGetHead = {
-  request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['index'], false>
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/plan.ts')['planIndexValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['index'], true>
 }
 type PlansCreateGetHead = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['create'], false>
 }
 type PlansPost = {
-  request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['store'], false>
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/plan.ts')['planValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['store'], true>
 }
 type PlansIdEditGetHead = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['edit'], false>
 }
 type PlansIdPut = {
-  request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['update'], false>
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/plan.ts')['planValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['update'], true>
 }
 type PlansIdActivatePatch = {
   request: unknown
@@ -180,6 +180,18 @@ type PlansIdDeactivatePatch = {
 type PlansIdDelete = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/plans_controller.ts').default['destroy'], false>
+}
+type CouponsCreateGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/coupons_controller.ts').default['create'], false>
+}
+type CouponsPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/coupon.ts')['couponValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/coupons_controller.ts').default['run'], true>
+}
+type CouponsDelete = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/coupons_controller.ts').default['clear'], false>
 }
 export interface ApiDefinition {
   'login': {
@@ -385,6 +397,18 @@ export interface ApiDefinition {
       };
       '$delete': PlansIdDelete;
     };
+  };
+  'coupons': {
+    'create': {
+      '$url': {
+      };
+      '$get': CouponsCreateGetHead;
+      '$head': CouponsCreateGetHead;
+    };
+    '$url': {
+    };
+    '$post': CouponsPost;
+    '$delete': CouponsDelete;
   };
 }
 const routes = [
@@ -716,6 +740,27 @@ const routes = [
     path: '/plans/:id',
     method: ["DELETE"],
     types: {} as PlansIdDelete,
+  },
+  {
+    params: [],
+    name: 'coupons.create',
+    path: '/coupons/create',
+    method: ["GET","HEAD"],
+    types: {} as CouponsCreateGetHead,
+  },
+  {
+    params: [],
+    name: 'coupons.run',
+    path: '/coupons',
+    method: ["POST"],
+    types: {} as CouponsPost,
+  },
+  {
+    params: [],
+    name: 'coupons.clear',
+    path: '/coupons',
+    method: ["DELETE"],
+    types: {} as CouponsDelete,
   },
 ] as const;
 export const api = {

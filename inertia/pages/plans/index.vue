@@ -1,21 +1,33 @@
 <script setup lang="ts">
 import type { SimplePaginatorDtoContract } from '@adocasts.com/dto/types'
 import { Link } from '@tuyau/inertia/vue'
-import { Link as ILink } from '@inertiajs/vue3'
+import { Link as ILink, router } from '@inertiajs/vue3'
 import { DateTime } from 'luxon'
-import { ref, watchEffect } from 'vue'
-import RoleDto from '#dtos/plan'
-import { Plus, TicketPercent, Users } from 'lucide-vue-next'
+import { computed, ref, watchEffect } from 'vue'
+import { Plus, TicketPercent, TicketX, Users } from 'lucide-vue-next'
 import { tuyau } from '~/lib/tuyau'
 import PlanDto from '#dtos/plan'
+import useConfirmDestroyDialog from '~/composables/use_confirm_destroy_dialog'
 
 const props = defineProps<{
   plans: SimplePaginatorDtoContract<PlanDto>
 }>()
 
+const destroy = useConfirmDestroyDialog()
 const plans = ref(props.plans)
+const hasActiveCoupons = computed(() => plans.value.data.some((plan) => plan.hasActiveSale))
 
 watchEffect(() => (plans.value = props.plans))
+
+function onClearCoupons() {
+  destroy.value?.show({
+    title: 'Clear All Plan Coupons?',
+    message: `Are you sure you'd like to clear all plan coupons? Any active coupons promotions will be immediately cancelled. This will not alter the coupon in Stripe.`,
+    async onConfirm() {
+      await router.delete(tuyau.$url('coupons.clear'))
+    },
+  })
+}
 </script>
 
 <template>
@@ -35,9 +47,20 @@ watchEffect(() => (plans.value = props.plans))
     </Breadcrumb>
 
     <div class="flex items-center gap-3">
-      <Button variant="secondary">
-        <TicketPercent class="w-4 h-4" />
-        Run New Coupon
+      <Button variant="secondary" as-child>
+        <Link route="coupons.create" class="flex items-center gap-3">
+          <TicketPercent class="w-4 h-4" />
+          Run New Coupon
+        </Link>
+      </Button>
+      <Button
+        v-if="hasActiveCoupons"
+        variant="secondary"
+        class="hover:text-red-500"
+        @click="onClearCoupons"
+      >
+        <TicketX class="w-4 h-4" />
+        Clear Coupons
       </Button>
       <Button as-child>
         <Link route="plans.create">

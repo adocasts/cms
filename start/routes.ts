@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+const CouponsController = () => import('#controllers/coupons_controller')
 const PlansController = () => import('#controllers/plans_controller')
 const RolesController = () => import('#controllers/roles_controller')
 const UsersController = () => import('#controllers/users_controller')
@@ -96,5 +97,9 @@ router.group(() => {
   router.patch('/plans/:id/deactivate', [PlansController, 'deactivate']).as('plans.deactivate')
   router.delete('/plans/:id', [PlansController, 'destroy']).as('plans.destroy')
 
+  //* COUPONS
+  router.get('/coupons/create', [CouponsController, 'create']).as('coupons.create')
+  router.post('/coupons', [CouponsController, 'run']).as('coupons.run')
+  router.delete('/coupons', [CouponsController, 'clear']).as('coupons.clear')
 
 }).middleware([middleware.auth()])
