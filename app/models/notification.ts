@@ -7,7 +7,6 @@ import Profile from '#models/profile'
 import AppBaseModel from '#models/app_base_model'
 import NotificationTypes from '#enums/notification_types'
 import NotImplementedException from '#exceptions/not_implemented_exception'
-import Emitter from '@adonisjs/core/services/emitter'
 
 export default class Notification extends AppBaseModel {
   @column({ isPrimary: true })
@@ -103,14 +102,15 @@ export default class Notification extends AppBaseModel {
   }
 
   async trySendEmail(
-    userId: number,
-    trx: TransactionClientContract | undefined | null = undefined
+    _userId: number,
+    _trx: TransactionClientContract | undefined | null = undefined
   ) {
-    const user = await User.query().where({ id: userId }).preload('profile').firstOrFail()
+    throw new NotImplementedException('Email notification sending is not implemented yet')
+    // const user = await User.query().where({ id: userId }).preload('profile').firstOrFail()
 
-    if (!this.isEmailEnabled(user.profile)) return
-    if (!trx) return Emitter.emit('notification:send', { notification: this, user })
+    // if (!this.isEmailEnabled(user.profile)) return
+    // if (!trx) return emitter.emit('notification:send', { notification: this, user })
 
-    trx.on('commit', () => Emitter.emit('notification:send', { notification: this, user }))
+    // trx.on('commit', () => emitter.emit('notification:send', { notification: this, user }))
   }
 }

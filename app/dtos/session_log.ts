@@ -1,7 +1,6 @@
 import { BaseModelDto } from '@adocasts.com/dto/base'
 import SessionLog from '#models/session_log'
 import UserDto from '#dtos/user'
-import type { UAParser } from 'ua-parser-js'
 
 export default class SessionLogDto extends BaseModelDto {
   declare id: number

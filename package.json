@@ -31,6 +31,7 @@
     "#abilities/*": "./app/abilities/*.js",
     "#strategies/*": "./app/strategies/*.js",
     "#database/*": "./database/*.js",
+    "#factories/*": "./database/factories/*.js",
     "#tests/*": "./tests/*.js",
     "#start/*": "./start/*.js",
     "#config/*": "./config/*.js"
@@ -44,6 +45,7 @@
     "@japa/plugin-adonisjs": "^3.0.1",
     "@japa/runner": "^3.1.4",
     "@swc/core": "1.7.26",
+    "@types/dinero.js": "^1.9.4",
     "@types/js-cookie": "^3.0.6",
     "@types/luxon": "^3.4.2",
     "@types/node": "^22.7.5",
