@@ -2,11 +2,11 @@ import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class LogoutController {
-  async handle({ response, auth, session }: HttpContext) {
+  async handle({ auth, session, inertia }: HttpContext) {
     await User.logout(auth)
 
     session.flash('success', 'See you next time')
 
-    return response.redirect().toRoute('auth.login.show')
+    return inertia.location('https://adocasts.com/signin?action=cms')
   }
 }

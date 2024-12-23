@@ -27,11 +27,20 @@ const props = defineProps<{
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>{{ user.username }}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem :as="Link" href="/settings/profile">
+            <DropdownMenuItem as="a" href="https://adocasts.com/settings/account">
+              Account Settings
+            </DropdownMenuItem>
+            <DropdownMenuItem as="a" href="https://adocasts.com/settings/profile">
               Profile Settings
             </DropdownMenuItem>
-            <DropdownMenuItem :as="Link" href="/settings/account">
-              Account Settings
+            <DropdownMenuItem as="a" href="https://adocasts.com/settings/billing">
+              Billing Settings
+            </DropdownMenuItem>
+            <DropdownMenuItem as="a" href="https://adocasts.com/settings/notifications">
+              Manage Notification
+            </DropdownMenuItem>
+            <DropdownMenuItem as="a" href="https://adocasts.com/settings/data">
+              Manage Your Data
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem as-child>
