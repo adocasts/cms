@@ -1,5 +1,15 @@
 <script setup lang="ts">
-import { CircleUser } from 'lucide-vue-next'
+import {
+  ArrowLeftFromLine,
+  Bell,
+  CircleUser,
+  Database,
+  Fingerprint,
+  LogOut,
+  Receipt,
+  User,
+  UserPen,
+} from 'lucide-vue-next'
 import { Link } from '@inertiajs/vue3'
 import UserDto from '#dtos/user'
 
@@ -25,26 +35,42 @@ const props = defineProps<{
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>{{ user.username }}</DropdownMenuLabel>
+            <DropdownMenuLabel class="flex items-center gap-3">
+              <User class="w-4 h-4" />
+              {{ user.username }}
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem as="a" href="https://adocasts.com">
+              <ArrowLeftFromLine class="w-4 h-4" />
+              Return to Adocasts
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem as="a" href="https://adocasts.com/settings/account">
+              <Fingerprint class="w-4 h-4" />
               Account Settings
             </DropdownMenuItem>
             <DropdownMenuItem as="a" href="https://adocasts.com/settings/profile">
+              <UserPen class="w-4 h-4" />
               Profile Settings
             </DropdownMenuItem>
             <DropdownMenuItem as="a" href="https://adocasts.com/settings/billing">
+              <Receipt class="w-4 h-4" />
               Billing Settings
             </DropdownMenuItem>
             <DropdownMenuItem as="a" href="https://adocasts.com/settings/notifications">
+              <Bell class="w-4 h-4" />
               Manage Notification
             </DropdownMenuItem>
             <DropdownMenuItem as="a" href="https://adocasts.com/settings/data">
+              <Database class="w-4 h-4" />
               Manage Your Data
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem as-child>
-              <Link method="post" href="/logout">Logout</Link>
+              <Link method="post" href="/logout" class="flex items-center gap-2">
+                <LogOut class="w-4 h-4 pl-0.5" />
+                Logout
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
