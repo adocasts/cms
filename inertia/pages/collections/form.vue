@@ -98,6 +98,7 @@ function onSubmit(stateId: States = form.stateId) {
         label="Title"
         v-model="form.name"
         :errors="form.errors.name"
+        :max="100"
         placeholder="My Cool Collection"
         required
       />
@@ -106,7 +107,16 @@ function onSubmit(stateId: States = form.stateId) {
         label="Slug"
         v-model="form.slug"
         :errors="form.errors.slug"
+        :max="150"
         placeholder="Will auto generate from title if left empty"
+      />
+
+      <FormInput
+        type="textarea"
+        label="Description"
+        v-model="form.description"
+        :errors="form.errors.description"
+        :max="255"
       />
 
       <Collapsible>
@@ -122,13 +132,16 @@ function onSubmit(stateId: States = form.stateId) {
               label="Page Title"
               v-model="form.pageTitle"
               :errors="form.errors.pageTitle"
+              :max="100"
               placeholder="Enter a concise SEO friendly page title, uses post title when left empty"
             />
 
             <FormInput
+              type="textarea"
               label="Meta Description"
               v-model="form.metaDescription"
               :errors="form.errors.metaDescription"
+              :max="255"
               placeholder="Enter a concise SEO friendly meta description, uses post description when left empty"
             />
           </div>
@@ -177,6 +190,7 @@ function onSubmit(stateId: States = form.stateId) {
         type="url"
         v-model="form.repositoryUrl"
         :errors="form.errors.repositoryUrl"
+        :max="255"
         placeholder="Have code associated with this collection? Provide the repository URL here"
       />
 
@@ -185,6 +199,7 @@ function onSubmit(stateId: States = form.stateId) {
         type="url"
         v-model="form.youtubePlaylistUrl"
         :errors="form.errors.youtubePlaylistUrl"
+        :max="255"
         placeholder="Have a YouTube playlist for this series? Link it here"
       />
 

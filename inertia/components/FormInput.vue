@@ -83,9 +83,10 @@ defineExpose({ inputEl })
       />
     </Label>
     <div class="flex items-center justify-between gap-3">
-      <div v-show="error" class="flex-1 text-red-500 text-xs">
+      <div v-if="error" class="flex-1 text-red-500 text-xs">
         {{ error }}
       </div>
+      <div v-else></div>
       <div v-if="typeof internalValue === 'string' && max" class="text-slate-500 text-xs">
         {{ internalValue.length }} / {{ max }}
       </div>

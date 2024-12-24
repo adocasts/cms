@@ -110,6 +110,7 @@ function onSubmit() {
         label="Name"
         v-model="form.name"
         :errors="form.errors.name"
+        :max="100"
         placeholder="My Cool Taxonomy"
         required
       />
@@ -118,7 +119,16 @@ function onSubmit() {
         label="Slug"
         v-model="form.slug"
         :errors="form.errors.slug"
+        :max="150"
         placeholder="Will auto generate from title if left empty"
+      />
+
+      <FormInput
+        type="textarea"
+        label="Description"
+        v-model="form.description"
+        :errors="form.errors.description"
+        :max="255"
       />
 
       <Collapsible>
@@ -134,13 +144,16 @@ function onSubmit() {
               label="Page Title"
               v-model="form.pageTitle"
               :errors="form.errors.pageTitle"
+              :max="100"
               placeholder="Enter a concise SEO friendly page title, uses post title when left empty"
             />
 
             <FormInput
+              type="textarea"
               label="Meta Description"
               v-model="form.metaDescription"
               :errors="form.errors.metaDescription"
+              :max="255"
               placeholder="Enter a concise SEO friendly meta description, uses post description when left empty"
             />
           </div>

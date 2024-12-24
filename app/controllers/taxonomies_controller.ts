@@ -40,10 +40,7 @@ export default class TaxonomiesController {
 
     const { parentId } = await request.validateUsing(taxonomyCreateValidator)
     const parent = parentId ? await Taxonomy.findOrFail(parentId) : null
-    console.log({
-      parentId,
-      parent,
-    })
+
     return inertia.render('taxonomies/form', {
       parent: parent ? new TaxonomyDto(parent) : null,
     })

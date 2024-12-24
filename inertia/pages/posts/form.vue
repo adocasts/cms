@@ -4,7 +4,7 @@ import TaxonomyDto from '#dtos/taxonomy'
 import PaywallTypes, { PaywallTypeDesc } from '#enums/paywall_types'
 import PostTypes, { PostTypeDesc } from '#enums/post_types'
 import States from '#enums/states'
-import VideoTypes, { VideoTypeDesc } from '#enums/video_types'
+import VideoTypes, { VideoTypeDesc, VideoTypesOrdered } from '#enums/video_types'
 import { useForm } from '@inertiajs/vue3'
 import { Link } from '@tuyau/inertia/vue'
 import { BookCheck, BookDashed, BookKey, BookLock, ChevronsUpDown } from 'lucide-vue-next'
@@ -124,6 +124,7 @@ function onSubmit(stateId: States = Number(form.stateId)) {
         label="Title"
         v-model="form.title"
         :errors="form.errors.title"
+        :max="100"
         placeholder="My Cool Post"
         required
       />
@@ -132,7 +133,16 @@ function onSubmit(stateId: States = Number(form.stateId)) {
         label="Slug"
         v-model="form.slug"
         :errors="form.errors.slug"
+        :max="255"
         placeholder="Will auto generate from title if left empty"
+      />
+
+      <FormInput
+        type="textarea"
+        label="Description"
+        v-model="form.description"
+        :error="form.errors.description"
+        :max="255"
       />
 
       <Collapsible>
@@ -148,13 +158,16 @@ function onSubmit(stateId: States = Number(form.stateId)) {
               label="Page Title"
               v-model="form.pageTitle"
               :errors="form.errors.pageTitle"
+              :max="100"
               placeholder="Enter a concise SEO friendly page title, uses post title when left empty"
             />
 
             <FormInput
               label="Meta Description"
+              type="textarea"
               v-model="form.metaDescription"
               :errors="form.errors.metaDescription"
+              :max="255"
               placeholder="Enter a concise SEO friendly meta description, uses post description when left empty"
             />
 
@@ -163,6 +176,7 @@ function onSubmit(stateId: States = Number(form.stateId)) {
               type="url"
               v-model="form.canonical"
               :errors="form.errors.canonical"
+              :max="255"
               placeholder="Cross-posting from another site? Link the original here"
             />
           </div>
@@ -212,6 +226,7 @@ function onSubmit(stateId: States = Number(form.stateId)) {
         type="url"
         v-model="form.repositoryUrl"
         :errors="form.errors.repositoryUrl"
+        :max="255"
         placeholder="Have code associated with this post? Provide the repository URL here"
       />
 
@@ -254,12 +269,8 @@ function onSubmit(stateId: States = Number(form.stateId)) {
             placeholder="Have a video? Where is it stored?"
             :errors="form.errors.videoTypeId"
           >
-            <SelectItem
-              v-for="name in enumKeys(VideoTypes)"
-              :key="name"
-              :value="VideoTypes[name].toString()"
-            >
-              {{ VideoTypeDesc[VideoTypes[name]] }}
+            <SelectItem v-for="id in VideoTypesOrdered" :key="id" :value="id.toString()">
+              {{ VideoTypeDesc[id] }}
             </SelectItem>
           </FormInput>
 
@@ -269,6 +280,7 @@ function onSubmit(stateId: States = Number(form.stateId)) {
             type="url"
             v-model="form.videoUrl"
             :errors="form.errors.videoUrl"
+            :max="255"
             placeholder="Enter the YouTube Video URL"
           />
 
@@ -277,6 +289,7 @@ function onSubmit(stateId: States = Number(form.stateId)) {
             label="Bunny Video Id"
             v-model="form.videoBunnyId"
             :errors="form.errors.videoBunnyId"
+            :max="500"
             placeholder="Enter the Bunny Stream Video Id"
           />
 
