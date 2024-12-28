@@ -14,12 +14,13 @@ const emit = defineEmits(['update:duration'])
 
 const videoId = computed(() => {
   if (props.videoTypeId == VideoTypes.BUNNY) return props.bunnyId
-  if (props.videoTypeId == VideoTypes.YOUTUBE) return getYouTubeVideoid(props.videoUrl)
+  if (props.videoTypeId == VideoTypes.YOUTUBE) return getYouTubeVideoId(props.videoUrl)
+  if (props.videoTypeId == VideoTypes.R2) return props.videoUrl
 })
 
 const showEmbed = computed(() => isSourceValid(videoId.value))
 
-function getYouTubeVideoid(source: string | null) {
+function getYouTubeVideoId(source: string | null) {
   if (!source) return ''
   return source
     .replace('www.', '')
@@ -35,6 +36,7 @@ function isSourceValid(source?: string | null) {
   if (!source) return false
   if (props.videoTypeId == VideoTypes.BUNNY) return !!source
   if (props.videoTypeId == VideoTypes.YOUTUBE) return !!source.length
+  if (props.videoTypeId == VideoTypes.R2) return !!source.length
 }
 
 watch(
@@ -67,7 +69,7 @@ function onYouTubeInit() {
   }
 }
 
-function onBunnyReady(event: any) {
+function onVideoReady(event: any) {
   emit('update:duration', Math.round(event.target.duration))
 }
 </script>
@@ -85,12 +87,28 @@ function onBunnyReady(event: any) {
       <h4 class="font-semibold">No Video</h4>
       <p class="text-xs">Enter a valid video id to add a video to this post</p>
     </div>
-    <video v-if="showEmbed" controls @loadedmetadata="onBunnyReady">
+    <video v-if="showEmbed" controls @loadedmetadata="onVideoReady">
       <source
         :src="`https://videos.adocasts.com/${bunnyId}/play_480p.mp4`"
         size="480"
         type="video/mp4"
       />
+    </video>
+  </div>
+  <div
+    v-else-if="videoTypeId == VideoTypes.R2"
+    class="aspect-video rounded overflow-hidden bg-gray-100 shadow-inner"
+  >
+    <div
+      v-show="!showEmbed"
+      class="text-gray-700 flex flex-col h-full w-full items-center justify-center"
+    >
+      <VideoOff class="w-12 h-12" />
+      <h4 class="font-semibold">No Video</h4>
+      <p class="text-xs">Enter a valid video id to add a video to this post</p>
+    </div>
+    <video v-if="showEmbed" controls @loadedmetadata="onVideoReady">
+      <source :src="`https://vid.adocasts.com/${videoUrl}/video.mp4`" size="480" type="video/mp4" />
     </video>
   </div>
   <div

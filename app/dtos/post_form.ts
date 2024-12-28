@@ -5,6 +5,22 @@ import VideoTypes from '#enums/video_types'
 import States from '#enums/states'
 import PaywallTypes from '#enums/paywall_types'
 import PostTypes from '#enums/post_types'
+import CaptionTypes from '#enums/caption_types'
+import CaptionLanguages from '#enums/caption_languages'
+
+type Caption = {
+  id?: number
+  type: CaptionTypes
+  language: CaptionLanguages
+  label: string
+}
+
+type Chapter = {
+  id?: number
+  start: string
+  end: string
+  text: string
+}
 
 export default class PostFormDto extends BaseModelDto {
   declare id: number
@@ -38,6 +54,8 @@ export default class PostFormDto extends BaseModelDto {
   declare thumbnail: AssetDto | null
   declare cover: AssetDto | null
   declare taxonomyIds: number[]
+  declare captions: Caption[] | null
+  declare chapters: Chapter[] | null
 
   constructor(post?: Post) {
     super()
@@ -74,5 +92,23 @@ export default class PostFormDto extends BaseModelDto {
     this.thumbnail = post.thumbnails.length ? new AssetDto(post.thumbnails[0]) : null
     this.cover = post.covers.length ? new AssetDto(post.covers[0]) : null
     this.taxonomyIds = post.taxonomies?.map((row) => row.id) ?? []
+
+    if (post.captions?.length) {
+      this.captions = post.captions.map((row) => ({
+        id: row.id,
+        type: row.type,
+        language: row.language,
+        label: row.label,
+      }))
+    }
+
+    if (post.chapters?.length) {
+      this.chapters = post.chapters.map((row) => ({
+        id: row.id,
+        start: row.start,
+        end: row.end,
+        text: row.text,
+      }))
+    }
   }
 }

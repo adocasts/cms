@@ -24,6 +24,9 @@ export default class DestroyPost {
       await post.related('collections').detach()
       await post.related('taxonomies').detach()
 
+      await post.related('chapters').query().delete()
+      await post.related('captions').query().delete()
+
       await this.#destroyComments(post, trx)
       await this.#destroyHistory(post)
       await this.#removeFromWatchlists(post)

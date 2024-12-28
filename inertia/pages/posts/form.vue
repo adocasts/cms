@@ -1,13 +1,23 @@
 <script setup lang="ts">
 import PostFormDto from '#dtos/post_form'
 import TaxonomyDto from '#dtos/taxonomy'
+import CaptionLanguages, { CaptionLanguageDesc } from '#enums/caption_languages'
+import CaptionTypes, { CaptionTypeDesc } from '#enums/caption_types'
 import PaywallTypes, { PaywallTypeDesc } from '#enums/paywall_types'
 import PostTypes, { PostTypeDesc } from '#enums/post_types'
 import States from '#enums/states'
 import VideoTypes, { VideoTypeDesc, VideoTypesOrdered } from '#enums/video_types'
 import { useForm } from '@inertiajs/vue3'
 import { Link } from '@tuyau/inertia/vue'
-import { BookCheck, BookDashed, BookKey, BookLock, ChevronsUpDown } from 'lucide-vue-next'
+import {
+  Plus,
+  BookCheck,
+  BookDashed,
+  BookKey,
+  BookLock,
+  ChevronsUpDown,
+  Trash2,
+} from 'lucide-vue-next'
 import { DateTime } from 'luxon'
 import { computed } from 'vue'
 import { tuyau } from '~/lib/tuyau'
@@ -45,6 +55,8 @@ const form = useForm({
     altText: props.post?.thumbnail?.altText ?? '',
     credit: props.post?.thumbnail?.credit ?? '',
   },
+  captions: props.post?.captions ?? [],
+  chapters: props.post?.chapters ?? [],
   taxonomyIds: props.post?.taxonomyIds ?? [],
 })
 
@@ -52,6 +64,19 @@ const publishAt = computed(() => {
   const iso = [form.publishAtDate, form.publishAtTime].filter(Boolean).join('T')
   return iso && DateTime.fromISO(iso)
 })
+
+function secondsToTimecode(seconds: number) {
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  const secondsRemainder = seconds % 60
+  return [
+    hours && hours.toString().padStart(2, '0'),
+    minutes.toString().padStart(2, '0'),
+    secondsRemainder && secondsRemainder.toString().padStart(2, '0'),
+  ]
+    .filter(Boolean)
+    .join(':')
+}
 
 function onSubmit(stateId: States = Number(form.stateId)) {
   const action = form.transform((data) => {
@@ -294,6 +319,14 @@ function onSubmit(stateId: States = Number(form.stateId)) {
           />
 
           <FormInput
+            v-else-if="Number(form.videoTypeId) === VideoTypes.R2"
+            label="R2 Video Id"
+            v-model="form.videoUrl"
+            :max="255"
+            placeholder="Enter the R2 Video Id (directory name)"
+          />
+
+          <FormInput
             v-if="Number(form.videoTypeId) !== VideoTypes.NONE"
             type="group"
             label="Video Length (in seconds)"
@@ -307,6 +340,126 @@ function onSubmit(stateId: States = Number(form.stateId)) {
               </NumberFieldContent>
             </NumberField>
           </FormInput>
+
+          <fieldset
+            v-if="Number(form.videoTypeId) === VideoTypes.R2"
+            class="border rounded-lg border-slate-300 p-4 -mx-4"
+          >
+            <legend class="-mx-2 px-2">Captions</legend>
+
+            <div
+              v-if="form.captions"
+              v-for="(caption, index) in form.captions"
+              :key="caption.id ?? caption.language"
+              class="flex gap-2"
+            >
+              <FormInput
+                type="select"
+                label="Language"
+                class="flex-1"
+                v-model="form.captions[index].language"
+              >
+                <SelectItem v-for="id in CaptionLanguages" :key="id" :value="id.toString()">
+                  {{ CaptionLanguageDesc[id] }}
+                </SelectItem>
+              </FormInput>
+
+              <FormInput type="select" label="Type" v-model="form.captions[index].type">
+                <SelectItem v-for="id in CaptionTypes" :key="id" :value="id.toString()">
+                  {{ CaptionTypeDesc[id] }}
+                </SelectItem>
+              </FormInput>
+
+              <Button
+                type="button"
+                size="icon"
+                variant="secondary"
+                class="hover:text-red-500 mt-5"
+                @click="form.captions.splice(index, 1)"
+              >
+                <Trash2 class="h-3 w-3" />
+              </Button>
+            </div>
+
+            <Button
+              type="button"
+              size="sm"
+              class="mt-2"
+              variant="secondary"
+              @click="
+                form.captions.push({
+                  type: CaptionTypes.SRT,
+                  language: CaptionLanguages.ENGLISH,
+                  label: '',
+                })
+              "
+            >
+              <Plus class="h-3 w-3" />
+              Add Caption
+            </Button>
+          </fieldset>
+
+          <fieldset
+            v-if="Number(form.videoTypeId) === VideoTypes.R2"
+            class="border rounded-lg border-slate-300 p-4 -mx-4"
+          >
+            <legend class="-mx-2 px-2">Chapters</legend>
+
+            <div
+              v-if="form.chapters"
+              v-for="(chapter, index) in form.chapters"
+              :key="chapter.id ?? chapter.start"
+              class="flex gap-2"
+            >
+              <FormInput
+                label="Start"
+                class="w-[67px] text-xs"
+                v-model="form.chapters[index].start"
+                placeholder="00:00"
+              />
+
+              <FormInput
+                label="End"
+                class="w-[67px] text-xs"
+                v-model="form.chapters[index].end"
+                placeholder="00:00"
+              />
+
+              <FormInput
+                label="Text"
+                class="flex-1 text-xs"
+                v-model="form.chapters[index].text"
+                placeholder="Chapter text"
+              />
+
+              <Button
+                type="button"
+                size="icon"
+                variant="secondary"
+                class="hover:text-red-500 mt-5"
+                @click="form.chapters.splice(index, 1)"
+              >
+                <Trash2 class="h-3 w-3" />
+              </Button>
+            </div>
+
+            <Button
+              type="button"
+              size="sm"
+              class="mt-2"
+              variant="secondary"
+              @click="
+                form.chapters.push({
+                  start: form.chapters[form.chapters.length - 1]?.end ?? '00:00',
+                  end: secondsToTimecode(form.videoSeconds) ?? '00:00',
+                  text: '',
+                })
+              "
+            >
+              <Plus class="h-3 w-3" />
+              Add Chapter
+            </Button>
+          </fieldset>
 
           <FormInput
             v-if="Number(form.videoTypeId) === VideoTypes.YOUTUBE"

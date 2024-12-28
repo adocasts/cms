@@ -27,6 +27,8 @@ import SlugService from '#services/slug_service'
 import router from '@adonisjs/core/services/router'
 import Progress from './progress.js'
 import PostTypes from '#enums/post_types'
+import PostCaption from './post_caption.js'
+import PostChapter from './post_chapter.js'
 
 export default class Post extends AppBaseModel {
   serializeExtras = true
@@ -163,6 +165,12 @@ export default class Post extends AppBaseModel {
 
   @hasMany(() => Comment)
   declare comments: HasMany<typeof Comment>
+
+  @hasMany(() => PostCaption)
+  declare captions: HasMany<typeof PostCaption>
+
+  @hasMany(() => PostChapter)
+  declare chapters: HasMany<typeof PostChapter>
 
   @manyToMany(() => User, {
     pivotTable: 'author_posts',

@@ -13,6 +13,8 @@ import VideoTypes from '#enums/video_types'
 import States from '#enums/states'
 import PaywallTypes from '#enums/paywall_types'
 import PostTypes from '#enums/post_types'
+import PostChapterDto from './post_chapter.js'
+import PostCaptionDto from './post_caption.js'
 
 export default class PostDto extends BaseModelDto {
   declare id: number
@@ -69,6 +71,8 @@ export default class PostDto extends BaseModelDto {
   declare viewHistory: HistoryDto[]
   declare progressionHistory: ProgressDto[]
   declare watchlist: WatchlistDto[]
+  declare chapters: PostChapterDto[]
+  declare captions: PostCaptionDto[]
 
   declare publishAtISO: string | null
   declare publishAtDisplay: string
@@ -146,6 +150,8 @@ export default class PostDto extends BaseModelDto {
     this.viewHistory = HistoryDto.fromArray(post.viewHistory)
     this.progressionHistory = ProgressDto.fromArray(post.progressionHistory)
     this.watchlist = WatchlistDto.fromArray(post.watchlist)
+    this.chapters = PostChapterDto.fromArray(post.chapters)
+    this.captions = PostCaptionDto.fromArray(post.captions)
 
     this.publishAtISO = post.publishAtISO
     this.publishAtDisplay = post.publishAtDisplay

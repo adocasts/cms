@@ -6,6 +6,8 @@ import db from '@adonisjs/lucid/services/db'
 import { Infer } from '@vinejs/vine/types'
 import SyncPostAsset from './sync_post_assets.js'
 import SyncTaxonomies from '#actions/taxonomies/sync_taxonomies'
+import SyncCaptions from './sync_captions.js'
+import SyncChapters from './sync_chapters.js'
 
 type Data = Infer<typeof postValidator>
 
@@ -25,7 +27,8 @@ export default class UpdatePost {
     if (!data.stateId) data.stateId = States.DRAFT
     if (!data.postTypeId) data.postTypeId = PostTypes.LESSON
 
-    const { thumbnail, publishAtDate, publishAtTime, taxonomyIds, ...update } = data
+    const { thumbnail, publishAtDate, publishAtTime, taxonomyIds, captions, chapters, ...update } =
+      data
 
     post.merge(update)
 
@@ -39,6 +42,8 @@ export default class UpdatePost {
       await post.save()
       await SyncTaxonomies.handle({ resource: post, ids: taxonomyIds })
       await SyncPostAsset.handle({ post, asset: thumbnail }, trx)
+      await SyncCaptions.handle({ post, captions }, trx)
+      await SyncChapters.handle({ post, chapters }, trx)
 
       return post
     })

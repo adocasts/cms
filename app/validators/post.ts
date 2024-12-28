@@ -5,6 +5,8 @@ import VideoTypes from '#enums/video_types'
 import States from '#enums/states'
 import PaywallTypes from '#enums/paywall_types'
 import { DateTime } from 'luxon'
+import CaptionTypes from '#enums/caption_types'
+import CaptionLanguages from '#enums/caption_languages'
 
 export const postIndexValidator = vine.compile(
   vine.object({
@@ -49,7 +51,7 @@ export const postValidator = vine.compile(
     isFeatured: vine.boolean().optional().nullable(),
     isLive: vine.boolean().nullable(),
     videoTypeId: vine.number().enum(VideoTypes).optional(),
-    videoUrl: vine.string().trim().maxLength(255).url().optional().nullable(),
+    videoUrl: vine.string().trim().maxLength(255).optional().nullable(),
     videoBunnyId: vine.string().trim().maxLength(500).optional().nullable(),
     videoSeconds: vine.number().optional(),
     timezone: vine.string().trim().optional(),
@@ -64,6 +66,28 @@ export const postValidator = vine.compile(
       credit: vine.string().maxLength(100).optional(),
     }),
     taxonomyIds: vine.array(vine.number().exists(exists('taxonomies', 'id'))).optional(),
+
+    captions: vine
+      .array(
+        vine.object({
+          id: vine.number().exists(exists('post_captions', 'id')).optional(),
+          type: vine.enum(CaptionTypes),
+          label: vine.string().maxLength(50).optional(),
+          language: vine.enum(CaptionLanguages),
+        })
+      )
+      .optional(),
+
+    chapters: vine
+      .array(
+        vine.object({
+          id: vine.number().exists(exists('post_chapters', 'id')).optional(),
+          start: vine.string().regex(/^(?:[0-5]?[0-9]):([0-5]?[0-9])$/),
+          end: vine.string().regex(/^(?:[0-5]?[0-9]):([0-5]?[0-9])$/),
+          text: vine.string().maxLength(100),
+        })
+      )
+      .optional(),
 
     publishAt: vine
       .computed()
