@@ -49,8 +49,8 @@ export default class TaxonomyDto extends BaseModelDto {
     this.description = taxonomy.description
     this.pageTitle = taxonomy.pageTitle
     this.metaDescription = taxonomy.metaDescription
-    this.createdAt = taxonomy.createdAt.toISO()!
-    this.updatedAt = taxonomy.updatedAt.toISO()!
+    this.createdAt = taxonomy.createdAt?.toISO()!
+    this.updatedAt = taxonomy.updatedAt?.toISO()!
     this.owner = taxonomy.owner && new UserDto(taxonomy.owner)
     this.asset = taxonomy.asset && new AssetDto(taxonomy.asset)
     this.parent = taxonomy.parent && new TaxonomyDto(taxonomy.parent)
