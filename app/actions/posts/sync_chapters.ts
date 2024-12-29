@@ -15,6 +15,8 @@ export default class SyncChapters {
       return
     }
 
+    const postChapters = await post.related('chapters').query().orderBy('sort_order')
+
     const promises = chapters.map(async (chapter, index) => {
       if (!chapter.id) {
         return post.related('chapters').create(chapter, { client: trx })
@@ -30,6 +32,14 @@ export default class SyncChapters {
 
       return row.save()
     })
+
+    const deletedChapterIds = postChapters
+      .filter(({ id }) => !chapters.find((c) => c.id === id))
+      .map(({ id }) => id)
+
+    if (deletedChapterIds.length) {
+      await post.related('chapters').query().whereIn('id', deletedChapterIds).delete()
+    }
 
     await Promise.all(promises)
   }

@@ -15,6 +15,8 @@ export default class SyncCaptions {
       return
     }
 
+    const postCaptions = await post.related('captions').query().orderBy('sort_order')
+
     const promises = captions.map(async (caption, index) => {
       if (!caption.id) {
         return post.related('captions').create(caption, { client: trx })
@@ -30,6 +32,14 @@ export default class SyncCaptions {
 
       return row.save()
     })
+
+    const deletedCaptionIds = postCaptions
+      .filter(({ id }) => !captions.find((c) => c.id === id))
+      .map(({ id }) => id)
+
+    if (deletedCaptionIds.length) {
+      await post.related('captions').query().whereIn('id', deletedCaptionIds).delete()
+    }
 
     await Promise.all(promises)
   }
