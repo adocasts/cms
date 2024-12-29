@@ -41,6 +41,7 @@ export default class SyncCollectionContent {
         return module.save()
       })
 
+      await this.syncPosts(this.collection, data.postIds)
       await this.destroyRemovedModules(data.subcollections)
 
       return Promise.all(promises)
