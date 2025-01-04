@@ -123,7 +123,7 @@ async function uploadImage(file: File) {
     },
   })
 
-  return `/assets/${data.filename}`
+  return `https://adocasts.com/${data.filename}?w=900`
 }
 </script>
 

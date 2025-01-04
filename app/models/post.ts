@@ -321,11 +321,15 @@ export default class Post extends AppBaseModel {
   }
 
   @computed()
-  get videoId() {
-    if (this.videoTypeId === VideoTypes.BUNNY) {
-      return this.videoBunnyId
-    }
+  get videoR2Id() {
+    if (this.videoTypeId !== VideoTypes.R2 || !this.videoUrl) return ''
+    return this.videoUrl
+  }
 
+  @computed()
+  get videoId() {
+    if (this.videoTypeId === VideoTypes.BUNNY) return this.videoBunnyId
+    if (this.videoTypeId === VideoTypes.R2) return this.videoR2Id
     return this.videoYouTubeId
   }
 
@@ -362,6 +366,12 @@ export default class Post extends AppBaseModel {
 
   @computed()
   get transcriptUrl() {
+    if (this.videoTypeId === VideoTypes.R2 && this.captions?.length) {
+      const filename = this.captions.at(0)?.filename
+      if (!filename) return
+      return `https://vid.adocasts.com/${this.videoId}/${filename}`
+    }
+
     if (this.videoTypeId !== VideoTypes.BUNNY || !this.videoBunnyId) return
 
     return this.bunnySubtitleUrls?.at(0)?.src
@@ -369,6 +379,10 @@ export default class Post extends AppBaseModel {
 
   @computed()
   get animatedPreviewUrl() {
+    if (this.videoTypeId === VideoTypes.R2 && this.videoId) {
+      return `https://vid.adocasts.com/${this.videoId}/video.webp`
+    }
+
     if (this.videoTypeId !== VideoTypes.BUNNY || !this.videoBunnyId) return
 
     return `https://videos.adocasts.com/${this.videoBunnyId}/preview.webp`

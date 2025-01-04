@@ -108,7 +108,11 @@ function onVideoReady(event: any) {
       <p class="text-xs">Enter a valid video id to add a video to this post</p>
     </div>
     <video v-if="showEmbed" controls @loadedmetadata="onVideoReady">
-      <source :src="`https://vid.adocasts.com/${videoUrl}/video.mp4`" size="480" type="video/mp4" />
+      <source
+        :src="`https://vid.adocasts.com/${videoUrl}/video.mp4?cms=true`"
+        size="480"
+        type="video/mp4"
+      />
     </video>
   </div>
   <div
