@@ -1,14 +1,18 @@
+import { MonthlyStat } from '#actions/stats/get_monthly'
+import UserStats from '#actions/stats/user_stats'
 import Collection from '#models/collection'
 import Post from '#models/post'
 import Taxonomy from '#models/taxonomy'
-import User from '#models/user'
 
 export interface GetDashboardCountsContract {
   posts: BigInt
   postSeconds: BigInt
   series: BigInt
   topics: BigInt
-  users: BigInt
+  users: {
+    total: bigint
+    monthly: MonthlyStat[]
+  }
 }
 
 export default class GetDashboardCounts {
@@ -18,7 +22,10 @@ export default class GetDashboardCounts {
       postSeconds: await this.#countPostSeconds(),
       series: await this.#countSeries(),
       topics: await this.#countTopics(),
-      users: await this.#countUsers(),
+      users: {
+        total: await UserStats.getTotal(),
+        monthly: await UserStats.getMonthlyRegistrations(),
+      },
     }
   }
 
@@ -40,9 +47,5 @@ export default class GetDashboardCounts {
 
   static async #countTopics() {
     return Taxonomy.query().getCount()
-  }
-
-  static async #countUsers() {
-    return User.query().getCount()
   }
 }
