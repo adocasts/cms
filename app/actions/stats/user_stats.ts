@@ -1,7 +1,7 @@
 import User from '#models/user'
 import db from '@adonisjs/lucid/services/db'
 import { DateTime } from 'luxon'
-import GetMonthly, { MonthlyStat } from './get_monthly.js'
+import GetMonthly from './get_monthly.js'
 
 export default class UserStats {
   static async getTotal() {

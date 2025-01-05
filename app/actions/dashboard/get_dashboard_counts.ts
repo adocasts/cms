@@ -1,51 +1,47 @@
 import { MonthlyStat } from '#actions/stats/get_monthly'
+import PostStats from '#actions/stats/post_stats'
 import UserStats from '#actions/stats/user_stats'
-import Collection from '#models/collection'
-import Post from '#models/post'
-import Taxonomy from '#models/taxonomy'
 
 export interface GetDashboardCountsContract {
-  posts: BigInt
-  postSeconds: BigInt
-  series: BigInt
-  topics: BigInt
-  users: {
-    total: bigint
+  posts: {
+    total: BigInt
     monthly: MonthlyStat[]
   }
+  users: {
+    total: BigInt
+    monthly: MonthlyStat[]
+  }
+  completedLessons: {
+    total: BigInt
+    monthly: MonthlyStat[]
+  }
+  watchSeconds: {
+    total: BigInt
+    monthly: MonthlyStat[]
+  }
+  postSeconds: BigInt
 }
 
 export default class GetDashboardCounts {
   static async handle(): Promise<GetDashboardCountsContract> {
     return {
-      posts: await this.#countPublishedPosts(),
-      postSeconds: await this.#countPostSeconds(),
-      series: await this.#countSeries(),
-      topics: await this.#countTopics(),
+      posts: {
+        total: await PostStats.getTotalPublished(),
+        monthly: await PostStats.getMonthlyPublished(),
+      },
       users: {
         total: await UserStats.getTotal(),
         monthly: await UserStats.getMonthlyRegistrations(),
       },
+      completedLessons: {
+        total: await PostStats.getLessonsUsersHaveCompleted(),
+        monthly: await PostStats.getMonthlyLessonsUsersHaveCompleted(),
+      },
+      watchSeconds: {
+        total: await PostStats.getLessonsWatchDuration(),
+        monthly: await PostStats.getMonthlyLessonsWatchDuration(),
+      },
+      postSeconds: await PostStats.getTotalPostSeconds(),
     }
-  }
-
-  static async #countPublishedPosts() {
-    return Post.query()
-      .apply((scope) => scope.published())
-      .getCount()
-  }
-
-  static async #countPostSeconds() {
-    return Post.query()
-      .apply((scope) => scope.published())
-      .getSum('video_seconds')
-  }
-
-  static async #countSeries() {
-    return Collection.query().wherePublic().whereNull('parentId').getCount()
-  }
-
-  static async #countTopics() {
-    return Taxonomy.query().getCount()
   }
 }
