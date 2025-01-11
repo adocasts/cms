@@ -89,7 +89,7 @@ async function onDelete(post: PostDto) {
               {{ post.title }}
             </Link>
             <div class="text-slate-600 text-xs">
-              <a :href="`https://adocasts.com/${post.routeUrl}`" class="hover:underline">
+              <a :href="`https://adocasts.com${post.routeUrl}`" class="hover:underline">
                 {{ post.slug }}
               </a>
             </div>
