@@ -25,7 +25,7 @@ jobs:
           timeout: 60000
   build:
     needs: init
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     outputs:
       cleavr-step-status: ${{ toJson(steps) }}
       artifact-formatted-time: ${{ steps.artifact.outputs.formattedTime }}
@@ -36,7 +36,7 @@ jobs:
       - uses: actions/setup-node@v3
         id: setup-node
         with:
-          node-version: '20'
+          node-version: '22'
 
       - uses: bahmutov/npm-install@v1
         id: npm-install
