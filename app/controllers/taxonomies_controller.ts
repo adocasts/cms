@@ -74,6 +74,7 @@ export default class TaxonomiesController {
     const parent = await taxonomy.related('parent').query().first()
 
     await bouncer.with('TaxonomyPolicy').authorize('update', taxonomy)
+    await taxonomy.load('asset')
 
     return inertia.render('taxonomies/form', {
       taxonomy: new TaxonomyDto(taxonomy),
