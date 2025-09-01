@@ -29,7 +29,12 @@ const searchTerm = ref('')
 <template>
   <Popover v-model:open="open">
     <PopoverTrigger as-child>
-      <Button variant="outline" role="combobox" :aria-expanded="open" class="justify-between">
+      <Button
+        variant="outline"
+        role="combobox"
+        :aria-expanded="open"
+        class="justify-between w-full"
+      >
         {{ value ? options.find((option) => option.id === value)?.name : 'Select item...' }}
 
         <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />

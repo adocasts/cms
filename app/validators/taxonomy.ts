@@ -59,3 +59,9 @@ export const taxonomyValidator = vine.compile(
     }),
   })
 )
+
+export const taxonomyContentValidator = vine.compile(
+  vine.object({
+    postIds: vine.array(vine.number()),
+  })
+)

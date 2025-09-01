@@ -71,10 +71,11 @@ function getIgnoreIds() {
 </script>
 
 <template>
-  <div>
+  <div class="w-full flex">
     <Autocomplete
       v-model="post.postId"
       :options="options"
+      class="w-full"
       @search="onPostSearch"
       @update:modelValue="onPostCommit"
     />

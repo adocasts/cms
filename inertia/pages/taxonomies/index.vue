@@ -120,6 +120,12 @@ async function onDelete(taxonomy: TaxonomyDto) {
           </TableCell>
           <TableCell>
             <div class="flex items-center justify-end gap-3">
+              <Button variant="ghost" size="sm" as-child>
+                <Link route="taxonomies.edit.content" :params="{ id: taxonomy.id }">
+                  <Library class="w-3 h-3" />
+                  Edit Posts
+                </Link>
+              </Button>
               <Button
                 v-if="!parent && Number(taxonomy.meta.children_count)"
                 variant="secondary"
