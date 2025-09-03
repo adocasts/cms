@@ -53,6 +53,7 @@ export default class PostDto extends BaseModelDto {
   declare publishAtTime?: string | null
   declare createdAt: string
   declare updatedAt: string
+  declare updatedContentAt: string | null
 
   declare assets: AssetDto[]
   declare thumbnails: AssetDto[]
@@ -132,6 +133,7 @@ export default class PostDto extends BaseModelDto {
     this.publishAtTime = post.publishAtTimeString
     this.createdAt = post.createdAt.toISO()!
     this.updatedAt = post.updatedAt.toISO()!
+    this.updatedContentAt = post.updatedContentAt?.toISO()!
 
     this.assets = AssetDto.fromArray(post.assets)
     this.thumbnails = AssetDto.fromArray(post.thumbnails)

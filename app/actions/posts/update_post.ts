@@ -8,6 +8,7 @@ import SyncPostAsset from './sync_post_assets.js'
 import SyncTaxonomies from '#actions/taxonomies/sync_taxonomies'
 import SyncCaptions from './sync_captions.js'
 import SyncChapters from './sync_chapters.js'
+import { DateTime } from 'luxon'
 
 type Data = Infer<typeof postValidator>
 
@@ -27,14 +28,26 @@ export default class UpdatePost {
     if (!data.stateId) data.stateId = States.DRAFT
     if (!data.postTypeId) data.postTypeId = PostTypes.LESSON
 
-    const { thumbnail, publishAtDate, publishAtTime, taxonomyIds, captions, chapters, ...update } =
-      data
+    const {
+      thumbnail,
+      publishAtDate,
+      publishAtTime,
+      taxonomyIds,
+      captions,
+      chapters,
+      isUpdatingContent,
+      ...update
+    } = data
 
     post.merge(update)
 
     if (!data.videoBunnyId) post.videoBunnyId = null
     if (!data.videoUrl) post.videoUrl = null
     if (!data.videoBunnyId && !data.videoUrl) post.videoSeconds = 0
+
+    if (isUpdatingContent) {
+      post.updatedContentAt = DateTime.now()
+    }
 
     return db.transaction(async (trx) => {
       post.useTransaction(trx)

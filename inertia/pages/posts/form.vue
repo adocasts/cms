@@ -39,6 +39,7 @@ const form = useForm({
   repositoryUrl: props.post?.repositoryUrl ?? '',
   isFeatured: props.post?.isFeatured ?? false,
   isLive: props.post?.isLive ?? false,
+  isUpdatingContent: false,
   livestreamUrl: props.post?.livestreamUrl ?? '',
   videoTypeId: props.post?.videoTypeId?.toString() ?? VideoTypes.NONE.toString(),
   videoUrl: props.post?.videoUrl ?? '',
@@ -214,6 +215,17 @@ function onSubmit(stateId: States = Number(form.stateId)) {
         :errors="form.errors.publishAtDate || form.errors.publishAtTime"
       >
         <DatePicker v-model:date="form.publishAtDate" v-model:time="form.publishAtTime" />
+      </FormInput>
+
+      <FormInput
+        label="Mark Content as Updated"
+        type="group"
+        :error="form.errors.isUpdatingContent"
+      >
+        <div class="flex items-center gap-2">
+          <Checkbox v-model:checked="form.isUpdatingContent" />
+          <span>Is the content (body or video) being updated?</span>
+        </div>
       </FormInput>
 
       <FormInput

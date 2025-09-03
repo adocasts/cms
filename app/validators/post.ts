@@ -50,6 +50,7 @@ export const postValidator = vine.compile(
     repositoryUrl: vine.string().trim().maxLength(255).url().optional(),
     isFeatured: vine.boolean().optional().nullable(),
     isLive: vine.boolean().nullable(),
+    isUpdatingContent: vine.boolean().nullable(),
     videoTypeId: vine.number().enum(VideoTypes).optional(),
     videoUrl: vine.string().trim().maxLength(255).optional().nullable(),
     videoBunnyId: vine.string().trim().maxLength(500).optional().nullable(),
