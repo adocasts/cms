@@ -22,8 +22,16 @@ export default class StorePost {
     if (!data.stateId) data.stateId = States.DRAFT
     if (!data.postTypeId) data.postTypeId = PostTypes.LESSON
 
-    const { thumbnail, publishAtDate, publishAtTime, taxonomyIds, captions, chapters, ...store } =
-      data
+    const {
+      thumbnail,
+      publishAtDate,
+      publishAtTime,
+      taxonomyIds,
+      captions,
+      chapters,
+      isUpdatingContent,
+      ...store
+    } = data
 
     return db.transaction(async (trx) => {
       const post = await Post.create(store, { client: trx })
