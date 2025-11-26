@@ -45,7 +45,7 @@ export default class PostDto extends BaseModelDto {
   declare videoSeconds: number
   declare postTypeId: PostTypes
   declare redirectUrl: string
-  declare repositoryUrl: string
+  declare repositoryUrl: string | null
   declare repositoryAccessLevel: RepositoryAccessLevels
   declare isWatchlistSent: boolean
   declare timezone: string | null

@@ -45,7 +45,7 @@ export default class PostFormDto extends BaseModelDto {
   declare videoSeconds: number
   declare postTypeId: PostTypes
   declare redirectUrl: string
-  declare repositoryUrl: string
+  declare repositoryUrl: string | null
   declare repositoryAccessLevel: RepositoryAccessLevels
   declare timezone: string | null
   declare publishAtDate?: string | null
