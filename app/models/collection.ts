@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon'
 import {
   beforeSave,
   belongsTo,
@@ -9,22 +8,23 @@ import {
   scope,
 } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
+import { DateTime } from 'luxon'
 // import { slugify } from '@ioc:Adonis/Addons/LucidSlugify'
-import Database from '@adonisjs/lucid/services/db'
-import User from '#models/user'
-import Post from '#models/post'
-import Asset from '#models/asset'
-import Taxonomy from '#models/taxonomy'
 import CollectionTypes from '#enums/collection_types'
-import Status from '#enums/status'
-import State from '#enums/states'
-import AppBaseModel from '#models/app_base_model'
-import States from '#enums/states'
-import Watchlist from '#models/watchlist'
-import History from '#models/history'
 import HistoryTypes from '#enums/history_types'
-import { ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
+import RepositoryAccessLevels from '#enums/repository_access_levels'
+import { default as State, default as States } from '#enums/states'
+import Status from '#enums/status'
+import AppBaseModel from '#models/app_base_model'
+import Asset from '#models/asset'
+import History from '#models/history'
+import Post from '#models/post'
+import Taxonomy from '#models/taxonomy'
+import User from '#models/user'
+import Watchlist from '#models/watchlist'
 import SlugService from '#services/slug_service'
+import Database from '@adonisjs/lucid/services/db'
+import { ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 import Progress from './progress.js'
 
 export default class Collection extends AppBaseModel {
@@ -79,6 +79,9 @@ export default class Collection extends AppBaseModel {
 
   @column()
   declare repositoryUrl: string | null
+
+  @column()
+  declare repositoryAccessLevel: RepositoryAccessLevels
 
   @column()
   declare isFeatured: boolean

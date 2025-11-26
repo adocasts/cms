@@ -1,34 +1,33 @@
-import { DateTime } from 'luxon'
-import { beforeSave, column, computed, hasMany, manyToMany, scope } from '@adonisjs/lucid/orm'
-import type { HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
 import Asset from '#models/asset'
+import Comment from '#models/comment'
 import PostSnapshot from '#models/post_snapshot'
 import User from '#models/user'
-import Comment from '#models/comment'
+import { beforeSave, column, computed, hasMany, manyToMany, scope } from '@adonisjs/lucid/orm'
+import type { HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
+import { DateTime } from 'luxon'
 // import { slugify } from '@ioc:Adonis/Addons/LucidSlugify'
-import State from '#enums/states'
-import Taxonomy from '#models/taxonomy'
-import ReadService from '#services/read_service'
-import BodyTypes from '#enums/body_types'
-import PostType from '#enums/post_types'
-import AppBaseModel from '#models/app_base_model'
-import States from '#enums/states'
-import Collection from '#models/collection'
-import CollectionTypes from '#enums/collection_types'
-import Watchlist from '#models/watchlist'
-import History from '#models/history'
-import HistoryTypes from '#enums/history_types'
 import AssetTypes from '#enums/asset_types'
+import BodyTypes from '#enums/body_types'
+import CollectionTypes from '#enums/collection_types'
+import HistoryTypes from '#enums/history_types'
 import PaywallTypes from '#enums/paywall_types'
+import { default as PostType, default as PostTypes } from '#enums/post_types'
+import RepositoryAccessLevels from '#enums/repository_access_levels'
+import { default as State, default as States } from '#enums/states'
 import VideoTypes from '#enums/video_types'
-import UtilityService from '#services/utility_service'
-import { ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
+import AppBaseModel from '#models/app_base_model'
+import Collection from '#models/collection'
+import History from '#models/history'
+import Taxonomy from '#models/taxonomy'
+import Watchlist from '#models/watchlist'
+import ReadService from '#services/read_service'
 import SlugService from '#services/slug_service'
+import UtilityService from '#services/utility_service'
 import router from '@adonisjs/core/services/router'
-import Progress from './progress.js'
-import PostTypes from '#enums/post_types'
+import { ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 import PostCaption from './post_caption.js'
 import PostChapter from './post_chapter.js'
+import Progress from './progress.js'
 
 export default class Post extends AppBaseModel {
   serializeExtras = true
@@ -120,7 +119,10 @@ export default class Post extends AppBaseModel {
   declare redirectUrl: string
 
   @column()
-  declare repositoryUrl: string
+  declare repositoryUrl: string | null
+
+  @column()
+  declare repositoryAccessLevel: RepositoryAccessLevels
 
   @column()
   declare isWatchlistSent: boolean

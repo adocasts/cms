@@ -72,12 +72,6 @@ export default await Env.create(new URL('../', import.meta.url), {
   TURNSTILE_SITE_KEY: Env.schema.string(),
   TURNSTILE_SECRET_KEY: Env.schema.string(),
 
-  NOTION_SECRET: Env.schema.string(),
-  NOTION_VERSION: Env.schema.string(),
-  NOTION_DB_SERIES: Env.schema.string(),
-  NOTION_DB_MODULES: Env.schema.string(),
-  NOTION_DB_POSTS: Env.schema.string(),
-
   STRIPE_ENABLED: Env.schema.boolean(),
   STRIPE_PUBLISHABLE_KEY: Env.schema.string(),
   STRIPE_SECRET_KEY: Env.schema.string(),

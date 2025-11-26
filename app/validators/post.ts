@@ -1,12 +1,13 @@
-import PostTypes from '#enums/post_types'
-import vine from '@vinejs/vine'
-import { exists } from './helpers/db.js'
-import VideoTypes from '#enums/video_types'
-import States from '#enums/states'
-import PaywallTypes from '#enums/paywall_types'
-import { DateTime } from 'luxon'
-import CaptionTypes from '#enums/caption_types'
 import CaptionLanguages from '#enums/caption_languages'
+import CaptionTypes from '#enums/caption_types'
+import PaywallTypes from '#enums/paywall_types'
+import PostTypes from '#enums/post_types'
+import RepositoryAccessLevels from '#enums/repository_access_levels'
+import States from '#enums/states'
+import VideoTypes from '#enums/video_types'
+import vine from '@vinejs/vine'
+import { DateTime } from 'luxon'
+import { exists } from './helpers/db.js'
 
 export const postIndexValidator = vine.compile(
   vine.object({
@@ -47,7 +48,8 @@ export const postValidator = vine.compile(
     metaDescription: vine.string().trim().maxLength(255).optional(),
     canonical: vine.string().trim().maxLength(255).url().optional(),
     body: vine.string().trim().optional(),
-    repositoryUrl: vine.string().trim().maxLength(255).url().optional(),
+    repositoryUrl: vine.string().trim().maxLength(255).url().optional().nullable(),
+    repositoryAccessLevel: vine.number().enum(RepositoryAccessLevels).optional(),
     isFeatured: vine.boolean().optional().nullable(),
     isLive: vine.boolean().nullable(),
     isUpdatingContent: vine.boolean().nullable(),

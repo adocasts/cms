@@ -1,15 +1,16 @@
-import { BaseModelDto } from '@adocasts.com/dto/base'
-import Collection from '#models/collection'
-import CollectionTypes from '#enums/collection_types'
-import Status from '#enums/status'
-import State from '#enums/states'
-import UserDto from '#dtos/user'
 import AssetDto from '#dtos/asset'
-import PostDto from '#dtos/post'
-import TaxonomyDto from '#dtos/taxonomy'
-import WatchlistDto from '#dtos/watchlist'
 import HistoryDto from '#dtos/history'
+import PostDto from '#dtos/post'
 import ProgressDto from '#dtos/progress'
+import TaxonomyDto from '#dtos/taxonomy'
+import UserDto from '#dtos/user'
+import WatchlistDto from '#dtos/watchlist'
+import CollectionTypes from '#enums/collection_types'
+import RepositoryAccessLevels from '#enums/repository_access_levels'
+import State from '#enums/states'
+import Status from '#enums/status'
+import Collection from '#models/collection'
+import { BaseModelDto } from '@adocasts.com/dto/base'
 
 export default class CollectionDto extends BaseModelDto {
   declare id: number
@@ -28,6 +29,7 @@ export default class CollectionDto extends BaseModelDto {
   declare metaDescription: string
   declare youtubePlaylistUrl: string | null
   declare repositoryUrl: string | null
+  declare repositoryAccessLevel: RepositoryAccessLevels
   declare sortOrder: number
   declare moduleNumber: number
   declare owner: UserDto | null
@@ -64,6 +66,7 @@ export default class CollectionDto extends BaseModelDto {
     this.metaDescription = collection.metaDescription
     this.youtubePlaylistUrl = collection.youtubePlaylistUrl
     this.repositoryUrl = collection.repositoryUrl
+    this.repositoryAccessLevel = collection.repositoryAccessLevel
     this.moduleNumber = collection.moduleNumber
     this.owner = collection.owner && new UserDto(collection.owner)
     this.asset = collection.asset && new AssetDto(collection.asset)

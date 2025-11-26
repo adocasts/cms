@@ -1,12 +1,13 @@
-import { BaseModelDto } from '@adocasts.com/dto/base'
-import Post from '#models/post'
 import AssetDto from '#dtos/asset'
-import VideoTypes from '#enums/video_types'
-import States from '#enums/states'
+import CaptionLanguages from '#enums/caption_languages'
+import CaptionTypes from '#enums/caption_types'
 import PaywallTypes from '#enums/paywall_types'
 import PostTypes from '#enums/post_types'
-import CaptionTypes from '#enums/caption_types'
-import CaptionLanguages from '#enums/caption_languages'
+import RepositoryAccessLevels from '#enums/repository_access_levels'
+import States from '#enums/states'
+import VideoTypes from '#enums/video_types'
+import Post from '#models/post'
+import { BaseModelDto } from '@adocasts.com/dto/base'
 
 type Caption = {
   id?: number
@@ -45,6 +46,7 @@ export default class PostFormDto extends BaseModelDto {
   declare postTypeId: PostTypes
   declare redirectUrl: string
   declare repositoryUrl: string
+  declare repositoryAccessLevel: RepositoryAccessLevels
   declare timezone: string | null
   declare publishAtDate?: string | null
   declare publishAtTime?: string | null
@@ -83,6 +85,7 @@ export default class PostFormDto extends BaseModelDto {
     this.postTypeId = post.postTypeId
     this.redirectUrl = post.redirectUrl
     this.repositoryUrl = post.repositoryUrl
+    this.repositoryAccessLevel = post.repositoryAccessLevel
     this.timezone = post.timezone
     this.publishAtDate = post.publishAtDateString
     this.publishAtTime = post.publishAtTimeString

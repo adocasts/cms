@@ -1,5 +1,6 @@
 import CollectionTypes from '#enums/collection_types'
 import Difficulties from '#enums/difficulties'
+import RepositoryAccessLevels from '#enums/repository_access_levels'
 import States from '#enums/states'
 import Status from '#enums/status'
 import vine from '@vinejs/vine'
@@ -47,6 +48,7 @@ export const collectionValidator = vine.compile(
     metaDescription: vine.string().trim().maxLength(255).optional(),
     youtubePlaylistUrl: vine.string().trim().maxLength(255).nullable(),
     repositoryUrl: vine.string().trim().maxLength(255).nullable(),
+    repositoryAccessLevel: vine.number().enum(RepositoryAccessLevels).optional(),
     taxonomyIds: vine.array(vine.number().exists(exists('taxonomies', 'id'))).optional(),
     asset: vine.object({
       id: vine.number().exists(exists('assets', 'id')).optional(),

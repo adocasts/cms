@@ -3,6 +3,7 @@ import CollectionDto from '#dtos/collection'
 import TaxonomyDto from '#dtos/taxonomy'
 import CollectionTypes, { CollectionTypeDesc } from '#enums/collection_types'
 import Difficulties, { DifficultyDesc } from '#enums/difficulties'
+import RepositoryAccessLevels from '#enums/repository_access_levels'
 import States from '#enums/states'
 import Status, { StatusDesc } from '#enums/status'
 import { useForm } from '@inertiajs/vue3'
@@ -24,6 +25,7 @@ const form = useForm({
   metaDescription: props.collection?.metaDescription ?? '',
   youtubePlaylistUrl: props.collection?.youtubePlaylistUrl ?? '',
   repositoryUrl: props.collection?.repositoryUrl ?? '',
+  repositoryAccessLevel: props.collection?.repositoryAccessLevel?.toString() ?? RepositoryAccessLevels.PUBLIC.toString(),
   collectionTypeId: props.collection?.collectionTypeId ?? CollectionTypes.SERIES,
   stateId: props.collection?.stateId ?? States.UNLISTED,
   statusId: props.collection?.statusId ?? Status.COMING_SOON,
@@ -92,7 +94,7 @@ function onSubmit(stateId: States = form.stateId) {
 
   <div class="flex gap-10">
     <div
-      class="w-full lg:w-3/5 flex flex-col gap-4 p-3 lg:p-6 bg-white shadow-xl rounded-lg border border-slate-200"
+      class="flex flex-col gap-4 bg-white shadow-xl p-3 lg:p-6 border border-slate-200 rounded-lg w-full lg:w-3/5"
     >
       <FormInput
         label="Title"
@@ -121,7 +123,7 @@ function onSubmit(stateId: States = form.stateId) {
 
       <Collapsible>
         <CollapsibleTrigger as-child>
-          <Button variant="outline" class="w-full flex items-center justify-between">
+          <Button variant="outline" class="flex justify-between items-center w-full">
             Search Engine Optimization (SEO)
             <ChevronsUpDown class="w-4 h-4" />
           </Button>
@@ -195,6 +197,16 @@ function onSubmit(stateId: States = form.stateId) {
       />
 
       <FormInput
+        type="select"
+        label="Repository Access Level"
+        v-model="form.repositoryAccessLevel"
+        :errors="form.errors.repositoryAccessLevel"
+      >
+        <SelectItem :value="RepositoryAccessLevels.PUBLIC.toString()">Public</SelectItem>
+        <SelectItem :value="RepositoryAccessLevels.TEAM_MEMBERS.toString()">Team Members</SelectItem>
+      </FormInput>
+
+      <FormInput
         label="YouTube Playlist URL"
         type="url"
         v-model="form.youtubePlaylistUrl"
@@ -208,12 +220,12 @@ function onSubmit(stateId: States = form.stateId) {
       </FormInput>
     </div>
 
-    <div class="w-full lg:w-2/5 flex flex-col gap-4">
+    <div class="flex flex-col gap-4 w-full lg:w-2/5">
       <div class="-mx-3 lg:-mx-6">
         <AssetUpload
           name="thumbnail"
           idle-label="Upload Thumbnail"
-          class="bg-white p-3 lg:p-6 rounded-lg border border-slate-200 shadow-xl"
+          class="bg-white shadow-xl p-3 lg:p-6 border border-slate-200 rounded-lg"
           v-model="form.asset"
           :asset="collection?.asset"
           :error="form.errors.asset"

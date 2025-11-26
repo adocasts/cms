@@ -1,14 +1,14 @@
+import SyncTaxonomies from '#actions/taxonomies/sync_taxonomies'
 import PostTypes from '#enums/post_types'
 import States from '#enums/states'
 import Post from '#models/post'
 import { postValidator } from '#validators/post'
 import db from '@adonisjs/lucid/services/db'
 import { Infer } from '@vinejs/vine/types'
-import SyncPostAsset from './sync_post_assets.js'
-import SyncTaxonomies from '#actions/taxonomies/sync_taxonomies'
+import { DateTime } from 'luxon'
 import SyncCaptions from './sync_captions.js'
 import SyncChapters from './sync_chapters.js'
-import { DateTime } from 'luxon'
+import SyncPostAsset from './sync_post_assets.js'
 
 type Data = Infer<typeof postValidator>
 

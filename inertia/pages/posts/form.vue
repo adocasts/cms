@@ -5,17 +5,18 @@ import CaptionLanguages, { CaptionLanguageDesc } from '#enums/caption_languages'
 import CaptionTypes, { CaptionTypeDesc } from '#enums/caption_types'
 import PaywallTypes, { PaywallTypeDesc } from '#enums/paywall_types'
 import PostTypes, { PostTypeDesc } from '#enums/post_types'
+import RepositoryAccessLevels from '#enums/repository_access_levels'
 import States from '#enums/states'
 import VideoTypes, { VideoTypeDesc, VideoTypesOrdered } from '#enums/video_types'
 import { useForm } from '@inertiajs/vue3'
 import { Link } from '@tuyau/inertia/vue'
 import {
-  Plus,
   BookCheck,
   BookDashed,
   BookKey,
   BookLock,
   ChevronsUpDown,
+  Plus,
   Trash2,
 } from 'lucide-vue-next'
 import { DateTime } from 'luxon'
@@ -37,6 +38,7 @@ const form = useForm({
   canonical: props.post?.canonical ?? '',
   body: props.post?.body ?? '',
   repositoryUrl: props.post?.repositoryUrl ?? '',
+  repositoryAccessLevel: props.post?.repositoryAccessLevel?.toString() ?? RepositoryAccessLevels.PUBLIC.toString(),
   isFeatured: props.post?.isFeatured ?? false,
   isLive: props.post?.isLive ?? false,
   isUpdatingContent: false,
@@ -144,7 +146,7 @@ function onSubmit(stateId: States = Number(form.stateId)) {
 
   <div class="flex gap-10">
     <div
-      class="w-full lg:w-3/5 flex flex-col gap-4 p-3 lg:p-6 bg-white shadow-xl rounded-lg border border-slate-200"
+      class="flex flex-col gap-4 bg-white shadow-xl p-3 lg:p-6 border border-slate-200 rounded-lg w-full lg:w-3/5"
     >
       <FormInput
         label="Title"
@@ -173,7 +175,7 @@ function onSubmit(stateId: States = Number(form.stateId)) {
 
       <Collapsible>
         <CollapsibleTrigger as-child>
-          <Button variant="outline" class="w-full flex items-center justify-between">
+          <Button variant="outline" class="flex justify-between items-center w-full">
             Search Engine Optimization (SEO)
             <ChevronsUpDown class="w-4 h-4" />
           </Button>
@@ -267,6 +269,16 @@ function onSubmit(stateId: States = Number(form.stateId)) {
         placeholder="Have code associated with this post? Provide the repository URL here"
       />
 
+      <FormInput
+        type="select"
+        label="Repository Access Level"
+        v-model="form.repositoryAccessLevel"
+        :errors="form.errors.repositoryAccessLevel"
+      >
+        <SelectItem :value="RepositoryAccessLevels.PUBLIC.toString()">Public</SelectItem>
+        <SelectItem :value="RepositoryAccessLevels.TEAM_MEMBERS.toString()">Team Members</SelectItem>
+      </FormInput>
+
       <FormInput type="group" label="Taxonomies" :error="form.errors.taxonomyIds">
         <TaxonomyTags v-model="form.taxonomyIds" :taxonomies="taxonomies" />
       </FormInput>
@@ -276,12 +288,12 @@ function onSubmit(stateId: States = Number(form.stateId)) {
       </FormInput>
     </div>
 
-    <div class="w-full lg:w-2/5 flex flex-col gap-4">
+    <div class="flex flex-col gap-4 w-full lg:w-2/5">
       <div class="-mx-3 lg:-mx-6">
         <AssetUpload
           name="thumbnail"
           idle-label="Upload Thumbnail"
-          class="bg-white p-3 lg:p-6 rounded-lg border border-slate-200 shadow-xl"
+          class="bg-white shadow-xl p-3 lg:p-6 border border-slate-200 rounded-lg"
           v-model="form.thumbnail"
           :asset="post?.thumbnail"
           :error="form.errors.thumbnail"
@@ -290,7 +302,7 @@ function onSubmit(stateId: States = Number(form.stateId)) {
 
       <div class="-mx-3 lg:-mx-6">
         <div
-          class="bg-white p-3 lg:p-6 rounded-lg border border-slate-200 shadow-xl flex flex-col gap-3"
+          class="flex flex-col gap-3 bg-white shadow-xl p-3 lg:p-6 border border-slate-200 rounded-lg"
         >
           <VideoPreview
             v-model:duration="form.videoSeconds"
@@ -355,7 +367,7 @@ function onSubmit(stateId: States = Number(form.stateId)) {
 
           <fieldset
             v-if="Number(form.videoTypeId) === VideoTypes.R2"
-            class="border rounded-lg border-slate-300 p-4 -mx-4"
+            class="-mx-4 p-4 border border-slate-300 rounded-lg"
           >
             <legend class="-mx-2 px-2">Captions</legend>
 
@@ -386,10 +398,10 @@ function onSubmit(stateId: States = Number(form.stateId)) {
                 type="button"
                 size="icon"
                 variant="secondary"
-                class="hover:text-red-500 mt-5"
+                class="mt-5 hover:text-red-500"
                 @click="form.captions.splice(index, 1)"
               >
-                <Trash2 class="h-3 w-3" />
+                <Trash2 class="w-3 h-3" />
               </Button>
             </div>
 
@@ -406,14 +418,14 @@ function onSubmit(stateId: States = Number(form.stateId)) {
                 })
               "
             >
-              <Plus class="h-3 w-3" />
+              <Plus class="w-3 h-3" />
               Add Caption
             </Button>
           </fieldset>
 
           <fieldset
             v-if="Number(form.videoTypeId) === VideoTypes.R2"
-            class="border rounded-lg border-slate-300 p-4 -mx-4"
+            class="-mx-4 p-4 border border-slate-300 rounded-lg"
           >
             <legend class="-mx-2 px-2">Chapters</legend>
 
@@ -448,10 +460,10 @@ function onSubmit(stateId: States = Number(form.stateId)) {
                 type="button"
                 size="icon"
                 variant="secondary"
-                class="hover:text-red-500 mt-5"
+                class="mt-5 hover:text-red-500"
                 @click="form.chapters.splice(index, 1)"
               >
-                <Trash2 class="h-3 w-3" />
+                <Trash2 class="w-3 h-3" />
               </Button>
             </div>
 
@@ -468,7 +480,7 @@ function onSubmit(stateId: States = Number(form.stateId)) {
                 })
               "
             >
-              <Plus class="h-3 w-3" />
+              <Plus class="w-3 h-3" />
               Add Chapter
             </Button>
           </fieldset>

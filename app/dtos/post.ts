@@ -1,20 +1,21 @@
-import { BaseModelDto } from '@adocasts.com/dto/base'
-import Post from '#models/post'
 import AssetDto from '#dtos/asset'
-import PostSnapshotDto from '#dtos/post_snapshot'
-import CommentDto from '#dtos/comment'
-import UserDto from '#dtos/user'
-import TaxonomyDto from '#dtos/taxonomy'
 import CollectionDto from '#dtos/collection'
+import CommentDto from '#dtos/comment'
 import HistoryDto from '#dtos/history'
+import PostSnapshotDto from '#dtos/post_snapshot'
 import ProgressDto from '#dtos/progress'
+import TaxonomyDto from '#dtos/taxonomy'
+import UserDto from '#dtos/user'
 import WatchlistDto from '#dtos/watchlist'
-import VideoTypes from '#enums/video_types'
-import States from '#enums/states'
 import PaywallTypes from '#enums/paywall_types'
 import PostTypes from '#enums/post_types'
-import PostChapterDto from './post_chapter.js'
+import RepositoryAccessLevels from '#enums/repository_access_levels'
+import States from '#enums/states'
+import VideoTypes from '#enums/video_types'
+import Post from '#models/post'
+import { BaseModelDto } from '@adocasts.com/dto/base'
 import PostCaptionDto from './post_caption.js'
+import PostChapterDto from './post_chapter.js'
 
 export default class PostDto extends BaseModelDto {
   declare id: number
@@ -45,6 +46,7 @@ export default class PostDto extends BaseModelDto {
   declare postTypeId: PostTypes
   declare redirectUrl: string
   declare repositoryUrl: string
+  declare repositoryAccessLevel: RepositoryAccessLevels
   declare isWatchlistSent: boolean
   declare timezone: string | null
   declare publishAtUser: string | null
@@ -125,6 +127,7 @@ export default class PostDto extends BaseModelDto {
     this.postTypeId = post.postTypeId
     this.redirectUrl = post.redirectUrl
     this.repositoryUrl = post.repositoryUrl
+    this.repositoryAccessLevel = post.repositoryAccessLevel
     this.isWatchlistSent = post.isWatchlistSent
     this.timezone = post.timezone
     this.publishAtUser = post.publishAtUser
