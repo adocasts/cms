@@ -84,4 +84,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   PLOTMYCOURSE_API_KEY: Env.schema.string.optional(),
 
   R2_SIGNING_KEY: Env.schema.string(),
+
+  AI_SEARCH_KEY: Env.schema.string.optional(),
+  CLOUDFLARE_ACCOUNT_ID: Env.schema.string.optional(),
 })

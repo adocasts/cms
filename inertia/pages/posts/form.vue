@@ -10,6 +10,7 @@ import States from '#enums/states'
 import VideoTypes, { VideoTypeDesc, VideoTypesOrdered } from '#enums/video_types'
 import { useForm } from '@inertiajs/vue3'
 import { Link } from '@tuyau/inertia/vue'
+import axios from 'axios'
 import {
   BookCheck,
   BookDashed,
@@ -18,9 +19,11 @@ import {
   ChevronsUpDown,
   Plus,
   Trash2,
+  LucideLoader,
 } from 'lucide-vue-next'
 import { DateTime } from 'luxon'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { toast } from 'vue-sonner'
 import { tuyau } from '~/lib/tuyau'
 import { enumKeys } from '~/lib/utils'
 
@@ -28,6 +31,24 @@ const props = defineProps<{
   post?: PostFormDto
   taxonomies: TaxonomyDto[]
 }>()
+
+const r2DefaultCaptions = [
+  {
+    type: CaptionTypes.SRT,
+    language: CaptionLanguages.ENGLISH,
+    label: '',
+  },
+  {
+    type: CaptionTypes.SRT,
+    language: CaptionLanguages.SPANISH,
+    label: '',
+  },
+  {
+    type: CaptionTypes.SRT,
+    language: CaptionLanguages.FRENCH,
+    label: '',
+  },
+]
 
 const form = useForm({
   title: props.post?.title ?? '',
@@ -63,6 +84,8 @@ const form = useForm({
   taxonomyIds: props.post?.taxonomyIds ?? [],
 })
 
+const isGeneratingChapters = ref(false)
+
 const publishAt = computed(() => {
   const iso = [form.publishAtDate, form.publishAtTime].filter(Boolean).join('T')
   return iso && DateTime.fromISO(iso)
@@ -81,6 +104,29 @@ function secondsToTimecode(seconds: number) {
     .join(':')
 }
 
+async function generateVideoChapters() {
+  if (form.chapters.length || !form.videoUrl) return
+
+  isGeneratingChapters.value = true
+
+  try {
+    const { data } = await axios.post(`/ai/videos/${form.videoUrl}/chapters`)
+
+    if (Array.isArray(data.result.response)) {
+      form.chapters = data.result.response
+
+      toast.success('Chapters generated successfully')
+    } else {
+      toast.error('Chapters were generated successfully, but came back in an unexpected format')
+    }
+  } catch (error) {
+    console.error(error)
+    toast.error('Failed to generate chapters')
+  }
+
+  isGeneratingChapters.value = false
+}
+
 function onSubmit(stateId: States = Number(form.stateId)) {
   const action = form.transform((data) => {
     data.stateId = stateId
@@ -92,6 +138,13 @@ function onSubmit(stateId: States = Number(form.stateId)) {
   }
 
   action.post(tuyau.$url('posts.store'))
+}
+
+function onVideoTypeChanged(videoTypeId: string) {
+  if (form.chapters.length) return
+  if (videoTypeId !== VideoTypes.R2.toString()) return
+
+  form.captions = r2DefaultCaptions.map((r) => ({ ...r }))
 }
 </script>
 
@@ -317,6 +370,7 @@ function onSubmit(stateId: States = Number(form.stateId)) {
             v-model="form.videoTypeId"
             placeholder="Have a video? Where is it stored?"
             :errors="form.errors.videoTypeId"
+            @update:modelValue="onVideoTypeChanged"
           >
             <SelectItem v-for="id in VideoTypesOrdered" :key="id" :value="id.toString()">
               {{ VideoTypeDesc[id] }}
@@ -348,6 +402,7 @@ function onSubmit(stateId: States = Number(form.stateId)) {
             v-model="form.videoUrl"
             :max="255"
             placeholder="Enter the R2 Video Id (directory name)"
+            @blur="generateVideoChapters"
           />
 
           <FormInput
@@ -427,7 +482,15 @@ function onSubmit(stateId: States = Number(form.stateId)) {
             v-if="Number(form.videoTypeId) === VideoTypes.R2"
             class="-mx-4 p-4 border border-slate-300 rounded-lg"
           >
-            <legend class="-mx-2 px-2">Chapters</legend>
+            <legend class="-mx-2 px-2">
+              Chapters
+              <span
+                v-show="isGeneratingChapters"
+                class="text-slate-400 inline-flex items-center gap-1.5"
+              >
+                [Generating <LucideLoader class="w-4 h-4 animate-spin" />]
+              </span>
+            </legend>
 
             <div
               v-if="form.chapters"

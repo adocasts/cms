@@ -17,7 +17,7 @@ const props = withDefaults(
   }
 )
 
-const emits = defineEmits(['update:modelValue'])
+const emits = defineEmits(['update:modelValue', 'blur'])
 
 const inputEl = ref()
 
@@ -39,6 +39,7 @@ defineExpose({ inputEl })
           :type="type"
           :class="{ 'absolute start-2 inset-y-2 w-6 h-6 rounded': type === 'color' }"
           :disabled="disabled"
+          @blur="$emit('blur')"
         />
         <Input
           ref="inputEl"
@@ -47,6 +48,7 @@ defineExpose({ inputEl })
           :disabled="disabled"
           :placeholder="placeholder"
           :required="required"
+          @blur="$emit('blur')"
         />
       </div>
       <Select
@@ -55,6 +57,7 @@ defineExpose({ inputEl })
         ref="inputEl"
         :disabled="disabled"
         :required="required"
+        @blur="$emit('blur')"
       >
         <SelectTrigger>
           <slot name="trigger">
@@ -70,6 +73,7 @@ defineExpose({ inputEl })
         v-model="internalValue"
         ref="inputEl"
         :disabled="disabled"
+        @blur="$emit('blur')"
       />
       <slot v-else-if="type === 'group'" />
       <Input
@@ -80,6 +84,7 @@ defineExpose({ inputEl })
         :disabled="disabled"
         :placeholder="placeholder"
         :required="required"
+        @blur="$emit('blur')"
       />
     </Label>
     <div class="flex items-center justify-between gap-3">
