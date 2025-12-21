@@ -76,6 +76,8 @@
     "@adonisjs/shield": "^8.1.1",
     "@adonisjs/static": "^1.1.1",
     "@adonisjs/vite": "^3.0.0",
+    "@aws-sdk/client-s3": "^3.956.0",
+    "@aws-sdk/s3-request-presigner": "^3.956.0",
     "@google-cloud/storage": "^7.14.0",
     "@inertiajs/vue3": "^1.2.0",
     "@tailwindcss/typography": "^0.5.15",

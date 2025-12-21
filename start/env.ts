@@ -87,4 +87,7 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   AI_SEARCH_KEY: Env.schema.string.optional(),
   CLOUDFLARE_ACCOUNT_ID: Env.schema.string.optional(),
+  R2_KEY: Env.schema.string(),
+  R2_SECRET: Env.schema.string(),
+  R2_ENDPOINT: Env.schema.string(),
 })

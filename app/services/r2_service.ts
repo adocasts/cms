@@ -8,8 +8,8 @@ class R2Service {
     },
   })
 
-  async getTranscript(videoId: string) {
-    const { data } = await this.#api.get(`/${videoId}/en.srt`)
+  async getTranscript(videoId: string, filename = 'en.srt') {
+    const { data } = await this.#api.get(`/${videoId}/${filename}`)
     return data as string
   }
 }

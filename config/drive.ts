@@ -10,6 +10,26 @@ const driveConfig = defineConfig({
    * services each using the same or a different driver.
    */
   services: {
+    videos: services.s3({
+      credentials: {
+        accessKeyId: env.get('R2_KEY'),
+        secretAccessKey: env.get('R2_SECRET'),
+      },
+      region: 'auto',
+      bucket: 'videos',
+      endpoint: env.get('R2_ENDPOINT'),
+      visibility: 'public',
+    }),
+    rag: services.s3({
+      credentials: {
+        accessKeyId: env.get('R2_KEY'),
+        secretAccessKey: env.get('R2_SECRET'),
+      },
+      region: 'auto',
+      bucket: 'adocasts-rag',
+      endpoint: env.get('R2_ENDPOINT'),
+      visibility: 'public',
+    }),
     fs: services.fs({
       location: app.makePath('storage'),
       serveFiles: true,
