@@ -48,6 +48,26 @@ const r2DefaultCaptions = [
     language: CaptionLanguages.FRENCH,
     label: '',
   },
+  {
+    type: CaptionTypes.SRT,
+    language: CaptionLanguages.GERMAN,
+    label: '',
+  },
+  {
+    type: CaptionTypes.SRT,
+    language: CaptionLanguages.PORTUGUESE,
+    label: '',
+  },
+  {
+    type: CaptionTypes.SRT,
+    language: CaptionLanguages.PORTUGUESE_BRAZIL,
+    label: '',
+  },
+  {
+    type: CaptionTypes.SRT,
+    language: CaptionLanguages.POLISH,
+    label: '',
+  },
 ]
 
 const form = useForm({
@@ -59,7 +79,8 @@ const form = useForm({
   canonical: props.post?.canonical ?? '',
   body: props.post?.body ?? '',
   repositoryUrl: props.post?.repositoryUrl ?? '',
-  repositoryAccessLevel: props.post?.repositoryAccessLevel?.toString() ?? RepositoryAccessLevels.PUBLIC.toString(),
+  repositoryAccessLevel:
+    props.post?.repositoryAccessLevel?.toString() ?? RepositoryAccessLevels.PUBLIC.toString(),
   isFeatured: props.post?.isFeatured ?? false,
   isLive: props.post?.isLive ?? false,
   isUpdatingContent: false,
@@ -329,7 +350,9 @@ function onVideoTypeChanged(videoTypeId: string) {
         :errors="form.errors.repositoryAccessLevel"
       >
         <SelectItem :value="RepositoryAccessLevels.PUBLIC.toString()">Public</SelectItem>
-        <SelectItem :value="RepositoryAccessLevels.TEAM_MEMBERS.toString()">Team Members</SelectItem>
+        <SelectItem :value="RepositoryAccessLevels.TEAM_MEMBERS.toString()"
+          >Team Members</SelectItem
+        >
       </FormInput>
 
       <FormInput type="group" label="Taxonomies" :error="form.errors.taxonomyIds">
