@@ -138,7 +138,7 @@ async function generateVideoChapters() {
       form.chapters = result
 
       toast.success('Chapters generated successfully from JSON')
-    } else if (typeof result === 'string' && result.startsWith('```json[')) {
+    } else if (typeof result === 'string' && result.startsWith('```json')) {
       const chapters = JSON.parse(result.replace('```json', '').replace('```', ''))
       form.chapters = chapters
 
