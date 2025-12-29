@@ -132,11 +132,17 @@ async function generateVideoChapters() {
 
   try {
     const { data } = await axios.post(`/ai/videos/${form.videoUrl}/chapters`)
+    const result = data.result.response
 
-    if (Array.isArray(data.result.response)) {
-      form.chapters = data.result.response
+    if (Array.isArray(result)) {
+      form.chapters = result
 
-      toast.success('Chapters generated successfully')
+      toast.success('Chapters generated successfully from JSON')
+    } else if (typeof result === 'string' && result.startsWith('```json[')) {
+      const chapters = JSON.parse(result.replace('```json', '').replace('```', ''))
+      form.chapters = chapters
+
+      toast.success('Chapters generated successfully from Markdown')
     } else {
       toast.error('Chapters were generated successfully, but came back in an unexpected format')
     }
