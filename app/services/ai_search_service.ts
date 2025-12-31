@@ -24,6 +24,8 @@ class AiSearchService {
   async chapters(captions: string) {
     const { data } = await this.#api.post('', {
       query: `Take the provided SRT subtitles and create as few as possible, high-level, timestamp chapters from them. Between 3 to 8 chapters. The chapters time should only consist of minutes and seconds unless the captions go over an hour. Response should only contain JavaScript parsable JSON in the structure: [{ start: 'mm:ss', end: 'mm:ss', text: 'chapter text' }]. Captions: ${captions}`,
+      model: '@cf/meta/llama-4-scout-17b-16e-instruct',
+      rewrite_query: false,
     })
 
     return data
