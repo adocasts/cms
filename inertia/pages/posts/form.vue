@@ -461,18 +461,13 @@ function onVideoTypeChanged(videoTypeId: string) {
               :key="caption.id ?? caption.language"
               class="flex gap-2"
             >
-              <FormInput
-                type="select"
-                label="Language"
-                class="flex-1"
-                v-model="form.captions[index].language"
-              >
+              <FormInput type="select" class="flex-1" v-model="form.captions[index].language">
                 <SelectItem v-for="id in CaptionLanguages" :key="id" :value="id.toString()">
                   {{ CaptionLanguageDesc[id] }}
                 </SelectItem>
               </FormInput>
 
-              <FormInput type="select" label="Type" v-model="form.captions[index].type">
+              <FormInput type="select" v-model="form.captions[index].type">
                 <SelectItem v-for="id in CaptionTypes" :key="id" :value="id.toString()">
                   {{ CaptionTypeDesc[id] }}
                 </SelectItem>
@@ -482,7 +477,7 @@ function onVideoTypeChanged(videoTypeId: string) {
                 type="button"
                 size="icon"
                 variant="secondary"
-                class="mt-5 hover:text-red-500"
+                class="hover:text-red-500"
                 @click="form.captions.splice(index, 1)"
               >
                 <Trash2 class="w-3 h-3" />
@@ -528,21 +523,18 @@ function onVideoTypeChanged(videoTypeId: string) {
               class="flex gap-2"
             >
               <FormInput
-                label="Start"
-                class="w-[67px] text-xs"
+                class="w-[78px] text-xs"
                 v-model="form.chapters[index].start"
                 placeholder="00:00"
               />
 
               <FormInput
-                label="End"
-                class="w-[67px] text-xs"
+                class="w-[78px] text-xs"
                 v-model="form.chapters[index].end"
                 placeholder="00:00"
               />
 
               <FormInput
-                label="Text"
                 class="flex-1 text-xs"
                 v-model="form.chapters[index].text"
                 placeholder="Chapter text"
@@ -552,7 +544,7 @@ function onVideoTypeChanged(videoTypeId: string) {
                 type="button"
                 size="icon"
                 variant="secondary"
-                class="mt-5 hover:text-red-500"
+                class="hover:text-red-500"
                 @click="form.chapters.splice(index, 1)"
               >
                 <Trash2 class="w-3 h-3" />

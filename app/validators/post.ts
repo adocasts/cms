@@ -85,8 +85,8 @@ export const postValidator = vine.compile(
       .array(
         vine.object({
           id: vine.number().exists(exists('post_chapters', 'id')).optional(),
-          start: vine.string().regex(/^(?:[0-5]?[0-9]):([0-5]?[0-9])$/),
-          end: vine.string().regex(/^(?:[0-5]?[0-9]):([0-5]?[0-9])$/),
+          start: vine.string().regex(/^(?:([0-9]{1,2}):)?(?:[0-5]?[0-9]):([0-5]?[0-9])$/),
+          end: vine.string().regex(/^(?:([0-9]{1,2}):)?(?:[0-5]?[0-9]):([0-5]?[0-9])$/),
           text: vine.string().maxLength(100),
         })
       )
