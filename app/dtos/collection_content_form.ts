@@ -1,3 +1,4 @@
+import VideoTypes from '#enums/video_types'
 import type Post from '#models/post'
 import CollectionDto from './collection.js'
 import PostDto from './post.js'
@@ -7,6 +8,7 @@ export class CollectionPostFormDto {
   declare title: string
   declare slug: string
   declare publishAt?: string | null
+  declare videoTypeId: VideoTypes | null
   declare order: number
 
   constructor(post?: Post | PostDto) {
@@ -15,6 +17,7 @@ export class CollectionPostFormDto {
     this.id = post.id
     this.title = post.title
     this.slug = post.slug
+    this.videoTypeId = post.videoTypeId
 
     if ('$extras' in post) {
       this.publishAt = post.publishAt?.toISO()

@@ -3,7 +3,8 @@ import Sortable from 'vuedraggable'
 import { DateTime } from 'luxon'
 import { CollectionPostFormDto } from '#dtos/collection_content_form'
 import { Link } from '@tuyau/inertia/vue'
-import { CalendarClock, X } from 'lucide-vue-next'
+import { CalendarClock, VideoIcon, X } from 'lucide-vue-next'
+import VideoTypes, { VideoTypeDesc } from '#enums/video_types'
 
 defineProps<{
   moduleNumber?: number
@@ -48,6 +49,14 @@ const posts = defineModel<CollectionPostFormDto[]>({ default: [] })
           >
             <CalendarClock class="w-3 h-3" />
             {{ DateTime.fromISO(post.publishAt).toRelative() }}
+          </span>
+
+          <span
+            v-if="post.videoTypeId"
+            class="text-slate-400 text-xs hidden lg:flex items-center gap-2"
+          >
+            <VideoIcon class="w-3 h-3" />
+            {{ VideoTypeDesc[post.videoTypeId as VideoTypes] }}
           </span>
         </div>
 
