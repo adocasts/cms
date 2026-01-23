@@ -54,8 +54,8 @@ export default class CollectionFormDto extends BaseModelDto {
     this.repositoryUrl = collection.repositoryUrl
     this.repositoryAccessLevel = collection.repositoryAccessLevel
     this.sortOrder = collection.sortOrder
-    this.createdAt = collection.createdAt.toISO()
-    this.updatedAt = collection.updatedAt.toISO()
+    this.createdAt = collection.createdAt.toISO()!
+    this.updatedAt = collection.updatedAt.toISO()!
 
     this.asset = collection.asset ? new AssetDto(collection.asset) : null
     this.taxonomyIds = collection.taxonomies?.map((row) => row.id) ?? []

@@ -18,8 +18,4 @@ export default class FrameworkVersionDto extends BaseModelDto {
     this.createdAt = frameworkVersion.createdAt?.toISO()!
     this.updatedAt = frameworkVersion.updatedAt?.toISO()!
   }
-
-  static fromArray(frameworkVersions: FrameworkVersion[] = []) {
-    return frameworkVersions.map((fv) => new FrameworkVersionDto(fv))
-  }
 }

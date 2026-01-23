@@ -4,18 +4,14 @@ import StoreFrameworkVersion from '#actions/framework_versions/store_framework_v
 import UpdateFrameworkVersion from '#actions/framework_versions/update_framework_version'
 import FrameworkVersionDto from '#dtos/framework_version'
 import FrameworkVersion from '#models/framework_version'
-import {
-    frameworkVersionIndexValidator,
-    frameworkVersionValidator,
-} from '#validators/framework_version'
+import { frameworkVersionValidator } from '#validators/framework_version'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class FrameworkVersionsController {
   /**
    * Display a list of resource
    */
-  async index({ inertia, request }: HttpContext) {
-    const data = await request.validateUsing(frameworkVersionIndexValidator)
+  async index({ inertia }: HttpContext) {
     const frameworkVersions = await GetFrameworkVersions.handle()
 
     return inertia.render('framework_versions/index', {
@@ -36,7 +32,7 @@ export default class FrameworkVersionsController {
   async store({ request, response, session }: HttpContext) {
     const data = await request.validateUsing(frameworkVersionValidator)
 
-    const frameworkVersion = await StoreFrameworkVersion.handle({ data })
+    await StoreFrameworkVersion.handle({ data })
 
     session.flash('success', 'Framework version created successfully')
 

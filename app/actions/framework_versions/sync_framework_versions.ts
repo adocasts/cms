@@ -12,7 +12,7 @@ type Params = {
 export default class SyncFrameworkVersions {
   static async handle({ resource, ids = [] }: Params) {
     const frameworkVersions = ids.reduce(
-      (prev, currentId, i) => ({
+      (prev, currentId) => ({
         ...prev,
         [currentId]: {},
       }),
