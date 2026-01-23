@@ -56,6 +56,7 @@ export default class PostFormDto extends BaseModelDto {
   declare thumbnail: AssetDto | null
   declare cover: AssetDto | null
   declare taxonomyIds: number[]
+  declare frameworkVersionIds: number[]
   declare captions: Caption[] | null
   declare chapters: Chapter[] | null
 
@@ -95,6 +96,7 @@ export default class PostFormDto extends BaseModelDto {
     this.thumbnail = post.thumbnails.length ? new AssetDto(post.thumbnails[0]) : null
     this.cover = post.covers.length ? new AssetDto(post.covers[0]) : null
     this.taxonomyIds = post.taxonomies?.map((row) => row.id) ?? []
+    this.frameworkVersionIds = post.frameworkVersions?.map((row) => row.id) ?? []
 
     if (post.captions?.length) {
       this.captions = post.captions.map((row) => ({

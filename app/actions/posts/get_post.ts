@@ -9,6 +9,7 @@ export default class GetPost {
       .preload('chapters', (query) => query.orderBy('sort_order'))
       .preload('captions', (query) => query.orderBy('sort_order'))
       .preload('taxonomies')
+      .preload('frameworkVersions')
 
       .firstOrFail()
   }

@@ -1,3 +1,4 @@
+import SyncFrameworkVersions from '#actions/framework_versions/sync_framework_versions'
 import SyncTaxonomies from '#actions/taxonomies/sync_taxonomies'
 import PostTypes from '#enums/post_types'
 import States from '#enums/states'
@@ -33,6 +34,7 @@ export default class UpdatePost {
       publishAtDate,
       publishAtTime,
       taxonomyIds,
+      frameworkVersionIds,
       captions,
       chapters,
       isUpdatingContent,
@@ -54,6 +56,7 @@ export default class UpdatePost {
 
       await post.save()
       await SyncTaxonomies.handle({ resource: post, ids: taxonomyIds })
+      await SyncFrameworkVersions.handle({ resource: post, ids: frameworkVersionIds })
       await SyncPostAsset.handle({ post, asset: thumbnail }, trx)
       await SyncCaptions.handle({ post, captions }, trx)
       await SyncChapters.handle({ post, chapters }, trx)

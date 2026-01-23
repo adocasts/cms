@@ -1,4 +1,5 @@
 import AssetDto from '#dtos/asset'
+import FrameworkVersionDto from '#dtos/framework_version'
 import HistoryDto from '#dtos/history'
 import PostDto from '#dtos/post'
 import ProgressDto from '#dtos/progress'
@@ -40,6 +41,7 @@ export default class CollectionDto extends BaseModelDto {
   declare posts: PostDto[]
   declare postsFlattened: PostDto[]
   declare taxonomies: TaxonomyDto[]
+  declare frameworkVersions: FrameworkVersionDto[]
   declare children: CollectionDto[]
   declare watchlist: WatchlistDto[]
   declare viewHistory: HistoryDto[]
@@ -77,6 +79,7 @@ export default class CollectionDto extends BaseModelDto {
     this.posts = PostDto.fromArray(collection.posts)
     this.postsFlattened = PostDto.fromArray(collection.postsFlattened)
     this.taxonomies = TaxonomyDto.fromArray(collection.taxonomies)
+    this.frameworkVersions = FrameworkVersionDto.fromArray(collection.frameworkVersions)
     this.children = CollectionDto.fromArray(collection.children)
     this.watchlist = WatchlistDto.fromArray(collection.watchlist)
     this.viewHistory = HistoryDto.fromArray(collection.viewHistory)

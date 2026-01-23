@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FrameworkVersionDto from '#dtos/framework_version'
 import PostFormDto from '#dtos/post_form'
 import TaxonomyDto from '#dtos/taxonomy'
 import CaptionLanguages, { CaptionLanguageDesc } from '#enums/caption_languages'
@@ -17,9 +18,9 @@ import {
   BookKey,
   BookLock,
   ChevronsUpDown,
+  LucideLoader,
   Plus,
   Trash2,
-  LucideLoader,
 } from 'lucide-vue-next'
 import { DateTime } from 'luxon'
 import { computed, ref } from 'vue'
@@ -30,6 +31,7 @@ import { enumKeys } from '~/lib/utils'
 const props = defineProps<{
   post?: PostFormDto
   taxonomies: TaxonomyDto[]
+  frameworkVersions: FrameworkVersionDto[]
 }>()
 
 const r2DefaultCaptions = [
@@ -103,6 +105,7 @@ const form = useForm({
   captions: props.post?.captions ?? [],
   chapters: props.post?.chapters ?? [],
   taxonomyIds: props.post?.taxonomyIds ?? [],
+  frameworkVersionIds: props.post?.frameworkVersionIds ?? [],
 })
 
 const isGeneratingChapters = ref(false)
@@ -365,6 +368,10 @@ function onVideoTypeChanged(videoTypeId: string) {
         <TaxonomyTags v-model="form.taxonomyIds" :taxonomies="taxonomies" />
       </FormInput>
 
+      <FormInput type="group" label="Framework Versions" :error="form.errors.frameworkVersionIds">
+        <FrameworkVersionTags v-model="form.frameworkVersionIds" :framework-versions="frameworkVersions" />
+      </FormInput>
+
       <FormInput type="group" label="Body" :error="form.errors.body">
         <TipTapEditor v-model="form.body" />
       </FormInput>
@@ -510,7 +517,7 @@ function onVideoTypeChanged(videoTypeId: string) {
               Chapters
               <span
                 v-show="isGeneratingChapters"
-                class="text-slate-400 inline-flex items-center gap-1.5"
+                class="inline-flex items-center gap-1.5 text-slate-400"
               >
                 [Generating <LucideLoader class="w-4 h-4 animate-spin" />]
               </span>

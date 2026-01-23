@@ -3,7 +3,7 @@ import CollectionTypes from '#enums/collection_types'
 import PostTypes from '#enums/post_types'
 import TaxonomyTypes from '#enums/taxonomy_types'
 import { Link } from '@inertiajs/vue3'
-import { Menu, Slash, Route, Plus, EllipsisVertical } from 'lucide-vue-next'
+import { EllipsisVertical, Menu, Plus } from 'lucide-vue-next'
 
 const links = [
   {
@@ -23,6 +23,10 @@ const links = [
     href: '/taxonomies',
   },
   {
+    text: 'Versions',
+    href: '/framework-versions',
+  },
+  {
     text: 'Users',
     href: '/users',
   },
@@ -39,11 +43,11 @@ const links = [
 
 <template>
   <nav
-    class="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6"
+    class="hidden md:flex md:flex-row flex-col md:items-center gap-6 md:gap-5 lg:gap-6 font-medium md:text-sm text-lg"
   >
-    <Link href="/" class="flex items-center gap-2 text-lg font-semibold md:text-base">
+    <Link href="/" class="flex items-center gap-2 font-semibold md:text-base text-lg">
       <img
-        class="logo-black w-auto h-6 md:h-7"
+        class="w-auto h-6 md:h-7 logo-black"
         src="../assets/logo-black.svg"
         alt="Adocasts"
         width="146px"
@@ -136,6 +140,7 @@ const links = [
           <EllipsisVertical class="w-4 h-4" aria-label="More Options" />
         </MenubarTrigger>
         <MenubarContent>
+          <MenubarItem :as="Link" href="/framework-versions"> Framework Versions </MenubarItem>
           <MenubarItem :as="Link" href="/users"> Users </MenubarItem>
           <MenubarItem :as="Link" href="/roles"> Roles </MenubarItem>
           <MenubarItem :as="Link" href="/plans"> Plans </MenubarItem>
@@ -145,16 +150,16 @@ const links = [
   </nav>
   <Sheet>
     <SheetTrigger as-child>
-      <Button variant="outline" size="icon" class="shrink-0 md:hidden">
-        <Menu class="h-5 w-5" />
+      <Button variant="outline" size="icon" class="md:hidden shrink-0">
+        <Menu class="w-5 h-5" />
         <span class="sr-only">Toggle navigation menu</span>
       </Button>
     </SheetTrigger>
     <SheetContent side="left">
-      <nav class="grid gap-6 text-lg font-medium">
-        <Link href="/" class="flex items-center gap-2 text-lg font-semibold">
+      <nav class="gap-6 grid font-medium text-lg">
+        <Link href="/" class="flex items-center gap-2 font-semibold text-lg">
           <img
-            class="logo-black w-auto h-6 md:h-7"
+            class="w-auto h-6 md:h-7 logo-black"
             src="../assets/logo-black.svg"
             alt="Adocasts"
             width="146px"
@@ -179,7 +184,7 @@ const links = [
 
 <style scoped>
 .desktop-link {
-  @apply text-muted-foreground transition-colors hover:text-foreground;
+  @apply text-muted-foreground hover:text-foreground transition-colors;
 
   &.active {
     @apply text-foreground;

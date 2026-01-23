@@ -1,11 +1,11 @@
 import {
-  beforeSave,
-  belongsTo,
-  column,
-  computed,
-  hasMany,
-  manyToMany,
-  scope,
+    beforeSave,
+    belongsTo,
+    column,
+    computed,
+    hasMany,
+    manyToMany,
+    scope,
 } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
@@ -17,6 +17,7 @@ import { default as State, default as States } from '#enums/states'
 import Status from '#enums/status'
 import AppBaseModel from '#models/app_base_model'
 import Asset from '#models/asset'
+import FrameworkVersion from '#models/framework_version'
 import History from '#models/history'
 import Post from '#models/post'
 import Taxonomy from '#models/taxonomy'
@@ -148,6 +149,12 @@ export default class Collection extends AppBaseModel {
     pivotTable: 'collection_taxonomies',
   })
   declare taxonomies: ManyToMany<typeof Taxonomy>
+
+  @manyToMany(() => FrameworkVersion, {
+    pivotTable: 'collection_framework_versions',
+    pivotTimestamps: true,
+  })
+  declare frameworkVersions: ManyToMany<typeof FrameworkVersion>
 
   @hasMany(() => Collection, {
     foreignKey: 'parentId',

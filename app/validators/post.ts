@@ -69,6 +69,9 @@ export const postValidator = vine.compile(
       credit: vine.string().maxLength(100).optional(),
     }),
     taxonomyIds: vine.array(vine.number().exists(exists('taxonomies', 'id'))).optional(),
+    frameworkVersionIds: vine
+      .array(vine.number().exists(exists('framework_versions', 'id')))
+      .optional(),
 
     captions: vine
       .array(

@@ -6,9 +6,11 @@ import StorePost from '#actions/posts/store_post'
 import UpdatePost from '#actions/posts/update_post'
 import AutocompleteDto from '#dtos/autocomplete'
 import { CollectionPostFormDto } from '#dtos/collection_content_form'
+import FrameworkVersionDto from '#dtos/framework_version'
 import PostDto from '#dtos/post'
 import PostFormDto from '#dtos/post_form'
 import TaxonomyDto from '#dtos/taxonomy'
+import FrameworkVersion from '#models/framework_version'
 import Post from '#models/post'
 import Taxonomy from '#models/taxonomy'
 import { postIndexValidator, postSearchValidator, postValidator } from '#validators/post'
@@ -45,9 +47,11 @@ export default class PostsController {
     await bouncer.with('PostPolicy').authorize('create')
 
     const taxonomies = await Taxonomy.query().orderBy('name')
+    const frameworkVersions = await FrameworkVersion.query().orderBy('name')
 
     return inertia.render('posts/form', {
       taxonomies: TaxonomyDto.fromArray(taxonomies),
+      frameworkVersions: FrameworkVersionDto.fromArray(frameworkVersions),
     })
   }
 
@@ -73,12 +77,14 @@ export default class PostsController {
   async edit({ params, inertia, bouncer }: HttpContext) {
     const post = await GetPost.byId(params.id)
     const taxonomies = await Taxonomy.query().orderBy('name')
+    const frameworkVersions = await FrameworkVersion.query().orderBy('name')
 
     await bouncer.with('PostPolicy').authorize('update', post)
 
     return inertia.render('posts/form', {
       post: new PostFormDto(post),
       taxonomies: TaxonomyDto.fromArray(taxonomies),
+      frameworkVersions: FrameworkVersionDto.fromArray(frameworkVersions),
     })
   }
 

@@ -99,6 +99,7 @@ declare module 'vue' {
     DropdownMenuTrigger: typeof import('./inertia/components/ui/dropdown-menu/DropdownMenuTrigger.vue')['default']
     FormDialog: typeof import('./inertia/components/FormDialog.vue')['default']
     FormInput: typeof import('./inertia/components/FormInput.vue')['default']
+    FrameworkVersionTags: typeof import('./inertia/components/FrameworkVersionTags.vue')['default']
     Input: typeof import('./inertia/components/ui/input/Input.vue')['default']
     Label: typeof import('./inertia/components/ui/label/Label.vue')['default']
     Menubar: typeof import('./inertia/components/ui/menubar/Menubar.vue')['default']

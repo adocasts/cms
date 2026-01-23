@@ -17,6 +17,7 @@ import { default as State, default as States } from '#enums/states'
 import VideoTypes from '#enums/video_types'
 import AppBaseModel from '#models/app_base_model'
 import Collection from '#models/collection'
+import FrameworkVersion from '#models/framework_version'
 import History from '#models/history'
 import Taxonomy from '#models/taxonomy'
 import Watchlist from '#models/watchlist'
@@ -255,6 +256,12 @@ export default class Post extends AppBaseModel {
     pivotTimestamps: true,
   })
   declare collections: ManyToMany<typeof Collection>
+
+  @manyToMany(() => FrameworkVersion, {
+    pivotTable: 'post_framework_versions',
+    pivotTimestamps: true,
+  })
+  declare frameworkVersions: ManyToMany<typeof FrameworkVersion>
 
   @hasMany(() => History, {
     onQuery: (q) => q.where('historyTypeId', HistoryTypes.VIEW),

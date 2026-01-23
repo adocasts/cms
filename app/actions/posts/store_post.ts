@@ -1,3 +1,5 @@
+import SyncFrameworkVersions from '#actions/framework_versions/sync_framework_versions'
+import SyncTaxonomies from '#actions/taxonomies/sync_taxonomies'
 import PostTypes from '#enums/post_types'
 import States from '#enums/states'
 import Post from '#models/post'
@@ -5,10 +7,9 @@ import User from '#models/user'
 import { postValidator } from '#validators/post'
 import db from '@adonisjs/lucid/services/db'
 import { Infer } from '@vinejs/vine/types'
-import SyncPostAsset from './sync_post_assets.js'
-import SyncTaxonomies from '#actions/taxonomies/sync_taxonomies'
 import SyncCaptions from './sync_captions.js'
 import SyncChapters from './sync_chapters.js'
+import SyncPostAsset from './sync_post_assets.js'
 
 type Data = Infer<typeof postValidator>
 
@@ -27,6 +28,7 @@ export default class StorePost {
       publishAtDate,
       publishAtTime,
       taxonomyIds,
+      frameworkVersionIds,
       captions,
       chapters,
       isUpdatingContent,
@@ -39,6 +41,7 @@ export default class StorePost {
       await post.related('authors').attach([author.id])
 
       await SyncTaxonomies.handle({ resource: post, ids: taxonomyIds })
+      await SyncFrameworkVersions.handle({ resource: post, ids: frameworkVersionIds })
       await SyncPostAsset.handle({ post, asset: thumbnail }, trx)
       await SyncCaptions.handle({ post, captions }, trx)
       await SyncChapters.handle({ post, chapters }, trx)

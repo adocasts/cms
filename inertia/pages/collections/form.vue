@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import CollectionDto from '#dtos/collection'
+import FrameworkVersionDto from '#dtos/framework_version'
 import TaxonomyDto from '#dtos/taxonomy'
 import CollectionTypes, { CollectionTypeDesc } from '#enums/collection_types'
 import Difficulties, { DifficultyDesc } from '#enums/difficulties'
@@ -15,6 +16,7 @@ import { enumKeys } from '~/lib/utils'
 const props = defineProps<{
   collection?: CollectionDto
   taxonomies: TaxonomyDto[]
+  frameworkVersions: FrameworkVersionDto[]
 }>()
 
 const form = useForm({
@@ -36,6 +38,7 @@ const form = useForm({
     credit: props.collection?.asset?.credit ?? '',
   },
   taxonomyIds: props.collection?.taxonomies.map((tax) => tax.id) ?? [],
+  frameworkVersionIds: props.collection?.frameworkVersions.map((fv) => fv.id) ?? [],
 })
 
 function onSubmit(stateId: States = form.stateId) {
@@ -217,6 +220,10 @@ function onSubmit(stateId: States = form.stateId) {
 
       <FormInput type="group" label="Taxonomies" :error="form.errors.taxonomyIds">
         <TaxonomyTags v-model="form.taxonomyIds" :taxonomies="taxonomies" />
+      </FormInput>
+
+      <FormInput type="group" label="Framework Versions" :error="form.errors.frameworkVersionIds">
+        <FrameworkVersionTags v-model="form.frameworkVersionIds" :framework-versions="frameworkVersions" />
       </FormInput>
     </div>
 

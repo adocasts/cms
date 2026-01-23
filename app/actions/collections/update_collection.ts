@@ -1,4 +1,5 @@
 import UpdateAsset from '#actions/assets/update_asset'
+import SyncFrameworkVersions from '#actions/framework_versions/sync_framework_versions'
 import SyncTaxonomies from '#actions/taxonomies/sync_taxonomies'
 import CollectionTypes from '#enums/collection_types'
 import States from '#enums/states'
@@ -19,7 +20,7 @@ export default class UpdateCollection {
     if (!data.statusId) data.statusId = Status.COMING_SOON
     if (!data.collectionTypeId) data.collectionTypeId = CollectionTypes.SERIES
 
-    const { taxonomyIds, asset, ...update } = data
+    const { taxonomyIds, frameworkVersionIds, asset, ...update } = data
     const collection = await Collection.findOrFail(id)
 
     collection.merge(update)
@@ -29,6 +30,7 @@ export default class UpdateCollection {
 
       await collection.save()
       await SyncTaxonomies.handle({ resource: collection, ids: taxonomyIds })
+      await SyncFrameworkVersions.handle({ resource: collection, ids: frameworkVersionIds })
       await UpdateAsset.handle(asset, trx)
 
       return collection

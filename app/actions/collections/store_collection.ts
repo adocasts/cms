@@ -1,4 +1,5 @@
 import UpdateAsset from '#actions/assets/update_asset'
+import SyncFrameworkVersions from '#actions/framework_versions/sync_framework_versions'
 import SyncTaxonomies from '#actions/taxonomies/sync_taxonomies'
 import CollectionTypes from '#enums/collection_types'
 import States from '#enums/states'
@@ -20,7 +21,7 @@ export default class StoreCollection {
     if (!data.statusId) data.statusId = Status.COMING_SOON
     if (!data.collectionTypeId) data.collectionTypeId = CollectionTypes.SERIES
 
-    const { taxonomyIds, asset, ...store } = data
+    const { taxonomyIds, frameworkVersionIds, asset, ...store } = data
 
     return db.transaction(async (trx) => {
       const collection = await Collection.create(
@@ -33,6 +34,7 @@ export default class StoreCollection {
       )
 
       await SyncTaxonomies.handle({ resource: collection, ids: taxonomyIds })
+      await SyncFrameworkVersions.handle({ resource: collection, ids: frameworkVersionIds })
       await UpdateAsset.handle(asset, trx)
 
       return collection

@@ -50,6 +50,9 @@ export const collectionValidator = vine.compile(
     repositoryUrl: vine.string().trim().maxLength(255).nullable(),
     repositoryAccessLevel: vine.number().enum(RepositoryAccessLevels).optional(),
     taxonomyIds: vine.array(vine.number().exists(exists('taxonomies', 'id'))).optional(),
+    frameworkVersionIds: vine
+      .array(vine.number().exists(exists('framework_versions', 'id')))
+      .optional(),
     asset: vine.object({
       id: vine.number().exists(exists('assets', 'id')).optional(),
       altText: vine.string().maxLength(100).optional(),

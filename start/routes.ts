@@ -7,10 +7,11 @@
 |
 */
 
-import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+import router from '@adonisjs/core/services/router'
 const AiVideosController = () => import('#controllers/ai_videos_controller')
 const TaxonomyContentsController = () => import('#controllers/taxonomy_contents_controller')
+const FrameworkVersionsController = () => import('#controllers/framework_versions_controller')
 const CouponsController = () => import('#controllers/coupons_controller')
 const PlansController = () => import('#controllers/plans_controller')
 const RolesController = () => import('#controllers/roles_controller')
@@ -78,6 +79,14 @@ router.group(() => {
   //* TAXONOMY CONTENT [Posts]
   router.get('/taxonomies/:id/edit/content', [TaxonomyContentsController, 'edit']).as('taxonomies.edit.content')
   router.put('/taxonomies/:id/content', [TaxonomyContentsController, 'update']).as('taxonomies.update.content')
+
+  //* FRAMEWORK VERSIONS
+  router.get('/framework-versions', [FrameworkVersionsController, 'index']).as('framework_versions.index')
+  router.get('/framework-versions/create', [FrameworkVersionsController, 'create']).as('framework_versions.create')
+  router.post('/framework-versions', [FrameworkVersionsController, 'store']).as('framework_versions.store')
+  router.get('/framework-versions/:id/edit', [FrameworkVersionsController, 'edit']).as('framework_versions.edit')
+  router.put('/framework-versions/:id', [FrameworkVersionsController, 'update']).as('framework_versions.update')
+  router.delete('/framework-versions/:id', [FrameworkVersionsController, 'destroy']).as('framework_versions.destroy')
 
   //* USERS
   router.get('/users', [UsersController, 'index']).as('users.index')

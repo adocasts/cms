@@ -3,8 +3,10 @@ import GetPaginatedCollections from '#actions/collections/get_paginated_collecti
 import StoreCollection from '#actions/collections/store_collection'
 import UpdateCollection from '#actions/collections/update_collection'
 import CollectionDto from '#dtos/collection'
+import FrameworkVersionDto from '#dtos/framework_version'
 import TaxonomyDto from '#dtos/taxonomy'
 import Collection from '#models/collection'
+import FrameworkVersion from '#models/framework_version'
 import Taxonomy from '#models/taxonomy'
 import { collectionIndexValidator, collectionValidator } from '#validators/collection'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -40,9 +42,11 @@ export default class CollectionsController {
     await bouncer.with('CollectionPolicy').authorize('create')
 
     const taxonomies = await Taxonomy.query().orderBy('name')
+    const frameworkVersions = await FrameworkVersion.query().orderBy('name')
 
     return inertia.render('collections/form', {
       taxonomies: TaxonomyDto.fromArray(taxonomies),
+      frameworkVersions: FrameworkVersionDto.fromArray(frameworkVersions),
     })
   }
 
@@ -74,13 +78,16 @@ export default class CollectionsController {
 
     const collection = await Collection.findOrFail(params.id)
     const taxonomies = await Taxonomy.query().orderBy('name')
+    const frameworkVersions = await FrameworkVersion.query().orderBy('name')
 
     await collection.load('asset')
     await collection.load('taxonomies', (q) => q.select('id'))
+    await collection.load('frameworkVersions', (q) => q.select('id'))
 
     return inertia.render('collections/form', {
       collection: new CollectionDto(collection),
       taxonomies: TaxonomyDto.fromArray(taxonomies),
+      frameworkVersions: FrameworkVersionDto.fromArray(frameworkVersions),
     })
   }
 
