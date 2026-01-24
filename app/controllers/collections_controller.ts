@@ -42,7 +42,7 @@ export default class CollectionsController {
     await bouncer.with('CollectionPolicy').authorize('create')
 
     const taxonomies = await Taxonomy.query().orderBy('name')
-    const frameworkVersions = await FrameworkVersion.query().orderBy('name')
+    const frameworkVersions = await FrameworkVersion.query().orderBy('sort')
 
     return inertia.render('collections/form', {
       taxonomies: TaxonomyDto.fromArray(taxonomies),
@@ -78,7 +78,7 @@ export default class CollectionsController {
 
     const collection = await Collection.findOrFail(params.id)
     const taxonomies = await Taxonomy.query().orderBy('name')
-    const frameworkVersions = await FrameworkVersion.query().orderBy('name')
+    const frameworkVersions = await FrameworkVersion.query().orderBy('sort')
 
     await collection.load('asset')
     await collection.load('taxonomies', (q) => q.select('id'))

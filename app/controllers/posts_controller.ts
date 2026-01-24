@@ -47,7 +47,7 @@ export default class PostsController {
     await bouncer.with('PostPolicy').authorize('create')
 
     const taxonomies = await Taxonomy.query().orderBy('name')
-    const frameworkVersions = await FrameworkVersion.query().orderBy('name')
+    const frameworkVersions = await FrameworkVersion.query().orderBy('sort')
 
     return inertia.render('posts/form', {
       taxonomies: TaxonomyDto.fromArray(taxonomies),
@@ -77,7 +77,7 @@ export default class PostsController {
   async edit({ params, inertia, bouncer }: HttpContext) {
     const post = await GetPost.byId(params.id)
     const taxonomies = await Taxonomy.query().orderBy('name')
-    const frameworkVersions = await FrameworkVersion.query().orderBy('name')
+    const frameworkVersions = await FrameworkVersion.query().orderBy('sort')
 
     await bouncer.with('PostPolicy').authorize('update', post)
 
