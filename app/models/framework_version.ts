@@ -10,7 +10,10 @@ export default class FrameworkVersion extends AppBaseModel {
   declare id: number
 
   @column()
-  declare name: string
+  declare framework: string
+
+  @column()
+  declare version: string
 
   @column()
   declare slug: string

@@ -10,7 +10,8 @@ const props = defineProps<{
 }>()
 
 const form = useForm({
-  name: props.frameworkVersion?.name ?? '',
+  framework: props.frameworkVersion?.framework ?? '',
+  version: props.frameworkVersion?.version ?? '',
   slug: props.frameworkVersion?.slug ?? '',
 })
 
@@ -41,7 +42,7 @@ function onSubmit() {
         <BreadcrumbSeparator class="hidden md:block" />
         <BreadcrumbItem>
           <BreadcrumbPage>{{
-            frameworkVersion?.id ? `Editing "${frameworkVersion.name}"` : 'New Framework Version'
+            frameworkVersion?.id ? `Editing "${frameworkVersion.framework} ${frameworkVersion.version}"` : 'New Framework Version'
           }}</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
@@ -60,16 +61,23 @@ function onSubmit() {
       class="flex flex-col gap-4 bg-white shadow-xl p-3 lg:p-6 border border-slate-200 rounded-lg w-full lg:w-3/5"
     >
       <FormInput
-        v-model="form.name"
-        label="Name"
-        placeholder="e.g., Vue 3, React 18, Laravel 10"
-        :error="form.errors.name"
+        v-model="form.framework"
+        label="Framework"
+        placeholder="e.g., AdonisJS, Vue, Inertia"
+        :error="form.errors.framework"
+      />
+
+      <FormInput
+        v-model="form.version"
+        label="Version"
+        placeholder="e.g., 3, 18, 10"
+        :error="form.errors.version"
       />
 
       <FormInput
         v-model="form.slug"
         label="Slug"
-        placeholder="e.g., vue-3, react-18, laravel-10"
+        placeholder="e.g., adonisjs-7, vue-3, inertia-2"
         :error="form.errors.slug"
       />
 

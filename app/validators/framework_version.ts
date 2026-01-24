@@ -10,7 +10,8 @@ export const frameworkVersionIndexValidator = vine.compile(
 
 export const frameworkVersionValidator = vine.compile(
   vine.object({
-    name: vine.string().trim().maxLength(100),
+    framework: vine.string().trim().maxLength(100),
+    version: vine.string().trim().maxLength(10),
     slug: vine
       .string()
       .trim()
