@@ -9,14 +9,14 @@ import VideoTypes from '#enums/video_types'
 import Post from '#models/post'
 import { BaseModelDto } from '@adocasts.com/dto/base'
 
-type Caption = {
+export type Caption = {
   id?: number
   type: CaptionTypes
   language: CaptionLanguages
   label: string
 }
 
-type Chapter = {
+export type Chapter = {
   id?: number
   start: string
   end: string

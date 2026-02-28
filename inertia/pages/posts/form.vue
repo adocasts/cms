@@ -9,6 +9,7 @@ import PostTypes, { PostTypeDesc } from '#enums/post_types'
 import RepositoryAccessLevels from '#enums/repository_access_levels'
 import States from '#enums/states'
 import VideoTypes, { VideoTypeDesc, VideoTypesOrdered } from '#enums/video_types'
+import { Chapter } from '#services/ai/ai_service'
 import { useForm } from '@inertiajs/vue3'
 import { Link } from '@tuyau/inertia/vue'
 import axios from 'axios'
@@ -135,20 +136,8 @@ async function generateVideoChapters() {
 
   try {
     const { data } = await axios.post(`/ai/videos/${form.videoUrl}/chapters`)
-    const result = data.result.response
-
-    if (Array.isArray(result)) {
-      form.chapters = result
-
-      toast.success('Chapters generated successfully from JSON')
-    } else if (typeof result === 'string' && result.startsWith('```json')) {
-      const chapters = JSON.parse(result.replace('```json', '').replace('```', ''))
-      form.chapters = chapters
-
-      toast.success('Chapters generated successfully from Markdown')
-    } else {
-      toast.error('Chapters were generated successfully, but came back in an unexpected format')
-    }
+    form.chapters = data as Chapter[]
+    toast.success('Chapters generated successfully')
   } catch (error) {
     console.error(error)
     toast.error('Failed to generate chapters')
