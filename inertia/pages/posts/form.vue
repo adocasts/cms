@@ -9,7 +9,7 @@ import PostTypes, { PostTypeDesc } from '#enums/post_types'
 import RepositoryAccessLevels from '#enums/repository_access_levels'
 import States from '#enums/states'
 import VideoTypes, { VideoTypeDesc, VideoTypesOrdered } from '#enums/video_types'
-import { Chapter } from '#services/ai/ai_service'
+import { AiBodyOverview, Chapter } from '#services/ai/ai_service'
 import { useForm } from '@inertiajs/vue3'
 import { Link } from '@tuyau/inertia/vue'
 import axios from 'axios'
@@ -32,7 +32,8 @@ import { enumKeys } from '~/lib/utils'
 const props = defineProps<{
   post?: PostFormDto
   taxonomies: TaxonomyDto[]
-  frameworkVersions: FrameworkVersionDto[]
+  frameworkVersions: FrameworkVersionDto[],
+  aiOverview: AiBodyOverview | null
 }>()
 
 const r2DefaultCaptions = [
@@ -110,6 +111,7 @@ const form = useForm({
 })
 
 const isGeneratingChapters = ref(false)
+const aiOverview = ref<AiBodyOverview | null>(props.aiOverview)
 
 const publishAt = computed(() => {
   const iso = [form.publishAtDate, form.publishAtTime].filter(Boolean).join('T')
@@ -144,6 +146,24 @@ async function generateVideoChapters() {
   }
 
   isGeneratingChapters.value = false
+}
+
+async function generateBodyOverview() {
+  if (!props.post?.id || !form.body) {
+    toast.error('Post must be saved and body must not be empty to generate overview')
+    return
+  }
+
+  try {
+    const { data } = await axios.post(`/ai/lessons/${props.post?.id}/body-overview`, {
+      body: form.body,
+    })
+    aiOverview.value = data
+    toast.success('Body overview generated successfully')
+  } catch (error) {
+    console.error(error)
+    toast.error('Failed to generate body overview')
+  }
 }
 
 function onSubmit(stateId: States = Number(form.stateId)) {
@@ -575,6 +595,48 @@ function onVideoTypeChanged(videoTypeId: string) {
               <span>Is this a livestream?</span>
             </div>
           </FormInput>
+        </div>
+      </div>
+
+      <div class="-mx-3 lg:-mx-6">
+        <div
+          v-if="post?.id && form.body?.length"
+          class="flex flex-col gap-3 bg-white shadow-xl p-3 lg:p-6 border border-slate-200 rounded-lg"
+        >
+          <h3 class="font-semibold">AI Generated Overview</h3>
+          <div v-if="!aiOverview">
+            <Button @click="generateBodyOverview" variant="secondary">
+              Generate Overview
+            </Button>
+          </div>
+          <div v-else class="text-sm">
+            <div class="mb-3 pt-3 border-slate-100 border-t">
+              <h6 class="font-semibold text-slate-600 text-xs uppercase tracking-wide">Summary</h6>
+              <ul class="pl-4 list-disc">
+                <li v-for="point in aiOverview.summary" :key="point">{{ point }}</li>
+              </ul>
+            </div>
+            <div class="mb-3 pt-3 border-slate-100 border-t">
+              <h6 class="font-semibold text-slate-600 text-xs uppercase tracking-wide">Meta Description</h6>
+              <p>{{ aiOverview.metaDescription }}</p>
+              <a role="button" class="inline-block mt-1 text-blue-500 text-xs underline" @click="form.metaDescription = aiOverview.metaDescription">
+                Use as Meta Description
+              </a>
+            </div>
+            <div class="mb-3 pt-3 border-slate-100 border-t">
+              <h6 class="font-semibold text-slate-600 text-xs uppercase tracking-wide">Social Hooks</h6>
+              <dl class="flex flex-col">
+                <div class="flex gap-3">
+                  <dt class="w-24 font-semibold">Twitter:</dt>
+                  <dd class="flex-1">{{ aiOverview.socialHooks.twitter }}</dd>
+                </div>
+                <div class="flex gap-3">
+                  <dt class="w-24 font-semibold">Facebook:</dt>
+                  <dd class="flex-1">{{ aiOverview.socialHooks.facebook }}</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
         </div>
       </div>
     </div>

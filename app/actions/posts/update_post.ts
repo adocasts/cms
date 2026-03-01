@@ -43,6 +43,7 @@ export default class UpdatePost {
 
     post.merge(update)
 
+    if (!data.publishAt) post.publishAt = null
     if (!data.videoBunnyId) post.videoBunnyId = null
     if (!data.videoUrl) post.videoUrl = null
     if (!data.videoBunnyId && !data.videoUrl) post.videoSeconds = 0

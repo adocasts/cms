@@ -43,11 +43,11 @@ export const postValidator = vine.compile(
         return !result
       })
       .optional(),
-    pageTitle: vine.string().trim().maxLength(100).optional(),
-    description: vine.string().trim().maxLength(255).optional(),
-    metaDescription: vine.string().trim().maxLength(255).optional(),
-    canonical: vine.string().trim().maxLength(255).url().optional(),
-    body: vine.string().trim().optional(),
+    pageTitle: vine.string().trim().maxLength(100).nullable(),
+    description: vine.string().trim().maxLength(255).nullable(),
+    metaDescription: vine.string().trim().maxLength(255).nullable(),
+    canonical: vine.string().trim().maxLength(255).url().nullable(),
+    body: vine.string().trim().nullable(),
     repositoryUrl: vine.string().trim().maxLength(255).url().optional().nullable(),
     repositoryAccessLevel: vine.number().enum(RepositoryAccessLevels).optional(),
     isFeatured: vine.boolean().optional().nullable(),
@@ -58,8 +58,8 @@ export const postValidator = vine.compile(
     videoBunnyId: vine.string().trim().maxLength(500).optional().nullable(),
     videoSeconds: vine.number().optional(),
     timezone: vine.string().trim().optional(),
-    publishAtDate: vine.date().optional(),
-    publishAtTime: vine.date({ formats: ['HH:mm'] }).optional(),
+    publishAtDate: vine.date().nullable(),
+    publishAtTime: vine.date({ formats: ['HH:mm'] }).nullable(),
     postTypeId: vine.number().enum(PostTypes).optional(),
     stateId: vine.number().enum(States).optional(),
     paywallTypeId: vine.number().enum(PaywallTypes).optional(),
@@ -112,6 +112,7 @@ export const postValidator = vine.compile(
         }
 
         return publishAt.setZone('UTC').set({ second: 0, millisecond: 0 })
-      }),
+      })
+      .nullable(),
   })
 )

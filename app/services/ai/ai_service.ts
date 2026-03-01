@@ -1,4 +1,5 @@
 import { Chapter } from '#dtos/post_form'
+import cache from '@adonisjs/cache/services/main'
 import { google } from '@ai-sdk/google'
 import { generateText, Output } from 'ai'
 import { z } from 'zod'
@@ -40,6 +41,61 @@ class AiService {
     })
 
     return output.chapters
+  }
+
+  async getBodyOverview(lessonId: number) {
+    return cache.namespace('AI_BODY_OVERVIEW').get({ key: `lesson_${lessonId}` })
+  }
+
+  async getOrGenerateBodyOverview(lessonId: number, body: string) {
+    return cache.namespace('AI_BODY_OVERVIEW').getOrSet({
+      key: `lesson_${lessonId}`,
+      ttl: '180d',
+      factory: async () => this.generateBodyOverview(body),
+    })
+  }
+
+  async generateBodyOverview(body: string): Promise<AiBodyOverview> {
+    const { output } = await generateText({
+      model: this.model,
+      output: Output.object({
+        schema: z.object({
+          summary: z
+            .array(z.string())
+            .describe('3 to 5 concise, action-oriented bullet points summarizing the lesson.'),
+          metaDescription: z
+            .string()
+            .max(160)
+            .describe(
+              'A high-click-through SEO description. Must include the primary topic and a call to learning, under 160 characters.'
+            ),
+          socialHooks: z.object({
+            twitter: z
+              .string()
+              .describe(
+                'A punchy, curiosity-gap style tweet to drive clicks. Use 1-2 relevant hashtags.'
+              ),
+            facebook: z
+              .string()
+              .describe(
+                'A conversational, community-focused post. Explain the value of the lesson and encourage comments or shares.'
+              ),
+          }),
+        }),
+      }),
+      prompt: `Analyze the following lesson body and generate metadata: ${body}`,
+    })
+
+    return output
+  }
+}
+
+export interface AiBodyOverview {
+  summary: string[]
+  metaDescription: string
+  socialHooks: {
+    twitter: string
+    facebook: string
   }
 }
 

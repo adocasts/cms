@@ -1,4 +1,4 @@
-import vine, { Vine, BaseLiteralType } from '@vinejs/vine'
+import vine, { BaseLiteralType, Vine } from '@vinejs/vine'
 import { FieldContext, FieldOptions, Validation } from '@vinejs/vine/types'
 
 declare module '@vinejs/vine' {
@@ -11,7 +11,7 @@ const requires = vine.createRule(
   (_: unknown, fields: string[], field: FieldContext) => {
     const missingFields = fields.filter((key) => !field.data[key])
 
-    if (missingFields.length) return
+    if (missingFields.length) return null
 
     const info: Record<string, any> = {}
 

@@ -13,6 +13,7 @@ import TaxonomyDto from '#dtos/taxonomy'
 import FrameworkVersion from '#models/framework_version'
 import Post from '#models/post'
 import Taxonomy from '#models/taxonomy'
+import aiService from '#services/ai/ai_service'
 import { postIndexValidator, postSearchValidator, postValidator } from '#validators/post'
 import type { HttpContext } from '@adonisjs/core/http'
 import router from '@adonisjs/core/services/router'
@@ -78,6 +79,7 @@ export default class PostsController {
     const post = await GetPost.byId(params.id)
     const taxonomies = await Taxonomy.query().orderBy('name')
     const frameworkVersions = await FrameworkVersion.query().orderBy('sort')
+    const aiOverview = await aiService.getBodyOverview(post.id)
 
     await bouncer.with('PostPolicy').authorize('update', post)
 
@@ -85,6 +87,7 @@ export default class PostsController {
       post: new PostFormDto(post),
       taxonomies: TaxonomyDto.fromArray(taxonomies),
       frameworkVersions: FrameworkVersionDto.fromArray(frameworkVersions),
+      aiOverview,
     })
   }
 
