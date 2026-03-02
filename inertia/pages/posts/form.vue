@@ -166,6 +166,17 @@ async function generateBodyOverview() {
   }
 }
 
+function copyChaptersForYouTube() {
+  if (!form.chapters?.length) return
+
+  const captionsText = form.chapters
+    .map((chapter) => `${chapter.start}: ${chapter.text}`)
+    .join('\n')
+
+  navigator.clipboard.writeText(captionsText)
+  toast.success('Captions copied to clipboard in YouTube format')
+}
+
 function onSubmit(stateId: States = Number(form.stateId)) {
   const action = form.transform((data) => {
     data.stateId = stateId
@@ -567,22 +578,27 @@ function onVideoTypeChanged(videoTypeId: string) {
               </Button>
             </div>
 
-            <Button
-              type="button"
-              size="sm"
-              class="mt-2"
-              variant="secondary"
-              @click="
-                form.chapters.push({
-                  start: form.chapters[form.chapters.length - 1]?.end ?? '00:00',
-                  end: secondsToTimecode(form.videoSeconds) ?? '00:00',
-                  text: '',
-                })
-              "
-            >
-              <Plus class="w-3 h-3" />
-              Add Chapter
-            </Button>
+            <div class="flex items-center gap-3 mt-2">
+              <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                @click="
+                  form.chapters.push({
+                    start: form.chapters[form.chapters.length - 1]?.end ?? '00:00',
+                    end: secondsToTimecode(form.videoSeconds) ?? '00:00',
+                    text: '',
+                  })
+                "
+              >
+                <Plus class="w-3 h-3" />
+                Add Chapter
+              </Button>
+
+              <a role="button" @click="copyChaptersForYouTube" class="text-blue-500 text-sm underline">
+                Copy for YouTube
+              </a>
+            </div>
           </fieldset>
 
           <FormInput
